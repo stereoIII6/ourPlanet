@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title><%= htmlWebpackPlugin.options.title %></title>
+
+        <link rel="icon" type="image/png" href="/images/fav.png" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" /> 
+        <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" /> 
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="head">
+          <div id="nav">
+            <div id="logo">
+              <i>affilly8</i>
+            </div>
+            <div id="links">
+              <div id="campaigns_btn" class="btn">campaigns</div>
+              <div id="links_btn" class="btn">links</div>
+              <div id="trxs_btn" class="btn">transactions</div>
+            </div>
+            <div id="log">
+              <div id="new">
+                <div onclick="login()" id="ud" class="btn">unstoppable</div>
+                <div id="profile_btn" class="btn">connect</div>
+              </div>
+              <div id="guest">
+                <div id="net_btn" class="btn">network</div>
+                <div id="wallet_btn" class="btn">0 MLQ</div>
+                <div id="profile_btn" class="btn">my profile</div>
+                <div id="produce_btn" class="btn">i produce</div>
+                <div id="promote_btn" class="btn">i promote</div>
+              </div>
+              <div id="producer">
+                <div id="net_btn" class="btn">network</div>
+                <div id="wallet_btn" class="btn">0 MLQ</div>
+                <div id="profile_btn" class="btn">my profile</div>
+                <div id="makecampaign_btn" class="btn">make a campaign</div>
+                <div id="mycampaigns_btn" class="btn">my campaigns</div>
+              </div>
+              <div id="promoter">
+                <div id="net_btn" class="btn">network</div>
+                <div id="wallet_btn" class="btn">0 MLQ</div>
+                <div id="profile_btn" class="btn">my profile</div>
+                <div id="link_btn" class="btn">make a link</div>
+                <div id="links_btn" class="btn">my links</div>
+              </div>
+              <div id="admin">
+                <div id="net_btn" class="btn">network</div>
+                <div id="wallet_btn" class="btn">0 MLQ</div>
+                <div id="profile_btn" class="btn">my profile</div>
+                <div id="greylist_btn" class="btn">make a campaign</div>
+                <div id="blacklist_btn" class="btn">my campaigns</div>
+                <div id="admin_btn" class="btn">admin tools</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="body">
+          <div id="home_stage">
+            <h2>create campaigns <br/>promote campaigns <br/><i>affilly8</i></h2>
+          </div>
+          <div id="campaign_stage">
+          <div id="campaign_list" class="list">
+            <h2>active campaigns</h2>
+            <ul>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+              <li class="list_item">shoe spring sale 10% for clients |  0.003ETH / Per Sale</li>
+            </ul>
+          </div>
+            <div id="campaign_detail"  class="detail"><h2>information</h2></div>
+          </div>
+          <div id="link_stage">
+          <div id="link_list" class="list"><h2>active links</h2></div>
+          <div id="link_detail" class="detail"><h2>information</h2></div>
+          </div>
+          <div id="tx_stage">
+          <div id="tx_list" class="list"><h2>transactions</h2></div>
+          <div id="tx_detail" class="detail"><h2>information</h2></div>
+          </div>
+        </div>
+        <div id="foot">
+          &copy; affilly8 2022-2025. All rights reserved.
+        </div>
+      </body>
+</html>
