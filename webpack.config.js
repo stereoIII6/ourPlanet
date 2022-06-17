@@ -7,7 +7,7 @@ module.exports = {
         main: path.resolve(__dirname, "src/app.js"),
     },
     output: {
-        path: path.resolve(__dirname, "build"),
+        path: path.resolve(__dirname, "dist"),
         filename: "[name].[contenthash].js",
         clean: false,
     },
@@ -19,7 +19,7 @@ module.exports = {
     },
     devtool: "inline-source-map",
     devServer: {
-        watchFiles: path.resolve(__dirname, "build"),
+        watchFiles: path.resolve(__dirname, "dist"),
         compress: true,
         port: 5000,
         open: true,
