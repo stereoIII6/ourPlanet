@@ -56,13 +56,18 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 // Chainlink Imports
 // import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
-contract Init{
-    address public author = 0x1Cd6F4D329D38043a6bDB3665c3a7b06F79B5242;
-    mapping(address => uint256) public role;
-    mapping(address => bytes) public uData;
-    uint256 public maxSupply;
-    uint256 public availSupply;
-    uint256 rate;
+/* 
+Init Contract
+
+Setup user account
+*/
+contract Init{ //
+    address public author = 0x1Cd6F4D329D38043a6bDB3665c3a7b06F79B5242; // main admin address
+    mapping(address => uint256) public role; // role by useraddress // 99 admin / 0 unknown / 1 guest / 
+    mapping(address => bytes) public uData; // user json object storage 
+    uint256 public maxSupply;   // max supply 
+    uint256 public availSupply; // available Supply
+    uint256 rate; // 
     uint256 digits = 1 * 10 ** 18;
     IERC20 internal Token;
     IERC20 internal MLQ;
@@ -78,7 +83,7 @@ contract Init{
         require(author == msg.sender, "you're not owner");
         _;
     }
-    function changeRole(address _to, uint256 _role) external isAdmin() returns(bool){
+    function changeRole(address _to, uint256 _role) external isAdmin() returns(bool){ // allows admins to set users roles
         role[_to] = _role;
         return true;
     }

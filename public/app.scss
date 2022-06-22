@@ -6,10 +6,11 @@ body{
     font-family: 'Fascinate', cursive;
     display:grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 50px 4em 50em  1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 50px 6em 50em  1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     justify-items:center;
     color:white;
     background: #000022;
+    overflow:hidden;
   }
   .stage{
     display:grid;
@@ -54,6 +55,9 @@ body{
     box-shadow: inset 0 0 180px #011,      /* inner white */
       0px 0px 40px 20px #adf;
   }
+  #movers{grid-row:4;grid-column:1/-1;}
+  #goEast{grid-column: 1;}
+  #goWest{grid-column: -1;}
   #cover{
     border-radius:50%;
     width:40em;
@@ -62,6 +66,46 @@ body{
     grid-column: 4/10;
     overflow:hidden;
   }
+  #modal-stage{
+    position:absolute;
+    top:0;left:0;width:100%;
+    height:100%;
+    background: rgba(ivory,0.3);
+    z-index:222;
+    display:none;
+    padding-top:11em;
+    justify-content: center;
+}
+#modal{
+    position:relative;
+    width:42em;
+    height:45em;
+    display:grid;
+    grid-gap: 1em;
+    grid-template-columns: 1fr;
+    grid-template-rows: 36px 1fr 36px;
+    border: 1px solid black;
+    border-radius: 9px;
+    padding:1em;
+    justify-self: center;
+    background: rgba(white,0.9);
+    color: black;
+}
+#modal-footer{
+  grid-row:1;
+  grid-column:1/-1;
+  text-align: center;
+}
+#modal-header{
+  grid-row:1;
+  grid-column:1/-1;
+  text-align: center;
+  font-size:2em;
+  font-weight: 900;
+}
+#modal-body{
+
+}
   #continents{
     width: 40.3em;
     height:40.3em;
@@ -71,7 +115,10 @@ body{
     background:rgba(0,0,0,0.2);
   }
   #line1,#line2{grid-column: 1/-1;}
-  #land{
+  #land1,#land2,#land3,#land4,#land5,#land6,#land7,#land8,#land9,#land10,
+  #land11,#land12,#land13,#land14,#land15,#land16,#land17,#land18,#land19,#land20,
+  #land21,#land22,#land23,#land24,#land25,#land26,#land27,#land28,#land29,#land30,
+  #land31,#land32,#land33,#land34,#land35,#land36,#land37,#land38,#land39,#land40{
     background:mediumseagreen;
     height: 0.9em;
     width: 0.9em;
