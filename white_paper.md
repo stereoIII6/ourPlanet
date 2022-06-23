@@ -17,14 +17,14 @@
 
 # Tokenomics
 
-- Tree Tokens
+- Tree Tokens (ERC20)
   `Every Tree Token costs 0.001 ETH`  
   `The Tree Tokens can be planted`  
   `The growth period last for three years`  
   `By planting Trees you recieve C02 Rewards`
   `Every planted Tree in our Garden represents a real Tree in the Real World`
 
-- CO2 Tokens
+- CO2 Tokens (ERC20)
   `Every staked Tree Token will vest a maximum of 5 CO2 Tokens`
   `The CO2 Tokens are backed by Real CO2 Certificates`
   `The Tree Tokens start releasing CO2 after 12 months of growth`
