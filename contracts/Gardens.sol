@@ -310,7 +310,7 @@ contract Init is TokenomicSets {
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 contract InitFace {
     Init public init;
-
+   
     constructor(address _initAdr) {
         init = Init(_initAdr);
     }
@@ -338,7 +338,9 @@ contract MLQ is ERC20, Init {
         rate = fx.initMlqRate;
         // mint(5000);
     }
-
+    function balanceOfU(address _u) external returns(uint256){
+        return balanceOf(_u);
+    }
     function mint(uint256 _amount) internal isOwner returns (bool) {
         uint256 ts = totalSupply();
         require((_amount * 10**18) <= maxSupply - ts);
@@ -372,15 +374,16 @@ contract MLQ is ERC20, Init {
     }
 }
 
-pragma solidity ^0.8.0;
-
 // Open Zeppelin Imports
 
 
 
-contract Trees is ERC20, InitFace, TokenomicSets {
-
-    constructor(address _mlq) ERC20("Impact Tree Token", "IMPCTrees"){
+contract Trees is ERC20, Init {
+    uint256 maxSupply;
+    uint256 rate;
+    uint256 availSupply;
+    MLQ mlq;
+    constructor(address _mlq, address _auth, address _avax) ERC20("Impact Tree Token", "IMPCTrees") Init(_auth, _avax){
         require(msg.sender == author);
         role[msg.sender] = 99;
         uData[msg.sender] = bytes('{"username":"@stereoiii6","email":"type.stereo@pm.me"}');
@@ -388,7 +391,7 @@ contract Trees is ERC20, InitFace, TokenomicSets {
         emit Log(logs,msg.sender,address(this),999,bytes("contract created"),block.timestamp);
         rate = 35;
         logs++;
-        MLQ = IERC20(_mlq);   
+        mlq = MLQ(_mlq);   
     }
 
     function plantTree(uint256 _amount) external payable returns(bool){
@@ -402,9 +405,9 @@ contract Trees is ERC20, InitFace, TokenomicSets {
     }
 
     function plantTreeMLQ(uint256 _amount) external payable returns(bool){
-        require(MLQ.balanceOf(msg.sender) >= 100 * _amount * rate * 10 ** 12);
+        require(mlq.balanceOfU(msg.sender) >= 100 * _amount * rate * 10 ** 12);
         require(availSupply < maxSupply);
-        MLQ.transferFrom(msg.sender,address(this), 100 * _amount * rate * 10 ** 12);
+        mlq.transferFrom(msg.sender,address(this), 100 * _amount * rate * 10 ** 12);
         availSupply += msg.value*10000;
         _mint(msg.sender, _amount * 10 ** 18);
         emit Log(logs,msg.sender,address(this),_amount,bytes("trees minted"),block.timestamp);
@@ -412,7 +415,7 @@ contract Trees is ERC20, InitFace, TokenomicSets {
         return true;
     }
 
-    function donateTrees(uint256 _amount) external returns(bool){
+    function donateTrees(uint256 _amount) isAdmin() external returns(bool){
         require(balanceOf(msg.sender) > _amount * 10 ** 18);
         _burn(msg.sender, _amount * 10 ** 18);
         emit Log(logs,msg.sender,address(this),_amount,bytes("trees burned"),block.timestamp);
@@ -420,16 +423,16 @@ contract Trees is ERC20, InitFace, TokenomicSets {
         return true;
     }
 
-    function approveContract(address _contract) external returns(bool){
+    function approveContract(address _contract) isAdmin() external returns(bool){
         approve(_contract, balanceOf(msg.sender));
         emit Log(logs,msg.sender,_contract,999,bytes("approve contract"),block.timestamp);
         logs++;
         return true;
     }
 
-    function trimTreesl(uint256 _newPrice) isAdmin() external returns(bool){
+    function trimTrees(uint256 _newPrice) external returns(uint256){
         rate = _newPrice;
-        return true;
+        return rate;
     }
 
     function withdraw(uint256 _eth, uint256 _tree) isAdmin() external returns(bool){
@@ -443,10 +446,13 @@ contract Trees is ERC20, InitFace, TokenomicSets {
     }
 }
 
-contract Co2s is ERC20, InitFace, TokenomicSets  {
+contract Co2s is ERC20, Init  {
 
     IERC20 internal trees;
-
+    MLQ mlq;
+    uint256 maxSupply;
+    uint256 rate;
+    uint256 availSupply;
     struct Bond{
         uint256 id;
         address adr;
@@ -464,7 +470,7 @@ contract Co2s is ERC20, InitFace, TokenomicSets  {
     uint256 c;
     uint256 b;
     uint256 per;
-    constructor(address _contract, uint256 _percent, address _mlq) ERC20("Carbon token", "CO2"){
+    constructor(address _contract, uint256 _percent, address _mlq, address _init, address _auth, address _avax) ERC20("Carbon token", "CO2") Init(_auth, _avax){
         require(msg.sender == author);
         role[msg.sender] = 99;
         uData[msg.sender] = bytes('{"username":"@stereoiii6","email":"type.stereo@pm.me"}');
@@ -472,7 +478,7 @@ contract Co2s is ERC20, InitFace, TokenomicSets  {
         trees = IERC20(_contract);  
         per = _percent;
         emit Log(logs,msg.sender,address(this),_percent,bytes("contract created"),block.timestamp);
-        MLQ = IERC20(_mlq);  
+        mlq = MLQ(_mlq);  
         logs++;
     }
 
@@ -562,12 +568,13 @@ contract Co2s is ERC20, InitFace, TokenomicSets  {
     }
 }
 
-contract GardenPool is ERC1155, InitFace, TokenomicSets  {
+contract GardenPool is ERC1155, Init {
     IERC20 internal TR3EZ;
     IERC20 internal CO2;
     IERC20 internal WETH;
     IERC20 internal lowC;
     IERC20 internal highC;
+
     uint256 private per;
     uint256 public collectedFees;
     struct Garden{
@@ -582,7 +589,7 @@ contract GardenPool is ERC1155, InitFace, TokenomicSets  {
     }
     Garden[] public gardens;
     uint256 g;
-    constructor(address _trees, address _co2, address _weth, uint256 _percent) ERC1155("IMgardens") {
+    constructor(address _trees, address _co2, address _weth, uint256 _percent, address _init, address _auth, address _avax) ERC1155("IMgardens") Init(_auth, _avax){
         require(msg.sender == author);
         role[msg.sender] = 99;
         uData[msg.sender] = bytes('{"username":"@stereoiii6","email":"type.stereo@pm.me"}');
