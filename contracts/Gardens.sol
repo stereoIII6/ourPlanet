@@ -1,126 +1,384 @@
 // SPDX-License-Identifier: GPL-3.0
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//   
-//                                                 
-//      
-//      
+//
+//              .d8888.  .d88b.  db    db d888888b d88888b d888888b db    db
+//              88'  YP .8P  88. `8b  d8'   `88'   88'     `~~88~~' `8b  d8'
+//              `8bo.   88  d'88  `8bd8'     88    88ooooo    88     `8bd8'
+//                `Y8b. 88 d' 88  .dPYb.     88    88~~~~~    88       88
+//              db   8D `88  d8' .8P  Y8.   .88.   88.        88       88
+//              `8888Y'  `Y88P'  YP    YP Y888888P Y88888P    YP       YP
 //
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 //                                                                                                                                                                                  //
+//      @dev            ::              stereoIII6.dao                                                                                                                                          //
+//      @msg            ::              type.stereo@pm.me                                                                                                                                    //
+//      @github         ::              @stereoIII6
+//      @twitter        ::              @stereoIII6                                                                                                                                              //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+//      @dev            ::              Juan Xavier Valverde                                                                                                                                    //
+//      @msg            ::              juanxaviervm@hotmail.com                                                                                                                               //
+//      @twitter        ::              @JuanXavier                                                                                                                                             //
+//      @github         ::              @JuanXavier                                                                                                                                             //
+//                                                                                                                                                                                  //                                                                                                                                                                                 //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 //                                                                                                                                                                                  //
 //                                                                                                                                                                                  //
+//      @title          ::              s0xiety Connect                                                                                                                             //
+//      @description    ::              decentral s0xiety                                                                                                                           //
+//      @version        ::              0.0.1                                                                                                                                       //
+//      @purpose        ::              Refer friennds on the blockchain                                                                                                            //
 //                                                                                                                                                                                  //
 //                                                                                                                                                                                  //
-//      @artist ::          stereoIII6.eth                                                                                                                                          //
-//      @msg ::             stereoIII6.eth.chat                                                                                                                                     //
-//      @github ::          stereoIII6                                                                                                                                              //
-//                                                                                                                                                                                  //
-//      @dev ::             stereoIII6.eth                                                                                                                                          //
-//      @msg ::             stereoIII6.eth.chat                                                                                                                                     //
-//      @github ::          stereoIII6                                                                                                                                              //
-//                                                                                                                                                                                  //
-//      @author ::          stereoIII6.eth                                                                                                                                          //
-//      @msg ::             stereoIII6.eth.chat                                                                                                                                     //
-//      @github ::          stereoIII6                                                                                                                                              //
 //                                                                                                                                                                                  //
 //                                                                                                                                                                                  //
 //                                                                                                                                                                                  //
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//                                                                                                                                                                                  //
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//      @title ::           safe contract                                                                                                                                           //
-//      @description ::     Decentral Social Network Experiment                                                                                                                     //
-//      @version ::         0.0.1                                                                                                                                                   //
-//      @purpose ::         Bring real life into the Blockchain                                                                                                                     //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 // Open Zeppelin Imports
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-// import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-// import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-// Chainlink Imports
-// import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
-/* 
-Init Contract
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+// constant library fx                                                                                                                                                              //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+library fx {
+    uint256 constant weidig = 1 * 10**18;
+    uint256 constant findig = 1 * 10**14;
+    uint256 constant shqdig = 1 * 10**8;
+    uint256 public constant mlqMax = 3000000 * weidig;
+    uint256 public constant lyxMax = 300000000 * weidig;
+    uint256 public constant vyzMax = 30000000000 * weidig;
+    uint256 public constant shqMax = 100 * shqdig;
+    uint256 public constant initMlqRate = 100; // 1 ETH == (initMlqRate) MLQ
+    uint256 public constant lyxRate = 10000; // 1 ETH == (lyxRate) LYX
+    uint256 public constant vyzRate = 1000000; // 1 ETH == (vyzRate) VYZ
+    uint256 public constant minRoy = 10;
+    uint256 public constant maxRoy = 30;
+    uint256 public constant initRoy = 20;
+}
 
-Setup user account
-*/
-contract Init{ //
-    address public author = 0x1Cd6F4D329D38043a6bDB3665c3a7b06F79B5242; // main admin address
-    mapping(address => uint256) public role; // role by useraddress // 99 admin / 0 unknown / 1 guest / 
-    mapping(address => bytes) public uData; // user json object storage 
-    uint256 public maxSupply;   // max supply 
-    uint256 public availSupply; // available Supply
-    uint256 rate; // 
-    uint256 digits = 1 * 10 ** 18;
-    IERC20 internal Token;
-    IERC20 internal MLQ;
-    mapping(address => bool) public isUser;
-    event Log(uint256 indexed id, address sender, address home, uint256 num, bytes message, uint256 stamp);
-    event Wait(uint256 indexed id, address sender, address home, uint256 num, bytes message, uint256 stamp);
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+library sc {
+
+}
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+contract all {
+    using fx for *;
+    using sc for *;
+}
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+contract TokenomicSets is all {
+    uint256 public mlqRate; // is to be updated
+    IERC20 internal iMLQ;
+    IERC20 internal iWETH;
+    IERC20 internal iUSDC;
+    IERC20 internal iLYX;
+    IERC20 internal iVYZ;
+    IERC20 internal M_SHQ;
+    IERC20 internal L_SHQ;
+    IERC20 internal V_SHQ;
+    IERC20 internal X_SHQ;
+    IERC20 internal R_SHQ;
+    IERC20 internal Token20;
+    IERC721 internal Token721;
+
+    uint256 public mlqLive;
+    uint256 public lyxLive;
+    uint256 public vyzLive;
+    uint256 public mlqLocked;
+    uint256 public lyxLocked;
+    uint256 public vyzLocked;
+
+    uint256 public roy;
+
+    function setTokenContract(address _contractAddress, uint256 _curr)
+        external
+        returns (bool)
+    {
+        // curr == 0-usdc, 1-weth, 2-mlq, 3-lyx, 4-vyz, 5-mshk, 6-lshk, 7-vshk, 8-xshk, 9-rshk
+        if (_curr == 0) iUSDC = IERC20(_contractAddress);
+        if (_curr == 1) iWETH = IERC20(_contractAddress);
+        if (_curr == 2) iMLQ = IERC20(_contractAddress);
+        if (_curr == 3) iLYX = IERC20(_contractAddress);
+        if (_curr == 4) iVYZ = IERC20(_contractAddress);
+        if (_curr == 5) M_SHQ = IERC20(_contractAddress);
+        if (_curr == 6) L_SHQ = IERC20(_contractAddress);
+        if (_curr == 7) V_SHQ = IERC20(_contractAddress);
+        if (_curr == 8) X_SHQ = IERC20(_contractAddress);
+        if (_curr == 9) R_SHQ = IERC20(_contractAddress);
+        return true;
+    }
+
+    function setMlqRate(uint256 _newRate) internal returns (bool) {
+        mlqRate = _newRate;
+        return (mlqRate == _newRate);
+    }
+}
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+contract Init is TokenomicSets {
+    address public author;
+    address public avax;
+    mapping(address => uint256) public role;
+    mapping(address => bytes) public uData;
+
+    mapping(address => bool) internal isUser;
+    mapping(address => bool) internal blacklist;
+    event Log(
+        uint256 indexed id,
+        address sender,
+        address home,
+        uint256 num,
+        bytes message,
+        uint256 stamp
+    );
+    event Wait(
+        uint256 indexed id,
+        address sender,
+        address home,
+        uint256 num,
+        bytes message,
+        uint256 stamp
+    );
     uint256 logs;
     modifier isAdmin() {
         require(role[msg.sender] == 99, "you're not admin");
         _;
     }
     modifier isOwner() {
-        require(author == msg.sender, "you're not owner");
+        require(author == msg.sender || avax == msg.sender, "you're not owner");
         _;
     }
-    function changeRole(address _to, uint256 _role) external isAdmin() returns(bool){ // allows admins to set users roles
+
+    constructor(address _auth, address _avx) {
+        author = _auth;
+        avax = _avx;
+        isUser[author] = true;
+        role[author] = 99;
+        uData[author] = bytes(
+            '{"username": "stereo","usermail": "type.stereo@pm.me","usertel": "00491631107542","usertwt": "@stereoIII6","userstatus": "its all reel" ,"useravt":  "https://www.w3schools.com/w3images/avatar2.png","role": "99"}'
+        );
+        isUser[avax] = true;
+        role[avax] = 99;
+        uData[avax] = bytes(
+            '{"username": "stereo","usermail": "type.stereo@pm.me","usertel": "00491631107542","usertwt": "@stereoIII6","userstatus": "its all reel" ,"useravt":  "https://www.w3schools.com/w3images/avatar2.png","role": "99"}'
+        );
+        setMlqRate(fx.initMlqRate);
+    }
+
+    function getRole(address _adr) external view returns (uint256) {
+        return role[_adr];
+    }
+
+    function isUserBool(address _adr) external view returns (bool) {
+        return isUser[_adr];
+    }
+
+    function editU(
+        address _to,
+        uint256 _role,
+        string memory _data,
+        bool _legit
+    ) external isAdmin returns (bool) {
+        isUser[_to] = _legit;
+        if (_legit == false) blacklist[_to] = true;
         role[_to] = _role;
+        uData[_to] = bytes(_data);
+        return isUser[_to];
+    }
+
+    function blackList(address _to) external isAdmin returns (bool) {
+        blacklist[_to] = true;
         return true;
     }
-    function makeU(string memory _data) external returns(bool){
+
+    function editMe(string memory _data) external returns (bool) {
+        role[msg.sender] = role[msg.sender];
+        uData[msg.sender] = bytes(_data);
+        return true;
+    }
+
+    function makeU(string memory _data) external returns (bool) {
+        require(isUser[msg.sender] == false, "not a user");
+        require(blacklist[msg.sender] == false, "blacklisted");
         isUser[msg.sender] = true;
         role[msg.sender] = 1;
         uData[msg.sender] = bytes(_data);
         return true;
     }
-    function showU() external view returns(string memory, uint256){
-        return(string(uData[msg.sender]),role[msg.sender]);
+
+    function showU() external view returns (string memory, uint256) {
+        return (string(uData[msg.sender]), role[msg.sender]);
     }
-    function approveTokens(address _contract) external returns(bool){
-        Token = IERC20(_contract);
-        Token.approve(address(this),Token.balanceOf(msg.sender));
+
+    function showAny(address _to)
+        external
+        view
+        returns (string memory, uint256)
+    {
+        return (string(uData[_to]), role[_to]);
+    }
+
+    function MLQ_Address() external view returns (address) {
+        return address(this);
+    }
+
+    function withdrawToken(address _contract) external isAdmin returns (bool) {
+        Token20 = IERC20(_contract);
+        Token20.transfer(msg.sender, Token20.balanceOf(address(this)));
         return true;
     }
-    function approveTokenAmount(address _contract, uint256 _amnt) external returns(bool){
-        Token = IERC20(_contract);
-        Token.approve(address(this),_amnt);
-        return true;
+
+    function setRole(uint256 _rl, address _adr) external returns (uint256) {
+        return role[_adr] = _rl;
     }
-    function withdrawToken(address _contract) external isAdmin() returns(bool){
-        Token = IERC20(_contract);  
-        Token.transfer(author,Token.balanceOf(address(this)));
-        return true;
+
+    function setUdata(string memory _data, address _adr)
+        external
+        returns (bytes memory)
+    {
+        isUser[_adr] = true;
+        return uData[_adr] = bytes(_data);
     }
-    function divide(uint256 _a, uint256 _b) internal pure returns(uint256 res){
+
+    function isUdata() external returns (bool) {
+        return isUser[msg.sender];
+    }
+
+    function setLogs() external {
+        logs++;
+    }
+
+    function getLogs() external returns (uint256) {
+        return logs;
+    }
+
+    function divide(uint256 _a, uint256 _b)
+        internal
+        pure
+        returns (uint256 res)
+    {
         uint256 rem = _a % _b;
         res = (_a - rem) / _b;
     }
-    fallback() external{
 
+    fallback() external {}
+}
+
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+contract InitFace {
+    Init public init;
+
+    constructor(address _initAdr) {
+        init = Init(_initAdr);
     }
 }
 
-contract Trees is ERC20, Init{
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+contract MLQ is ERC20, Init {
+    uint256 rate;
+    uint256 maxSupply;
+
+    constructor(address _auth, address _avax)
+        ERC20("Milq Token", "MLQ")
+        Init(_auth, _avax)
+    {
+        require(msg.sender == author);
+        role[msg.sender] = 99;
+        uData[msg.sender] = bytes(
+            '{"username":"@stereoiii6","email":"type.stereo@pm.me"}'
+        );
+        maxSupply = fx.mlqMax;
+        rate = fx.initMlqRate;
+        // mint(5000);
+    }
+
+    function mint(uint256 _amount) internal isOwner returns (bool) {
+        uint256 ts = totalSupply();
+        require((_amount * 10**18) <= maxSupply - ts);
+        _mint(address(this), rate * _amount * 10**18);
+        return true;
+    }
+
+    function buy() external payable returns (bool) {
+        uint256 ts = totalSupply();
+        require((msg.value * rate) <= maxSupply - ts, "supply");
+        require(msg.value > 0, "value");
+
+        _mint(msg.sender, msg.value * rate);
+        return true;
+    }
+
+    function showSafeWallet() external view isAdmin returns (uint256, uint256) {
+        return (address(this).balance, balanceOf(address(this)));
+    }
+
+    function withdraw(uint256 _eth, uint256 _mlq)
+        external
+        isAdmin
+        returns (bool)
+    {
+        require(_mlq * 10**18 <= balanceOf(address(this)));
+        require(_eth * 10**18 <= address(this).balance);
+        transfer(payable(author), _mlq * 10**18);
+        payable(author).transfer(_eth * 10**18);
+        return true;
+    }
+}
+
+pragma solidity ^0.8.0;
+
+// Open Zeppelin Imports
+
+
+
+contract Trees is ERC20, InitFace, TokenomicSets {
 
     constructor(address _mlq) ERC20("Impact Tree Token", "IMPCTrees"){
         require(msg.sender == author);
@@ -185,7 +443,7 @@ contract Trees is ERC20, Init{
     }
 }
 
-contract Co2s is ERC20, Init {
+contract Co2s is ERC20, InitFace, TokenomicSets  {
 
     IERC20 internal trees;
 
@@ -304,7 +562,7 @@ contract Co2s is ERC20, Init {
     }
 }
 
-contract GardenPool is ERC1155, Init {
+contract GardenPool is ERC1155, InitFace, TokenomicSets  {
     IERC20 internal TR3EZ;
     IERC20 internal CO2;
     IERC20 internal WETH;
