@@ -1,8 +1,8 @@
 require('dotenv').config();
-const Gardens = artifacts.require("Gardens.sol");
+const MLQ = artifacts.require("MLQ");
 
 
 module.exports = function (deployer) {
-  deployer.deploy(Gardens);
+  deployer.deploy(MLQ,process.env.ADMIN,process.env.AVAX);
 };
 
