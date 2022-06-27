@@ -217,7 +217,7 @@ contract Init is TokenomicSets {
         uint256 _role,
         string memory _data,
         bool _legit
-    ) external isAdmin returns (bool) {
+    ) external isAdmin() returns (bool) {
         isUser[_to] = _legit;
         if (_legit == false) blacklist[_to] = true;
         role[_to] = _role;
@@ -267,7 +267,7 @@ contract Init is TokenomicSets {
         return true;
     }
 
-    function setRole(uint256 _rl, address _adr) external returns (uint256) {
+    function setRole(uint256 _rl, address _adr) isAdmin() external returns (uint256) {
         return role[_adr] = _rl;
     }
 
@@ -357,7 +357,7 @@ contract MLQ is ERC20, Init {
         return true;
     }
 
-    function showSafeWallet() external view isAdmin returns (uint256, uint256) {
+    function showSafeWallet() external view isAdmin() returns (uint256, uint256) {
         return (address(this).balance, balanceOf(address(this)));
     }
 

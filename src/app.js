@@ -313,6 +313,9 @@ const labelMe = (e) => {
   label.innerHTML = `You are on map ${rotated + 1} :: ${e.target.parentNode.id} / ${e.target.id}`;
 };
 draw();
+const goProfile = (e) => {
+  e.preventDefault();
+}
 goEast.addEventListener("click", east);
 goWest.addEventListener("click", west);
 const onClickConnect = async (e) => {
@@ -394,6 +397,7 @@ const log = async () => {
     }
     if (false) {
       // user is producer
+
     }
     if (false) {
       // user is promoter
@@ -434,11 +438,11 @@ const web3init = async () => {
     //Now we check to see if MetaMask is installed
     if (!isMetaMaskInstalled()) {
       //If it isn't installed we ask the user to click to install it
-      profile_btn.innerText = "install metamask!";
+      profile_btn.innerText = "Install Metamask!";
       profile_btn.addEventListener("click", clickInstall);
     } else {
       //If it is installed we change our button text
-      profile_btn.innerText = "connect";
+      profile_btn.innerText = "Connect";
       profile_btn.addEventListener("click", onClickConnect);
     }
   };
