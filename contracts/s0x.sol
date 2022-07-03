@@ -456,7 +456,7 @@ contract s0xPool is MathFnx{
     COIN public coin;
     COIN public main;
     COIN public sec;
-    COIN[] public pool;
+    COIN public pool;
     uint256 p;
     struct Pool {
         uint256 id;
@@ -468,6 +468,7 @@ contract s0xPool is MathFnx{
         uint256 ethBySec;
         uint256 secMax;
         uint256 distrib;
+        uint256 xRate;
     }
     mapping(uint256 => Pool) public poolz;
     function addToken(address _token) external returns(address){
@@ -490,18 +491,29 @@ contract s0xPool is MathFnx{
         if(sEthPrice < mEthPrice) dRate = divide(mEthPrice,sEthPrice); // example // 10^16 / 10^13 = 1000
         else dRate = divide(sEthPrice,mEthPrice); // example // null
         // get x rate // triangleCalc( pool , main , sec )
-        uint256 xRate = triangleCalc(0,mEthPrice,sEthPrice);
-        pool[p] = new COIN(_name, _psym, xRate, 100*10**18, msg.sender); // example // 100 * 10^18
-        poolz[p] = Pool(p,address(pool[p]),_main,mEthPrice,divide(main.getMax(),3),_sec,sEthPrice,divide(sec.getMax(),3),0);
+        // uint256 xRate = divide(10**18,triangleCalc(0,mEthPrice,sEthPrice));
+        uint256 xRate = ((mEthPrice * main.getMax()) + (sEthPrice * sec.getMax())) / 100;
+        pool = new COIN(_name, _psym, xRate, 100*10**18, msg.sender); // example // 100 * 10^18
+        poolz[p] = Pool(p,address(pool),_main,mEthPrice,divide(main.getMax(),3),_sec,sEthPrice,divide(sec.getMax(),3),0,xRate);
         p++;
+        /*
+
+        // 0xbd5b354220B250DF257ed5e988Fe8FE81CdB6235 MLQ
+        // 0x7e54D10fda1dBAf0aA2eB842942B3B924fcfd947 LYX
+
+        mlq 10000000000000000eth * 1000000mlq
+        lyx 10000000000000eth * 1000000000lyx
+        shk 600000000000000000000eth * 100shk
+
+        */
         return address(coin);
     }
     function addMilquidity(uint256 _p, uint256 _mIn) external returns(uint256, uint256, uint256){
         main = COIN(poolz[_p].main);
         sec = COIN(poolz[_p].sec);
         coin = COIN(poolz[_p].pool);
-        uint256 weth = 10**18;
-        return (_mIn, , );
+        // uint256 weth = 10**18;
+        return (_mIn, 0, 0);
     } 
     function triangleCalc(uint256 _pool, uint256 _main, uint256 _sec) internal pure returns(uint256){
         if(_pool == 0) { 
