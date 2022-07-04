@@ -59,7 +59,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
@@ -649,27 +649,24 @@ contract s0xPool is MathFnx {
         if (sEthPrice < mEthPrice)
             dRate = divide(mEthPrice, sEthPrice); // example // 10^16 / 10^13 = 1000
         else dRate = divide(sEthPrice, mEthPrice); // example // null
-        // get x rate // triangleCalc( pool , main , sec )
-<<<<<<< Updated upstream
-        // uint256 xRate = divide(10**18,triangleCalc(0,mEthPrice,sEthPrice));
-        uint256 xRate = ((mEthPrice * main.getMax()) + (sEthPrice * sec.getMax())) / 100;
-        pool = new COIN(_name, _psym, xRate, 100*10**18, msg.sender); // example // 100 * 10^18
-        poolz[p] = Pool(p,address(pool),_main,mEthPrice,divide(main.getMax(),3),_sec,sEthPrice,divide(sec.getMax(),3),0,xRate);
-=======
-        uint256 xRate = triangleCalc(0, mEthPrice, sEthPrice);
-        pool[p] = new COIN(_name, _psym, xRate, 100 * 10**18, msg.sender); // example // 100 * 10^18
+        uint256 xRate;
+        xRate =
+            ((mEthPrice * main.getMax()) + (sEthPrice * sec.getMax())) /
+            100;
+        pool = new COIN(_name, _psym, xRate, 100 * 10**18, msg.sender); // example // 100 * 10^18
         poolz[p] = Pool(
             p,
-            address(pool[p]),
+            address(pool),
             _main,
             mEthPrice,
             divide(main.getMax(), 3),
             _sec,
             sEthPrice,
             divide(sec.getMax(), 3),
-            0
+            0,
+            xRate
         );
->>>>>>> Stashed changes
+
         p++;
         /*
 
@@ -695,27 +692,8 @@ contract s0xPool is MathFnx {
         main = COIN(poolz[_p].main);
         sec = COIN(poolz[_p].sec);
         coin = COIN(poolz[_p].pool);
-<<<<<<< Updated upstream
         // uint256 weth = 10**18;
         return (_mIn, 0, 0);
-    } 
-    function triangleCalc(uint256 _pool, uint256 _main, uint256 _sec) internal pure returns(uint256){
-        if(_pool == 0) { 
-            return (divide(10**18, _main * 2)); 
-            }
-        if(_sec == 0) { 
-            return (divide(_pool, _main)); 
-            }
-        if(_main == 0) { 
-            return (divide(_pool, _sec)); 
-            }
-        else return 0;
-    }
-
-}
-=======
-        uint256 weth = 10**18;
-        return (_mIn, , );
     }
 
     function triangleCalc(
@@ -734,4 +712,3 @@ contract s0xPool is MathFnx {
         } else return 0;
     }
 }
->>>>>>> Stashed changes
