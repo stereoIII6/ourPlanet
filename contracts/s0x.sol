@@ -314,14 +314,15 @@ contract Groups is MathFnx {
     }
 
     function addUser(address _adr) external returns (address) {
-        if (state == 0) require(m < 2); // private state one allows 2 users only
-        /*
-        require(user.isU(msg.sender) == true);
-        require(user.isU(_adr) == true);
-        else if(state == 1) {
+        if (state == 0)
+            require(m < 2); // private state one allows 2 users only
+            // require(user.isU(msg.sender) == true);
+            // require(user.isU(_adr) == true);
+        else if (state == 1) {
             require(friend.isFrenz(owner, _adr));
             require(friend.isFrenz(_adr, owner));
-        } // only degenz&frenz allowed 
+        } // only degenz&frenz allowed
+        /*
         else if(state == 2) {
           require(friend.isFrenz(owner, _adr));  
         } // only frenz people you like
@@ -534,6 +535,7 @@ contract COIN is ERC20, MathFnx {
     uint256 public rate;
     uint256 public pubSupply;
     uint256 public maxSupply;
+    string public title;
     mapping(address => uint256) public coinBalance;
 
     constructor(
@@ -545,7 +547,8 @@ contract COIN is ERC20, MathFnx {
     ) ERC20(_name, _sym) {
         admin = _admin;
         setRate(_rate);
-        setSupply(_supply);
+        maxSupply = _supply;
+        title = _name;
     }
 
     function setRate(uint256 _newRate) internal returns (uint256) {
@@ -561,9 +564,11 @@ contract COIN is ERC20, MathFnx {
         return maxSupply;
     }
 
-    function setSupply(uint256 _newSupply) internal returns (uint256) {
-        pubSupply = divide(_newSupply, 3);
-        maxSupply = _newSupply;
+    function getName() external view returns (string memory) {
+        return title;
+    }
+
+    function getMinted() external view returns (uint256) {
         return pubSupply;
     }
 
@@ -573,7 +578,7 @@ contract COIN is ERC20, MathFnx {
         require(divide(msg.value, 100) >= amnt);
         _mint(msg.sender, amnt);
         coinBalance[msg.sender] = amnt;
-        pubSupply -= amnt;
+        pubSupply += amnt;
         return amnt;
     }
 
@@ -615,10 +620,37 @@ contract s0xPool is MathFnx {
         uint256 distrib;
         uint256 xRate;
     }
+    uint256 t;
+    struct Token {
+        uint256 id;
+        string name;
+        address adr;
+        uint256 maxSupply;
+        uint256 mintedSupply;
+        uint256 priceInEth;
+    }
+    uint256 s;
+    struct Safe {
+        uint256 id;
+        address user;
+        address token;
+        uint256 safeBalance;
+    }
     mapping(uint256 => Pool) public poolz;
+    mapping(uint256 => Token) public tokenz;
+    mapping(uint256 => Safe) public safez;
 
     function addToken(address _token) external returns (address) {
         coin = COIN(_token);
+        tokenz[t] = Token(
+            t,
+            coin.getName(),
+            address(coin),
+            coin.getMax(),
+            coin.getMinted(),
+            coin.getRate()
+        );
+        t++;
         return address(coin);
     }
 
@@ -629,6 +661,8 @@ contract s0xPool is MathFnx {
         uint256 _max
     ) external returns (address) {
         coin = new COIN(_name, _sym, _rate, _max, msg.sender);
+        tokenz[t] = Token(t, _name, address(coin), _max, 0, _rate);
+        t++;
         return address(coin);
     }
 
@@ -694,21 +728,5 @@ contract s0xPool is MathFnx {
         coin = COIN(poolz[_p].pool);
         // uint256 weth = 10**18;
         return (_mIn, 0, 0);
-    }
-
-    function triangleCalc(
-        uint256 _pool,
-        uint256 _main,
-        uint256 _sec
-    ) internal pure returns (uint256) {
-        if (_pool == 0) {
-            return (divide(10**18, _main * 2));
-        }
-        if (_sec == 0) {
-            return (divide(_pool, _main));
-        }
-        if (_main == 0) {
-            return (divide(_pool, _sec));
-        } else return 0;
     }
 }
