@@ -141,8 +141,6 @@ body {
   font-size: 2em;
   font-weight: 900;
 }
-#modal-body {
-}
 #continents {
   width: 60.3em;
   height: 60.3em;
@@ -155,6 +153,7 @@ body {
     1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
     1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   background: rgba(0, 0, 0, 0.2);
+  transform: rotate(12deg);
 }
 #line1,
 #line2 {
