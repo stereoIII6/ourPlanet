@@ -146,7 +146,8 @@ const labelMe = (e) => {
   label.position = "absolute";
   label.top = e.mouseY;
   label.left = e.mouseX;
-  label.innerHTML = `You are on map ${rotated + 1} :: ${e.target.parentNode.id} / ${e.target.id}`;
+  console.log(e.target.parentNode.id.slice(-2));
+  label.innerHTML = `${-6 * (Number(e.target.parentNode.id.slice(-2)) - 31)}° ${Number(e.target.parentNode.id.slice(-2)) - 31 < 0 ? "North" : "South"} / ${Number(e.target.id.slice(-2)) + a < 95 ? Number(e.target.id.slice(-2)) + a : Number(e.target.id.slice(-2)) + a - 94}`;
 };
 const goProfile = (e) => {
   e.preventDefault();
