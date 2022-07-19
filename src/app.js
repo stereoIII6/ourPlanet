@@ -46,8 +46,10 @@ const lines = document.getElementsByClassName("bars");
 const goWest = document.getElementById("goWest");
 const goEast = document.getElementById("goEast");
 const modal = document.getElementById("modal-stage");
-const label = document.getElementById("label");
+const label = document.getElementById("label-stage");
+const labelbody = document.getElementById("label-body");
 const cover = document.getElementById("cover");
+const close = document.getElementById("close");
 
 let a = 0;
 let move = true;
@@ -120,9 +122,16 @@ const draw = (e) => {
     // console.log(lines[i].id);
     let j = 0;
     while (j < 60) {
-      lines[i].children[j].style.opacity = africa[i][j + a];
-      lines[i].children[j].addEventListener("mouseover", labelMe);
-      lines[i].children[j].addEventListener("mouseout", labelMe);
+      // lines[i].children[j].style.opacity = africa[i][j + a];
+      if (africa[i][j + a] === 0) {
+        lines[i].children[j].style.background = "#badbe1";
+        lines[i].children[j].style.border = "1px solid #4c8690";
+      } else if (africa[i][j + a] === 1) {
+        lines[i].children[j].style.background = "#4c9071";
+        lines[i].children[j].style.border = "0px solid #4c9071";
+      }
+      lines[i].children[j].addEventListener("click", labelMe);
+      close.addEventListener("click", unlabelMe);
       j++;
     }
     i++;
@@ -136,18 +145,16 @@ const toggle = (e) => {
   } else mod = "none";
   modal.style.display = mod;
 };
-let lab = "none";
+let lab = "grid";
 const labelMe = (e) => {
-  console.log(e.target.parentNode.id);
-  if (lab == "none") {
-    lab = "grid";
-  } else lab = "none";
+  lab = "grid";
   label.style.display = lab;
   label.position = "absolute";
-  label.top = e.mouseY;
-  label.left = e.mouseX;
-  console.log(e.target.parentNode.id.slice(-2));
-  label.innerHTML = `${-6 * (Number(e.target.parentNode.id.slice(-2)) - 31)}° ${Number(e.target.parentNode.id.slice(-2)) - 31 < 0 ? "North" : "South"} / ${Number(e.target.id.slice(-2)) + a < 95 ? Number(e.target.id.slice(-2)) + a : Number(e.target.id.slice(-2)) + a - 94}`;
+  labelbody.innerHTML = `${-6 * (Number(e.target.parentNode.id.slice(-2)) - 31)}° ${Number(e.target.parentNode.id.slice(-2)) - 31 < 0 ? "North" : "South"} / ${Number(e.target.id.slice(-2)) + a < 95 ? Number(e.target.id.slice(-2)) + a : Number(e.target.id.slice(-2)) + a - 94}`;
+};
+const unlabelMe = (e) => {
+  lab = "none";
+  label.style.display = lab;
 };
 const goProfile = (e) => {
   e.preventDefault();

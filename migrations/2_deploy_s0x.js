@@ -1,7 +1,6 @@
 require("dotenv").config();
 const MLQ = artifacts.require("MLQ");
 const s0xFactory = artifacts.require("s0xFactory");
-const Friends = artifacts.require("Friends");
 const Trees = artifacts.require("Trees");
 const Co2s = artifacts.require("Co2s");
 const GardenPool = artifacts.require("GardenPool");
