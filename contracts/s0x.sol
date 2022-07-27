@@ -138,8 +138,11 @@ contract Users {
     }
 
     // takes dias to create guest user profile
-    function createUserAccount(string memory _dias) external returns (bool) {
-        return makeUser(msg.sender, bytes(_dias), 2);
+    function createUserAccount(string memory _dias, address _user)
+        external
+        returns (bool)
+    {
+        return makeUser(_user, bytes(_dias), 2);
     }
 
     // takes address , dias , and role to admin edit and store a user profile in user mapping

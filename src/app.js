@@ -5,8 +5,8 @@
 //          stereodocbush@gmail.com     //
 //                                      //
 //////////////////////////////////////////
-
-import { ethers } from "ethers";
+require("dotenv").config();
+import { ethers, Wallet } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import "../public/app.scss";
 import { sha256 } from "crypto-hash";
@@ -44,6 +44,7 @@ const IERC20 = require("../dist/contracts/IERC20.json");
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
+const wallet = new Wallet(process.env.,provider);
 // links & buttons
 const lines = document.getElementsByClassName("bars");
 const goWest = document.getElementById("goWest");
@@ -222,7 +223,7 @@ const onClickConnect = async (e) => {
     if (Number(network) === 80001) networkTag = "Mumbai";
     if (Number(network) === 43113) networkTag = "Fuji";
     net_btn.innerHTML = networkTag;
-    user = await log();
+    userData = await log();
   } catch (error) {
     console.error("connect error", error);
     profile_btn.innerText = "error";
@@ -233,7 +234,7 @@ let isApproved = false;
 const goApprove = async (e) => {
   e.preventDefault();
   console.log(signer);
-  trees = await treeData();
+  const trees = await treeData();
   const doApprove = await trees
     .approveUSDC(trs * 94 * 10 ** 15)
     .then((result) => {
@@ -246,7 +247,7 @@ const goApprove = async (e) => {
 };
 const goUsdBuy = async (e) => {
   e.preventDefault();
-  trees = await treeData();
+  const trees = await treeData();
   const amnt = trs;
   const buy = await trees
     .buyTreeERC20(amnt)
@@ -346,17 +347,15 @@ const gardenData = async () => {
 const log = async () => {
   console.log("logging user in...");
   profile_btn.innerHTML = "logging";
-  trees = await treeData();
-  co2 = await co2Data();
-  garden = await gardenData();
-  s0x = await s0xData();
+
+  const s0x = await s0xData();
 
   console.log(s0x);
   // ask contract about user
   const isU = await s0x
     .isU(accounts[0])
     .then((result) => {
-      console.log(result);
+      console.log(result, " :: RESULT");
       return result;
     })
     .catch((err) => {
@@ -398,9 +397,10 @@ const log = async () => {
 };
 const addUser = async (e) => {
   e.preventDefault();
-  s0x = await s0xData();
-  const user = await s0x
-    .createUserAccount(`{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`)
+  const s0x = await s0xData();
+  console.log(accounts[0], `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`);
+  userData = await s0x
+    .createUserAccount(accounts[0], `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`)
     .then((result) => {
       console.log(result);
       return result;
