@@ -49,14 +49,17 @@ body {
 #trees {
   grid-column: 1/5;
   background: #4c9071;
+  color: #badbe1;
 }
 #plant {
   grid-column: 5/9;
   background: #4c9071;
+  color: #badbe1;
 }
 #co2 {
   grid-column: 9/-1;
   background: #4c9071;
+  color: #badbe1;
 }
 #defilinks {
   grid-column: 10/-1;
@@ -66,18 +69,22 @@ body {
 #tree_bal {
   grid-column: 1/4;
   background: #badbe1;
+  color: #4c9071;
 }
 #co2_bal {
   grid-column: 4/7;
   background: #badbe1;
+  color: #4c9071;
 }
 #profile_btn {
   grid-column: 7/10;
   background: #4c9071;
+  color: #badbe1;
 }
 #net_btn {
   grid-column: 10/-1;
   background: #badbe1;
+  color: #4c9071;
 }
 .link {
   border-radius: 9px;
@@ -98,7 +105,7 @@ body {
 }
 #globe {
   border-radius: 50%;
-  background: cornflowerblue;
+  background: #badbe1;
   width: 60em;
   height: 60em;
   grid-row: 3;
@@ -145,7 +152,7 @@ body {
 }
 #modal-footer,
 #label-footer {
-  grid-row: 1;
+  grid-row: 3;
   grid-column: 1/-1;
   text-align: center;
 }
@@ -156,6 +163,61 @@ body {
   text-align: center;
   font-size: 2em;
   font-weight: 900;
+}
+#modal-body,
+#label-body {
+  grid-row: 2;
+  grid-column: 1/-1;
+}
+#close {
+  position: relative;
+  right: 0px;
+  top: -1em;
+  color: ivory;
+  background: tomato;
+  border: 2px solid ivory;
+  border-radius: 50%;
+  height: 32px;
+  width: 32px;
+  margin: 0;
+  padding-bottom: 0.5em;
+  text-align: center;
+}
+.lfield,
+.ffield {
+  grid-column: 1/-1;
+}
+#tenx {
+  grid-row: 1;
+  grid-column: 12;
+}
+#add {
+  grid-row: 1;
+  grid-column: 11;
+}
+#sub {
+  grid-row: 1;
+  grid-column: 2;
+}
+#div {
+  grid-row: 1;
+  grid-column: 1;
+}
+#amnt {
+  grid-row: 1;
+  grid-column: 3/10;
+  text-align: center;
+}
+#approve {
+  grid-row: 2;
+  grid-column: 1/7;
+}
+#treebuy {
+  grid-row: 2;
+  grid-column: 7/-1;
+}
+#buyTreesDef {
+  display: none;
 }
 #continents {
   width: 60.3em;

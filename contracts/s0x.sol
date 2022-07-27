@@ -524,6 +524,14 @@ contract MLQ is ERC20, MathFnx {
     }
 }
 
+contract USDC is ERC20 {
+    constructor() ERC20("US Dollar Coin", "USDC") {}
+
+    function dropUSDC() external {
+        _mint(msg.sender, 100 * 10**18);
+    }
+}
+
 // any coin tokeen contract
 contract COIN is ERC20, MathFnx {
     using mlqLib for *;
@@ -731,13 +739,17 @@ contract Trees is ERC20, MathFnx {
     uint256 maxSupply;
     uint256 rate;
     uint256 availSupply;
-    MLQ mlq;
     address author;
     Friends private friends;
+    ERC20 usdc;
+    MLQ mlq;
 
-    constructor(address _mlq) ERC20("Impact Tree Token", "IMPCTrees") {
+    constructor(address _con, address _mlq)
+        ERC20("Impact Tree Token", "IMPCTrees")
+    {
         maxSupply = 5000000000000 * 10**18;
         author = msg.sender;
+        usdc = ERC20(_con);
         mlq = MLQ(_mlq);
     }
 
@@ -746,24 +758,31 @@ contract Trees is ERC20, MathFnx {
         _;
     }
 
-    function plantTree(uint256 _amount) external payable returns (bool) {
-        require(msg.value >= _amount * rate * 10**12);
+    function buyTreeERC20(uint256 _trees) external payable returns (bool) {
+        require(usdc.balanceOf(msg.sender) >= 100 * _trees * 94 * 10**15);
         require(availSupply < maxSupply);
+        usdc.transferFrom(
+            msg.sender,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            100 * _trees * 94 * 10**15
+        );
         availSupply += msg.value * 10000;
-        _mint(msg.sender, _amount * 10**18);
+        _mint(msg.sender, _trees * 10**18);
         return true;
     }
 
-    function plantTreeMLQ(uint256 _amount) external payable returns (bool) {
-        require(mlq.mlqBal(msg.sender) >= 100 * _amount * rate * 10**12);
+    function buyTreeMLQ(uint256 _trees) external payable returns (bool) {
+        require(
+            mlq.balanceOf(msg.sender) >= rate / (100 * _trees * 94 * 10**15)
+        );
         require(availSupply < maxSupply);
         mlq.transferFrom(
             msg.sender,
-            address(this),
-            100 * _amount * rate * 10**12
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            rate / (100 * _trees * 94 * 10**15)
         );
         availSupply += msg.value * 10000;
-        _mint(msg.sender, _amount * 10**18);
+        _mint(msg.sender, _trees * 10**18);
         return true;
     }
 
@@ -773,13 +792,23 @@ contract Trees is ERC20, MathFnx {
         return true;
     }
 
-    function approveContract(address _contract)
-        external
-        isAdmin
-        returns (bool)
-    {
+    function approveContract(address _contract) external returns (bool) {
         approve(_contract, balanceOf(msg.sender));
         return true;
+    }
+
+    function setERC20(address _usdc) external isAdmin returns (bool) {
+        usdc = ERC20(_usdc);
+        return true;
+    }
+
+    function setMLQ(address _mlq) external isAdmin returns (bool) {
+        mlq = MLQ(_mlq);
+        return true;
+    }
+
+    function approveUSDC(uint256 _amnt) external returns (bool) {
+        return usdc.approve(address(this), _amnt);
     }
 
     function trimTrees(uint256 _newPrice) external returns (uint256) {
@@ -951,7 +980,6 @@ contract Co2s is ERC20, MathFnx {
 contract GardenPool is ERC1155, MathFnx {
     IERC20 internal TR3EZ;
     IERC20 internal CO2;
-    IERC20 internal WETH;
     IERC20 internal lowC;
     IERC20 internal highC;
     address author;
@@ -973,13 +1001,11 @@ contract GardenPool is ERC1155, MathFnx {
     constructor(
         address _trees,
         address _co2,
-        address _weth,
         uint256 _percent
     ) ERC1155("IMgardens") {
         author = msg.sender;
         TR3EZ = IERC20(_trees);
         CO2 = IERC20(_co2);
-        WETH = IERC20(_weth);
         per = _percent;
     }
 

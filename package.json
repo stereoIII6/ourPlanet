@@ -16,7 +16,12 @@
     "migrate:opti": "sudo truffle migrate --network optimism",
     "migrate:optikov": "sudo truffle migrate --network optikovan",
     "migrate:main": "sudo truffle migrate --network main",
-    "migrate:rinkeby": "sudo truffle migrate --network rinkeby"
+    "migrate:rinkeby": "sudo truffle migrate --network rinkeby",
+    "migrate:bsc": "sudo truffle migrate --network bsc",
+    "migrate:chalen": "sudo truffle migrate --network chalen",
+    "migrate:avax": "sudo truffle migrate --network avax",
+    "migrate:fuji": "sudo truffle migrate --network fuji",
+    "migrate:moonriver": "sudo truffle migrate --network moonriver"
   },
   "keywords": [],
   "author": "",
