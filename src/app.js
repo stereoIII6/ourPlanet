@@ -5,8 +5,8 @@
 //          stereodocbush@gmail.com     //
 //                                      //
 //////////////////////////////////////////
-require("dotenv").config();
-import { ethers, Wallet } from "ethers";
+// require("dotenv").config();
+import { ethers, VoidSigner, Wallet } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import "../public/app.scss";
 import { sha256 } from "crypto-hash";
@@ -41,10 +41,15 @@ const Trees = require("../dist/contracts/Trees.json");
 const CO2 = require("../dist/contracts/Co2s.json");
 const GardenPool = require("../dist/contracts/GardenPool.json");
 const IERC20 = require("../dist/contracts/IERC20.json");
+let provider;
+let signer;
+const sign = async () => {
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  signer = provider.getSigner(accounts[0]);
+};
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-const signer = provider.getSigner();
-const wallet = new Wallet(process.env.,provider);
+console.log(signer);
+// const wallet = new Wallet(process.env.PKEY, provider);
 // links & buttons
 const lines = document.getElementsByClassName("bars");
 const goWest = document.getElementById("goWest");
@@ -223,6 +228,8 @@ const onClickConnect = async (e) => {
     if (Number(network) === 80001) networkTag = "Mumbai";
     if (Number(network) === 43113) networkTag = "Fuji";
     net_btn.innerHTML = networkTag;
+    console.log(accounts[0]);
+    await sign();
     userData = await log();
   } catch (error) {
     console.error("connect error", error);
