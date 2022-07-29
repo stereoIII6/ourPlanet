@@ -41,14 +41,16 @@ const Trees = require("../dist/contracts/Trees.json");
 const CO2 = require("../dist/contracts/Co2s.json");
 const GardenPool = require("../dist/contracts/GardenPool.json");
 const IERC20 = require("../dist/contracts/IERC20.json");
-let provider;
-let signer;
-const sign = async () => {
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  signer = provider.getSigner(accounts[0]);
-};
+let provider = new ethers.providers.Web3Provider(window.ethereum);
+let wallet;
+let signer = provider.getSigner();
+function loadWallet() {
+  signer.getAddress().then(async (res) => {
+    wallet = res;
+    await console.log(wallet);
+  });
+}
 
-console.log(signer);
 // const wallet = new Wallet(process.env.PKEY, provider);
 // links & buttons
 const lines = document.getElementsByClassName("bars");
@@ -229,7 +231,7 @@ const onClickConnect = async (e) => {
     if (Number(network) === 43113) networkTag = "Fuji";
     net_btn.innerHTML = networkTag;
     console.log(accounts[0]);
-    await sign();
+    loadWallet();
     userData = await log();
   } catch (error) {
     console.error("connect error", error);
@@ -333,21 +335,25 @@ buyTrees.addEventListener("click", grabTrees);
 const s0xData = async () => {
   const deploymentKey = await Object.keys(s0xFactory.networks)[0];
   // console.log(Trees.abi);
+  loadWallet();
   return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, provider, signer);
 };
 const treeData = async () => {
   const deploymentKey = await Object.keys(Trees.networks)[0];
   // console.log(Trees.abi);
+  loadWallet();
   return new ethers.Contract(Trees.networks[deploymentKey].address, Trees.abi, provider, signer);
 };
 const co2Data = async () => {
   const deploymentKey = await Object.keys(CO2.networks)[0];
   // console.log(CO2.abi);
+  loadWallet();
   return new ethers.Contract(CO2.networks[deploymentKey].address, CO2.abi, provider, signer);
 };
 const gardenData = async () => {
   const deploymentKey = await Object.keys(GardenPool.networks)[0];
   // console.log(GardenPool.abi);
+  loadWallet();
   return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, provider, signer);
 };
 
