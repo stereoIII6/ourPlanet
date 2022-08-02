@@ -216,6 +216,14 @@ body {
   grid-row: 2;
   grid-column: 7/-1;
 }
+#approve_m {
+  grid-row: 3;
+  grid-column: 1/7;
+}
+#treebuy_m {
+  grid-row: 3;
+  grid-column: 7/-1;
+}
 #buyTreesDef {
   display: none;
 }

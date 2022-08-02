@@ -5,7 +5,6 @@
 //          stereodocbush@gmail.com     //
 //                                      //
 //////////////////////////////////////////
-// require("dotenv").config();
 import { ethers, VoidSigner, Wallet } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import "../public/app.scss";
@@ -25,7 +24,6 @@ const uauth = new UAuth({
   clientID: "101df3a0-41df-4c22-8edf-0cf4db92a61c",
   redirectUri: "http://127.0.0.1:5000/callback",
 });
-
 uauth
   .user()
   .then((user) => {
@@ -41,15 +39,10 @@ const Trees = require("../dist/contracts/Trees.json");
 const CO2 = require("../dist/contracts/Co2s.json");
 const GardenPool = require("../dist/contracts/GardenPool.json");
 const IERC20 = require("../dist/contracts/IERC20.json");
-let provider = new ethers.providers.Web3Provider(window.ethereum);
-let wallet;
-let signer = provider.getSigner();
-function loadWallet() {
-  signer.getAddress().then(async (res) => {
-    wallet = res;
-    await console.log(wallet);
-  });
-}
+const USDC = require("../dist/contracts/USDC.json");
+const MLQ = require("../dist/contracts/MLQ.json");
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+let signer;
 
 // const wallet = new Wallet(process.env.PKEY, provider);
 // links & buttons
@@ -216,6 +209,9 @@ const onClickConnect = async (e) => {
     profile_btn.addEventListener("click", goProfile);
     // get wallet address and account data of client and store in main state accounts
     accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    await provider.send("eth_requestAccounts", []);
+    signer = await provider.getSigner();
+    console.log(await signer.getAddress());
     // get network data
     network = await ethereum.request({ method: "net_version" });
     var networkTag = "Switch Network";
@@ -230,8 +226,7 @@ const onClickConnect = async (e) => {
     if (Number(network) === 80001) networkTag = "Mumbai";
     if (Number(network) === 43113) networkTag = "Fuji";
     net_btn.innerHTML = networkTag;
-    console.log(accounts[0]);
-    loadWallet();
+    // console.log(await signer.getAddress());
     userData = await log();
   } catch (error) {
     console.error("connect error", error);
@@ -240,12 +235,29 @@ const onClickConnect = async (e) => {
 };
 let trs;
 let isApproved = false;
-const goApprove = async (e) => {
+const approveUSDC = async (e) => {
   e.preventDefault();
-  console.log(signer);
+  console.log(signer.getAddress());
+  const usdc = await usdcData();
+  const deploymentKey = await Object.keys(Trees.networks)[0];
+  console.log(Trees.networks[deploymentKey].address, BigInt(trs * 94));
+  const doApprove = await usdc
+    .approve(Trees.networks[deploymentKey].address, BigInt(trs * 94 * 1e15))
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+const approveMLQ = async (e) => {
+  e.preventDefault();
+  console.log(signer.getAddress());
   const trees = await treeData();
+  console.log(BigInt(trs * 94));
   const doApprove = await trees
-    .approveUSDC(trs * 94 * 10 ** 15)
+    .approveUSDC(BigInt(trs * 94 * 1e15))
     .then((result) => {
       console.log(result);
       return result;
@@ -258,8 +270,10 @@ const goUsdBuy = async (e) => {
   e.preventDefault();
   const trees = await treeData();
   const amnt = trs;
+  const sender = await signer.getAddress();
+  console.log(amnt, sender);
   const buy = await trees
-    .buyTreeERC20(amnt)
+    .buyTreeERC20(amnt, sender, 0)
     .then((result) => {
       console.log(result);
       return result;
@@ -325,7 +339,7 @@ const grabTrees = (e) => {
     }
   };
   div.addEventListener("click", divx);
-  approve.addEventListener("click", goApprove);
+  approve.addEventListener("click", approveUSDC);
   // if (isApproved === true)
   treebuy.addEventListener("click", goUsdBuy);
   modalFoot.innerHTML = "* confirm your transaction with your metamask !";
@@ -335,26 +349,38 @@ buyTrees.addEventListener("click", grabTrees);
 const s0xData = async () => {
   const deploymentKey = await Object.keys(s0xFactory.networks)[0];
   // console.log(Trees.abi);
-  loadWallet();
-  return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, provider, signer);
+
+  return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, signer);
+};
+const usdcData = async () => {
+  const deploymentKey = await Object.keys(USDC.networks)[0];
+  // console.log(Trees.abi);
+
+  return new ethers.Contract(USDC.networks[deploymentKey].address, USDC.abi, signer);
+};
+const mlqData = async () => {
+  const deploymentKey = await Object.keys(MLQ.networks)[0];
+  // console.log(Trees.abi);
+
+  return new ethers.Contract(MLQ.networks[deploymentKey].address, MLQ.abi, signer);
 };
 const treeData = async () => {
   const deploymentKey = await Object.keys(Trees.networks)[0];
   // console.log(Trees.abi);
-  loadWallet();
-  return new ethers.Contract(Trees.networks[deploymentKey].address, Trees.abi, provider, signer);
+
+  return new ethers.Contract(Trees.networks[deploymentKey].address, Trees.abi, signer);
 };
 const co2Data = async () => {
   const deploymentKey = await Object.keys(CO2.networks)[0];
   // console.log(CO2.abi);
-  loadWallet();
-  return new ethers.Contract(CO2.networks[deploymentKey].address, CO2.abi, provider, signer);
+
+  return new ethers.Contract(CO2.networks[deploymentKey].address, CO2.abi, signer);
 };
 const gardenData = async () => {
   const deploymentKey = await Object.keys(GardenPool.networks)[0];
   // console.log(GardenPool.abi);
-  loadWallet();
-  return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, provider, signer);
+
+  return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, signer);
 };
 
 const log = async () => {
@@ -366,7 +392,7 @@ const log = async () => {
   console.log(s0x);
   // ask contract about user
   const isU = await s0x
-    .isU(accounts[0])
+    .isU(await signer.getAddress())
     .then((result) => {
       console.log(result, " :: RESULT");
       return result;
@@ -377,7 +403,7 @@ const log = async () => {
   console.log("You are a user ? Response : ", isU);
   if (isU) {
     const role = await s0x
-      .getRole(accounts[0])
+      .getRole(await signer.getAddress())
       .then((result) => {
         console.log(result);
         return result;
@@ -411,9 +437,10 @@ const log = async () => {
 const addUser = async (e) => {
   e.preventDefault();
   const s0x = await s0xData();
-  console.log(accounts[0], `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`);
+  const account = await signer.getAddress();
+  console.log(String(account), `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`);
   userData = await s0x
-    .createUserAccount(accounts[0], `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`)
+    .createUserAccount(`{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`, String(account))
     .then((result) => {
       console.log(result);
       return result;

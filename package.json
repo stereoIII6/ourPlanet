@@ -47,6 +47,7 @@
     "ncu": "^0.2.1",
     "npm-check": "^5.9.2",
     "parcel": "^2.5.0",
+    "path-browserify": "^1.0.1",
     "pedometer": "^0.0.5",
     "three": "^0.136.0",
     "underscore": "^1.13.2",

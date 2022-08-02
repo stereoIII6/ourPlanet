@@ -1,72 +1,78 @@
 // SPDX-License-Identifier: GPL-3.0
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//
-//              .d8888.  .d88b.  db    db d888888b d88888b d888888b db    db
-//              88'  YP .8P  88. `8b  d8'   `88'   88'     `~~88~~' `8b  d8'
-//              `8bo.   88  d'88  `8bd8'     88    88ooooo    88     `8bd8'
-//                `Y8b. 88 d' 88  .dPYb.     88    88~~~~~    88       88
-//              db   8D `88  d8' .8P  Y8.   .88.   88.        88       88
-//              `8888Y'  `Y88P'  YP    YP Y888888P Y88888P    YP       YP
-//
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//                                                                                                                                                                                  //
-//      @dev            ::              stereoIII6.dao                                                                                                                                          //
-//      @msg            ::              type.stereo@pm.me                                                                                                                                    //
-//      @github         ::              @stereoIII6
-//      @twitter        ::              @stereoIII6                                                                                                                                              //
-//                                                                                                                                                                                  //
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//                                                                                                                                                                                  //
-//      @dev            ::              Juan Xavier Valverde                                                                                                                                    //
-//      @msg            ::              juanxaviervm@hotmail.com                                                                                                                               //
-//      @twitter        ::              @JuanXavier                                                                                                                                             //
-//      @github         ::              @JuanXavier                                                                                                                                             //
-//                                                                                                                                                                                  //                                                                                                                                                                                 //
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//      @title          ::              s0xiety Connect                                                                                                                             //
-//      @description    ::              decentral s0xiety                                                                                                                           //
-//      @version        ::              0.0.1                                                                                                                                       //
-//      @purpose        ::              Refer friennds on the blockchain                                                                                                            //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-//                                                                                                                                                                                  //
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
-// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-/*
-
- MOCK USER TAG ::: "{'name':'s0x user','email':'type.stereo@pm.me','image':'https://ipfs.io/ipfs/QmXNciGvGJGRV2HHE82oLoicvwatB8sqsydxn7P3NSP1nW'}"
-
-*/
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* 
 
 INSTRUCTIONS 
 
-*/
-pragma solidity ^0.8.7;
+Here are the source codes you will need to test the functionality of the eco mint function with USDC payment 
+(because of the 0.094$ price) 
 
-// Open Zeppelin Imports
+- USDC is an obvious mockUp with a airdrop function so you can grab some coins !
+- Trees is the TR33 Contract that takes care of the Tree Tokenomics and gives the user his TR33 Tokens
+- MLQ is our Impact.dao Utility and Liquidity Token (unused but a dependency)
+- ECO is the Eco Mint NFT Contract that automates one tree per NFT into the payment process 
+
+Hope that helps the easiest way is to deploy all the contracts in remix and try to 
+
+
+0xBfBAF1bFc247f7A54BE7533cd5B642Fc1E75695A :: Migration AVAX FUJI
+0x39438cD81945f8975c1E3A1554AA73a5b854Adbc :: USDC on AVAX FUJI TESTNET
+0xdc5d8aF7cbb2BaD4e2608794e11764A2c7b8627F :: MLQ on AVAX FUJI
+0xd0405b24CC1f7b5DBDA4139E2D89f5878379Cd51 :: TR33 on AVAX FUJI
+0xa28061b1258e2dCDE030db5eBF7F1ea0de4c81Df :: CO2 on AVAX FUJI
+0xF659A3109C9ea1b28fDA3BA9e4Be52aC2aC7A46a :: s0x Factory on AVAX FUJI
+0xA15f2a5e6700eEEB98236290e308E3f522494A86 :: ECO NFT on AVAX FUJI
+0x958730CA7BCE0CBf0E04CcB202a200Abc6f7c95f :: GardenPool on AVAX FUJI
+
+1 . Deploy USDC 
+2 . Deploy MLQ
+3 . Deploy Trees using USDC Adress as input param
+4 . Deploy ECO using a) account address b) token name c) token symbol d) tree contract address e) usdc contract address
+5 . In USDC / call dropUSDC function to collect USDC funds
+6 . In USDC / approve ECO contract as Spender of your USDC balance
+7 . In ECO / call ecoMint using number of tokens to buy as input param
+8 . In Trees / call getClaims to receive TR33 Tokens 
+
+Thats kind of it !
+
+greetings and blessings https://stereoIII6.dao
+
+
+
+*/
+
+pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-// mathematical function for conglomerate
+contract PriceConsumerV3 {
+    AggregatorV3Interface internal priceFeed;
+
+    constructor(address _adr) {
+        priceFeed = AggregatorV3Interface(_adr);
+    }
+
+    function EthUsdPrice() public view returns (int256) {
+        (
+            ,
+            /*uint80 roundID */
+            int256 price, /* uint startedAt */ /* uint timeStamp */ /* uint80 answeredInRound */
+            ,
+            ,
+
+        ) = priceFeed.latestRoundData();
+        return price;
+    }
+}
+
 contract MathFnx {
+    // Math Function Extension
     // division function for solidity
     function divide(uint256 _a, uint256 _b) internal pure returns (uint256) {
         uint256 rem = _a % _b;
@@ -95,8 +101,18 @@ contract MathFnx {
     }
 }
 
-// user data storage for conglomerate
+library mlqLib {
+    // MLQ Token Extension
+    uint256 public constant mlqRate = 100;
+    uint256 public constant mlqDig = 10**18;
+    uint256 public constant maxSupply = 3 * 10**9 * mlqDig;
+    uint256 public constant pubSupply = 1 * 10**9 * mlqDig;
+    uint256 public constant poolReserve = 1 * 10**9 * mlqDig;
+    uint256 public constant circReserve = 1 * 10**9 * mlqDig;
+}
+
 contract Users {
+    // user data storage for conglomerate
     address private s0x; // s0x admin
 
     constructor() {
@@ -186,7 +202,9 @@ contract Users {
     }
 }
 
-contract Friends is MathFnx {
+contract Friends is
+    MathFnx // friends contract
+{
     Users private user;
     // frenz // you# => frenz# => isfriend?
     mapping(address => mapping(address => bool)) public frenz; // people following you
@@ -282,8 +300,9 @@ contract Friends is MathFnx {
     }
 }
 
-// groups contract stores groupmembers , posts and comments inside the group on chain
-contract Groups is MathFnx {
+contract Groups is
+    MathFnx // groups contract stores groupmembers , posts and comments inside the group on chain
+{
     Users private user; // user contract reference
     Friends private friend; // friend contract reference
     address public owner; // owner address
@@ -372,8 +391,10 @@ contract Groups is MathFnx {
     }
 }
 
-// allows users to create groups
-contract s0xFactory is Users, MathFnx {
+contract s0xFactory is
+    Users,
+    MathFnx // allows users to create groups
+{
     Friends public friends;
     Groups public groups;
     MLQ public mlq;
@@ -463,32 +484,47 @@ contract s0xFactory is Users, MathFnx {
     }
 }
 
-// mlq library
-library mlqLib {
-    uint256 public constant mlqRate = 100;
-    uint256 public constant mlqDig = 10**18;
-    uint256 public constant maxSupply = 3 * 10**9 * mlqDig;
-    uint256 public constant pubSupply = 1 * 10**9 * mlqDig;
-    uint256 public constant poolReserve = 1 * 10**9 * mlqDig;
-    uint256 public constant circReserve = 1 * 10**9 * mlqDig;
+contract USDC is
+    ERC20 // Mock up USDC Coin with airdrop function
+{
+    constructor() ERC20("US Dollar Coin", "USDC") {}
+
+    function dropUSDC() external {
+        _mint(msg.sender, 100 * 10**18);
+    }
 }
 
-// mlq token contract
-contract MLQ is ERC20, MathFnx {
+contract MLQ is
+    ERC20,
+    MathFnx // Utility & Liquidity Token Contract
+{
     using mlqLib for *;
     address private admin;
-    uint256 public rate;
+    int256 public rate;
     uint256 public pubSupply;
+    PriceConsumerV3 public ethUsdPrice;
     mapping(address => uint256) public mlqBalance;
+    USDC usdc;
 
-    constructor() ERC20("Milquidity Token", "MLQ") {
+    constructor(address _usdc, address _pc) ERC20("Milquidity Token", "MLQ") {
         admin = msg.sender;
-        setRate(mlqLib.mlqRate);
+        usdc = USDC(_usdc);
         setSupply(mlqLib.pubSupply);
+        ethUsdPrice = PriceConsumerV3(_pc);
     }
 
-    function setRate(uint256 _newRate) internal returns (uint256) {
-        rate = _newRate;
+    function setRate() internal returns (int256) {
+        int256 price = ethUsdPrice.EthUsdPrice();
+        uint256 newRate = divide(uint256(price), 100);
+        rate = int256(newRate);
+        return rate;
+    }
+
+    function setPrice() external returns (int256) {
+        return setRate();
+    }
+
+    function getRate() external view returns (int256) {
         return rate;
     }
 
@@ -497,12 +533,22 @@ contract MLQ is ERC20, MathFnx {
         return pubSupply;
     }
 
-    function buyMlq(uint256 _amnt) external payable returns (uint256) {
-        uint256 amnt = mlqLib.mlqDig * _amnt;
+    function buyMlqETH() external payable returns (uint256) {
+        uint256 amnt = msg.value * 100;
         require(pubSupply >= amnt);
-        require(divide(msg.value, 100) >= amnt);
         _mint(msg.sender, amnt);
         mlqBalance[msg.sender] = amnt;
+        pubSupply -= amnt;
+        return amnt;
+    }
+
+    function buyMlqUSDC(uint256 _amnt) external payable returns (uint256) {
+        setRate();
+        uint256 amnt = _amnt * uint256(rate) * 10**10;
+        require(pubSupply >= amnt);
+        usdc.transferFrom(msg.sender, address(this), amnt);
+        _mint(msg.sender, _amnt * 10**18);
+        mlqBalance[msg.sender] = _amnt * 10**18;
         pubSupply -= amnt;
         return amnt;
     }
@@ -523,218 +569,8 @@ contract MLQ is ERC20, MathFnx {
         require(admin == msg.sender);
         transferFrom(address(this), admin, mlqBalance[address(this)]);
         payable(admin).transfer(address(this).balance);
+        usdc.transferFrom(address(this), admin, usdc.balanceOf(address(this)));
         return address(this).balance;
-    }
-}
-
-contract USDC is ERC20 {
-    constructor() ERC20("US Dollar Coin", "USDC") {}
-
-    function dropUSDC() external {
-        _mint(msg.sender, 100 * 10**18);
-    }
-}
-
-// any coin tokeen contract
-contract COIN is ERC20, MathFnx {
-    using mlqLib for *;
-    address private admin;
-    uint256 public rate;
-    uint256 public pubSupply;
-    uint256 public maxSupply;
-    string public title;
-    mapping(address => uint256) public coinBalance;
-
-    constructor(
-        string memory _name,
-        string memory _sym,
-        uint256 _rate,
-        uint256 _supply,
-        address _admin
-    ) ERC20(_name, _sym) {
-        admin = _admin;
-        setRate(_rate);
-        maxSupply = _supply;
-        title = _name;
-    }
-
-    function setRate(uint256 _newRate) internal returns (uint256) {
-        rate = _newRate;
-        return rate;
-    }
-
-    function getRate() external view returns (uint256) {
-        return rate;
-    }
-
-    function getMax() external view returns (uint256) {
-        return maxSupply;
-    }
-
-    function getName() external view returns (string memory) {
-        return title;
-    }
-
-    function getMinted() external view returns (uint256) {
-        return pubSupply;
-    }
-
-    function buyMlq(uint256 _amnt) external payable returns (uint256) {
-        uint256 amnt = mlqLib.mlqDig * _amnt;
-        require(pubSupply >= amnt);
-        require(divide(msg.value, 100) >= amnt);
-        _mint(msg.sender, amnt);
-        coinBalance[msg.sender] = amnt;
-        pubSupply += amnt;
-        return amnt;
-    }
-
-    function coinBal(address _adr) external view returns (uint256) {
-        return coinBalance[_adr];
-    }
-
-    function withdraw(uint256 _amnt) external returns (uint256) {
-        uint256 amnt = mlqLib.mlqDig * _amnt;
-        require(admin == msg.sender);
-        require(coinBalance[address(this)] >= amnt);
-        transferFrom(address(this), admin, amnt);
-        return amnt;
-    }
-
-    function flush() external returns (uint256) {
-        require(admin == msg.sender);
-        transferFrom(address(this), admin, coinBalance[address(this)]);
-        payable(admin).transfer(address(this).balance);
-        return address(this).balance;
-    }
-}
-
-contract s0xPool is MathFnx {
-    COIN public coin;
-    COIN public main;
-    COIN public sec;
-    COIN public pool;
-    uint256 p;
-    struct Pool {
-        uint256 id;
-        address pool;
-        address main;
-        uint256 ethByMain;
-        uint256 mainMax;
-        address sec;
-        uint256 ethBySec;
-        uint256 secMax;
-        uint256 distrib;
-        uint256 xRate;
-    }
-    uint256 t;
-    struct Token {
-        uint256 id;
-        string name;
-        address adr;
-        uint256 maxSupply;
-        uint256 mintedSupply;
-        uint256 priceInEth;
-    }
-    uint256 s;
-    struct Safe {
-        uint256 id;
-        address user;
-        address token;
-        uint256 safeBalance;
-    }
-    mapping(uint256 => Pool) public poolz;
-    mapping(uint256 => Token) public tokenz;
-    mapping(uint256 => Safe) public safez;
-
-    function addToken(address _token) external returns (address) {
-        coin = COIN(_token);
-        tokenz[t] = Token(
-            t,
-            coin.getName(),
-            address(coin),
-            coin.getMax(),
-            coin.getMinted(),
-            coin.getRate()
-        );
-        t++;
-        return address(coin);
-    }
-
-    function createToken(
-        string memory _name,
-        string memory _sym,
-        uint256 _rate,
-        uint256 _max
-    ) external returns (address) {
-        coin = new COIN(_name, _sym, _rate, _max, msg.sender);
-        tokenz[t] = Token(t, _name, address(coin), _max, 0, _rate);
-        t++;
-        return address(coin);
-    }
-
-    function createPool(
-        address _main,
-        address _sec,
-        string memory _name,
-        string memory _psym
-    ) external returns (address) {
-        // get token contracts
-        main = COIN(_main);
-        sec = COIN(_sec);
-        // detect currency eth value per token
-        uint256 mEthPrice = divide(10**18, main.getRate()); // example // 10^18 / 100 = 10^16
-        uint256 sEthPrice = divide(10**18, sec.getRate()); // example // 10^18 / 100000 = 10^13
-        // detect dif ratio
-        uint256 dRate; // difference ratio
-        if (sEthPrice < mEthPrice)
-            dRate = divide(mEthPrice, sEthPrice); // example // 10^16 / 10^13 = 1000
-        else dRate = divide(sEthPrice, mEthPrice); // example // null
-        uint256 xRate;
-        xRate =
-            ((mEthPrice * main.getMax()) + (sEthPrice * sec.getMax())) /
-            100;
-        pool = new COIN(_name, _psym, xRate, 100 * 10**18, msg.sender); // example // 100 * 10^18
-        poolz[p] = Pool(
-            p,
-            address(pool),
-            _main,
-            mEthPrice,
-            divide(main.getMax(), 3),
-            _sec,
-            sEthPrice,
-            divide(sec.getMax(), 3),
-            0,
-            xRate
-        );
-
-        p++;
-        /*
-
-        // 0xbd5b354220B250DF257ed5e988Fe8FE81CdB6235 MLQ
-        // 0x7e54D10fda1dBAf0aA2eB842942B3B924fcfd947 LYX
-
-        mlq 10000000000000000eth * 1000000mlq
-        lyx 10000000000000eth * 1000000000lyx
-        shk 600000000000000000000eth * 100shk
-
-        */
-        return address(coin);
-    }
-
-    function addMilquidity(uint256 _p, uint256 _mIn)
-        external
-        returns (
-            uint256,
-            uint256,
-            uint256
-        )
-    {
-        main = COIN(poolz[_p].main);
-        sec = COIN(poolz[_p].sec);
-        coin = COIN(poolz[_p].pool);
-        // uint256 weth = 10**18;
-        return (_mIn, 0, 0);
     }
 }
 
@@ -743,49 +579,55 @@ contract Trees is ERC20, MathFnx {
     uint256 rate;
     uint256 availSupply;
     address author;
-    Friends private friends;
-    ERC20 usdc;
+    // Friends private friends;
+    IERC20 usdc;
     MLQ mlq;
 
-    constructor(address _con, address _mlq)
+    constructor(address _usdc, address _mlq)
         ERC20("Impact Tree Token", "IMPCTrees")
     {
         maxSupply = 5000000000000 * 10**18;
         author = msg.sender;
-        usdc = ERC20(_con);
+        usdc = IERC20(_usdc);
         mlq = MLQ(_mlq);
+        rate = 940;
     }
 
     modifier isAdmin() {
         require(msg.sender == author);
         _;
     }
+    mapping(address => uint256) public treeClaims;
 
-    function buyTreeERC20(uint256 _trees) external payable returns (bool) {
-        require(usdc.balanceOf(msg.sender) >= 100 * _trees * 94 * 10**15);
-        require(availSupply < maxSupply);
-        usdc.transferFrom(
-            msg.sender,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            100 * _trees * 94 * 10**15
-        );
-        availSupply += msg.value * 10000;
-        _mint(msg.sender, _trees * 10**18);
+    function addClaim(address _adr, uint256 _amnt) external returns (bool) {
+        treeClaims[_adr] += _amnt;
         return true;
     }
 
-    function buyTreeMLQ(uint256 _trees) external payable returns (bool) {
-        require(
-            mlq.balanceOf(msg.sender) >= rate / (100 * _trees * 94 * 10**15)
-        );
-        require(availSupply < maxSupply);
-        mlq.transferFrom(
-            msg.sender,
+    function getClaims() external returns (bool) {
+        _mint(msg.sender, treeClaims[msg.sender]);
+        treeClaims[msg.sender] = 0;
+        return true;
+    }
+
+    function buyTreeERC20(uint256 _amount, address _send)
+        external
+        returns (bool)
+    {
+        // require(usdc.balanceOf(_send) >= _amount * rate * 10**14);
+        // require(availSupply + _amount * 10**18 < maxSupply);
+        usdc.transferFrom(
+            _send,
             0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            rate / (100 * _trees * 94 * 10**15)
+            ((_amount * rate * 10**14) / 100) * 85
         );
-        availSupply += msg.value * 10000;
-        _mint(msg.sender, _trees * 10**18);
+        usdc.transferFrom(
+            _send,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            ((_amount * rate * 10**14) / 100) * 15
+        );
+        availSupply += _amount * 10**18;
+        _mint(msg.sender, _amount * 10**18);
         return true;
     }
 
@@ -801,7 +643,7 @@ contract Trees is ERC20, MathFnx {
     }
 
     function setERC20(address _usdc) external isAdmin returns (bool) {
-        usdc = ERC20(_usdc);
+        usdc = IERC20(_usdc);
         return true;
     }
 
@@ -810,8 +652,9 @@ contract Trees is ERC20, MathFnx {
         return true;
     }
 
-    function approveUSDC(uint256 _amnt) external returns (bool) {
-        return usdc.approve(address(this), _amnt);
+    function approveUSDC(uint256 _amnt) external pure returns (bool) {
+        // delegated call to approve
+        return _amnt == _amnt;
     }
 
     function trimTrees(uint256 _newPrice) external returns (uint256) {
@@ -829,6 +672,130 @@ contract Trees is ERC20, MathFnx {
         transfer(payable(author), _tree * 10**18);
         payable(author).transfer(_eth * 10**18);
         return true;
+    }
+}
+
+contract nftProject is
+    ERC721 // DIAS NFT Project Contract
+{
+    address public owner;
+    uint256 public minted;
+    uint256 public max;
+    string public nam;
+    string public sym;
+    mapping(uint256 => bytes) public dias;
+
+    constructor(
+        address _owner,
+        string memory _name,
+        string memory _sym
+    ) ERC721(_name, _sym) {
+        owner = _owner;
+        max = 1000;
+        nam = _name;
+        sym = _sym;
+    }
+
+    function isOwner(address _adr) external view returns (bool) {
+        if (_adr == owner) return true;
+        else return false;
+    }
+
+    function getName() external view returns (string memory) {
+        return nam;
+    }
+
+    function getSym() external view returns (string memory) {
+        return sym;
+    }
+
+    function mint(uint256 _amnt) external returns (uint256) {
+        require(minted < max);
+        doMint(_amnt);
+        return minted;
+    }
+
+    function doMint(uint256 _amnt) internal returns (uint256) {
+        _mint(msg.sender, minted);
+        minted++;
+        if (_amnt >= 2) {
+            _mint(msg.sender, minted);
+            minted++;
+
+            if (_amnt >= 3) {
+                _mint(msg.sender, minted);
+                minted++;
+
+                if (_amnt >= 4) {
+                    _mint(msg.sender, minted);
+                    minted++;
+
+                    if (_amnt >= 5) {
+                        _mint(msg.sender, minted);
+                        minted++;
+
+                        if (_amnt >= 6) {
+                            _mint(msg.sender, minted);
+                            minted++;
+
+                            if (_amnt >= 7) {
+                                _mint(msg.sender, minted);
+                                minted++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return minted;
+    }
+
+    function holder(uint256 _id) external view returns (address) {
+        return ownerOf(_id);
+    }
+}
+
+contract EcoMintNFT is nftProject {
+    Trees public trees;
+    ERC20 public currency;
+    uint256 nftPrice;
+    uint256 val;
+
+    constructor(
+        address _owner,
+        string memory _name,
+        string memory _sym,
+        address _treeAdr,
+        address _curr
+    ) nftProject(_owner, _name, _sym) {
+        trees = Trees(_treeAdr);
+        currency = ERC20(_curr);
+        nftPrice = 25 * 10**18;
+        val = 94 * 10**15;
+    }
+
+    function setValue(uint256 _val) external returns (uint256) {
+        return val = _val;
+    }
+
+    function ecoMint(uint256 _amnt) external returns (uint256) {
+        require(minted < max);
+        uint256 sub = nftPrice + val;
+        uint256 total = _amnt * sub;
+        uint256 fee = 94 * 10**15 * _amnt;
+        require(
+            total + fee < currency.balanceOf(msg.sender),
+            "insufficient funds"
+        );
+        currency.transferFrom(
+            msg.sender,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            fee
+        );
+        currency.transferFrom(msg.sender, address(this), total);
+        trees.addClaim(msg.sender, _amnt * 10**18);
+        doMint(_amnt);
+        return minted;
     }
 }
 
@@ -1127,3 +1094,210 @@ contract GardenPool is ERC1155, MathFnx {
         return difRatio;
     }
 }
+
+contract COIN is
+    ERC20,
+    MathFnx // any coin tokeen contract
+{
+    using mlqLib for *;
+    address private admin;
+    uint256 public rate;
+    uint256 public pubSupply;
+    uint256 public maxSupply;
+    string public title;
+    mapping(address => uint256) public coinBalance;
+
+    constructor(
+        string memory _name,
+        string memory _sym,
+        uint256 _rate,
+        uint256 _supply,
+        address _admin
+    ) ERC20(_name, _sym) {
+        admin = _admin;
+        setRate(_rate);
+        maxSupply = _supply;
+        title = _name;
+    }
+
+    function setRate(uint256 _newRate) internal returns (uint256) {
+        rate = _newRate;
+        return rate;
+    }
+
+    function getRate() external view returns (uint256) {
+        return rate;
+    }
+
+    function getMax() external view returns (uint256) {
+        return maxSupply;
+    }
+
+    function getName() external view returns (string memory) {
+        return title;
+    }
+
+    function getMinted() external view returns (uint256) {
+        return pubSupply;
+    }
+
+    function buyMlq(uint256 _amnt) external payable returns (uint256) {
+        uint256 amnt = mlqLib.mlqDig * _amnt;
+        require(pubSupply >= amnt);
+        require(divide(msg.value, 100) >= amnt);
+        _mint(msg.sender, amnt);
+        coinBalance[msg.sender] = amnt;
+        pubSupply += amnt;
+        return amnt;
+    }
+
+    function coinBal(address _adr) external view returns (uint256) {
+        return coinBalance[_adr];
+    }
+
+    function withdraw(uint256 _amnt) external returns (uint256) {
+        uint256 amnt = mlqLib.mlqDig * _amnt;
+        require(admin == msg.sender);
+        require(coinBalance[address(this)] >= amnt);
+        transferFrom(address(this), admin, amnt);
+        return amnt;
+    }
+
+    function flush() external returns (uint256) {
+        require(admin == msg.sender);
+        transferFrom(address(this), admin, coinBalance[address(this)]);
+        payable(admin).transfer(address(this).balance);
+        return address(this).balance;
+    }
+}
+
+contract s0xPool is MathFnx {
+    COIN public coin;
+    COIN public main;
+    COIN public sec;
+    COIN public pool;
+    uint256 p;
+    struct Pool {
+        uint256 id;
+        address pool;
+        address main;
+        uint256 ethByMain;
+        uint256 mainMax;
+        address sec;
+        uint256 ethBySec;
+        uint256 secMax;
+        uint256 distrib;
+        uint256 xRate;
+    }
+    uint256 t;
+    struct Token {
+        uint256 id;
+        string name;
+        address adr;
+        uint256 maxSupply;
+        uint256 mintedSupply;
+        uint256 priceInEth;
+    }
+    uint256 s;
+    struct Safe {
+        uint256 id;
+        address user;
+        address token;
+        uint256 safeBalance;
+    }
+    mapping(uint256 => Pool) public poolz;
+    mapping(uint256 => Token) public tokenz;
+    mapping(uint256 => Safe) public safez;
+
+    function addToken(address _token) external returns (address) {
+        coin = COIN(_token);
+        tokenz[t] = Token(
+            t,
+            coin.getName(),
+            address(coin),
+            coin.getMax(),
+            coin.getMinted(),
+            coin.getRate()
+        );
+        t++;
+        return address(coin);
+    }
+
+    function createToken(
+        string memory _name,
+        string memory _sym,
+        uint256 _rate,
+        uint256 _max
+    ) external returns (address) {
+        coin = new COIN(_name, _sym, _rate, _max, msg.sender);
+        tokenz[t] = Token(t, _name, address(coin), _max, 0, _rate);
+        t++;
+        return address(coin);
+    }
+
+    function createPool(
+        address _main,
+        address _sec,
+        string memory _name,
+        string memory _psym
+    ) external returns (address) {
+        // get token contracts
+        main = COIN(_main);
+        sec = COIN(_sec);
+        // detect currency eth value per token
+        uint256 mEthPrice = divide(10**18, main.getRate()); // example // 10^18 / 100 = 10^16
+        uint256 sEthPrice = divide(10**18, sec.getRate()); // example // 10^18 / 100000 = 10^13
+        // detect dif ratio
+        uint256 dRate; // difference ratio
+        if (sEthPrice < mEthPrice)
+            dRate = divide(mEthPrice, sEthPrice); // example // 10^16 / 10^13 = 1000
+        else dRate = divide(sEthPrice, mEthPrice); // example // null
+        uint256 xRate;
+        xRate =
+            ((mEthPrice * main.getMax()) + (sEthPrice * sec.getMax())) /
+            100;
+        pool = new COIN(_name, _psym, xRate, 100 * 10**18, msg.sender); // example // 100 * 10^18
+        poolz[p] = Pool(
+            p,
+            address(pool),
+            _main,
+            mEthPrice,
+            divide(main.getMax(), 3),
+            _sec,
+            sEthPrice,
+            divide(sec.getMax(), 3),
+            0,
+            xRate
+        );
+
+        p++;
+        /*
+
+        // 0xbd5b354220B250DF257ed5e988Fe8FE81CdB6235 MLQ
+        // 0x7e54D10fda1dBAf0aA2eB842942B3B924fcfd947 LYX
+
+        mlq 10000000000000000eth * 1000000mlq
+        lyx 10000000000000eth * 1000000000lyx
+        shk 600000000000000000000eth * 100shk
+
+        */
+        return address(coin);
+    }
+
+    function addMilquidity(uint256 _p, uint256 _mIn)
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        main = COIN(poolz[_p].main);
+        sec = COIN(poolz[_p].sec);
+        coin = COIN(poolz[_p].pool);
+        // uint256 weth = 10**18;
+        return (_mIn, 0, 0);
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

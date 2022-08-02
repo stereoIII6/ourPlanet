@@ -1,0 +1,15 @@
+require("dotenv").config();
+const PC = artifacts.require("PriceConsumerV3");
+/* */ const USDC = artifacts.require("USDC"); // MockUp Testnet */
+/* 
+    Fuji 
+        ETH / USD :: 0x86d67c3D38D2bCeE722E601025C25a575021c6EA
+        V3 :: 0x7BC470fB2956A46a830959715cEA0229783B74Ac
+    Avax
+        ETH / USD :: 0x976B3D034E162d8bD72D6b9C989d545b839003b0
+        V3 :: 
+*/
+module.exports = function (deployer) {
+  deployer.deploy(PC, "0x86d67c3d38d2bcee722e601025c25a575021c6ea");
+  deployer.deploy(USDC);
+};
