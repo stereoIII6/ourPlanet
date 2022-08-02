@@ -42,7 +42,7 @@ body {
 }
 
 #mainlinks {
-  grid-column: 1/8;
+  grid-column: 1/5;
   color: black;
   background: white;
 }
@@ -62,27 +62,37 @@ body {
   color: #badbe1;
 }
 #defilinks {
-  grid-column: 10/-1;
+  grid-column: 6/-1;
   color: black;
   background: white;
 }
+#usdc_bal {
+  grid-column: 1/3;
+  background: #badbe1;
+  color: #4c9071;
+}
+#mlq_bal {
+  grid-column: 3/5;
+  background: #badbe1;
+  color: #4c9071;
+}
 #tree_bal {
-  grid-column: 1/4;
+  grid-column: 5/7;
   background: #badbe1;
   color: #4c9071;
 }
 #co2_bal {
-  grid-column: 4/7;
+  grid-column: 7/9;
   background: #badbe1;
   color: #4c9071;
 }
 #profile_btn {
-  grid-column: 7/10;
+  grid-column: 9/11;
   background: #4c9071;
   color: #badbe1;
 }
 #net_btn {
-  grid-column: 10/-1;
+  grid-column: 11/-1;
   background: #badbe1;
   color: #4c9071;
 }

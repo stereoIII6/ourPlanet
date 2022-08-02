@@ -590,7 +590,7 @@ contract Trees is ERC20, MathFnx {
         author = msg.sender;
         usdc = IERC20(_usdc);
         mlq = MLQ(_mlq);
-        rate = 940;
+        rate = 94 * 10**15;
     }
 
     modifier isAdmin() {
@@ -614,17 +614,23 @@ contract Trees is ERC20, MathFnx {
         external
         returns (bool)
     {
-        // require(usdc.balanceOf(_send) >= _amount * rate * 10**14);
-        // require(availSupply + _amount * 10**18 < maxSupply);
-        usdc.transferFrom(
-            _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            ((_amount * rate * 10**14) / 100) * 85
+        require(
+            usdc.balanceOf(_send) >= _amount * rate,
+            "insufficient usdc balance"
+        );
+        require(
+            availSupply + _amount * 10**18 < maxSupply,
+            "insufficient supply"
         );
         usdc.transferFrom(
             _send,
             0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            ((_amount * rate * 10**14) / 100) * 15
+            ((_amount * rate) / 100) * 85
+        );
+        usdc.transferFrom(
+            _send,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            ((_amount * rate) / 100) * 15
         );
         availSupply += _amount * 10**18;
         _mint(msg.sender, _amount * 10**18);

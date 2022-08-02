@@ -239,10 +239,10 @@ const approveUSDC = async (e) => {
   e.preventDefault();
   console.log(signer.getAddress());
   const usdc = await usdcData();
+  const trees = await treeData();
   const deploymentKey = await Object.keys(Trees.networks)[0];
-  console.log(Trees.networks[deploymentKey].address, BigInt(trs * 94));
   const doApprove = await usdc
-    .approve(Trees.networks[deploymentKey].address, BigInt(trs * 94 * 1e15))
+    .approve(trees.address, BigInt(trs * 94 * 1e15))
     .then((result) => {
       console.log(result);
       return result;
@@ -272,8 +272,13 @@ const goUsdBuy = async (e) => {
   const amnt = trs;
   const sender = await signer.getAddress();
   console.log(amnt, sender);
+  const usdc = await usdcData();
+  const balance = await usdc.balanceOf(await signer.getAddress());
+  console.log(Number(balance._hex));
+  console.log(amnt * 94 * 1e15);
+  console.log(trees.address);
   const buy = await trees
-    .buyTreeERC20(amnt, sender, 0)
+    .buyTreeERC20(amnt, sender)
     .then((result) => {
       console.log(result);
       return result;
