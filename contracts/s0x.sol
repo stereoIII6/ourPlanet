@@ -1,5 +1,47 @@
 // SPDX-License-Identifier: GPL-3.0
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//
+//              .d8888.  .d88b.  db    db d888888b d88888b d888888b db    db
+//              88'  YP .8P  88. `8b  d8'   `88'   88'     `~~88~~' `8b  d8'
+//              `8bo.   88  d'88  `8bd8'     88    88ooooo    88     `8bd8'
+//                `Y8b. 88 d' 88  .dPYb.     88    88~~~~~    88       88
+//              db   8D `88  d8' .8P  Y8.   .88.   88.        88       88
+//              `8888Y'  `Y88P'  YP    YP Y888888P Y88888P    YP       YP
+//
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+//      @dev            ::              stereoIII6.dao                                                                                                                                          //
+//      @msg            ::              type.stereo@pm.me                                                                                                                                    //
+//      @github         ::              @stereoIII6
+//      @twitter        ::              @stereoIII6                                                                                                                                              //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+//      @dev            ::              Juan Xavier Valverde                                                                                                                                    //
+//      @msg            ::              juanxaviervm@hotmail.com                                                                                                                               //
+//      @twitter        ::              @JuanXavier                                                                                                                                             //
+//      @github         ::              @JuanXavier                                                                                                                                             //
+//                                                                                                                                                                                  //                                                                                                                                                                                 //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//                                                                                                                                                                                  //
+//                                                                                                                                                                                  //
+//      @title          ::              s0xiety Connect                                                                                                                             //
+//      @description    ::              decentral s0xiety                                                                                                                           //
+//      @version        ::              0.0.1                                                                                                                                       //
+//      @purpose        ::              Refer friennds on the blockchain                                                                                                            //
+//                                                                                                                                                                                  //
+//                                                                                                                                                                                  //
+//                                                                                                                                                                                  //
+//                                                                                                                                                                                  //
+//                                                                                                                                                                                  //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+//  *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   //
+// // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* 
 
 INSTRUCTIONS 
@@ -15,14 +57,15 @@ Here are the source codes you will need to test the functionality of the eco min
 Hope that helps the easiest way is to deploy all the contracts in remix and try to 
 
 
-0xBfBAF1bFc247f7A54BE7533cd5B642Fc1E75695A :: Migration AVAX FUJI
-0x39438cD81945f8975c1E3A1554AA73a5b854Adbc :: USDC on AVAX FUJI TESTNET
-0xdc5d8aF7cbb2BaD4e2608794e11764A2c7b8627F :: MLQ on AVAX FUJI
-0xd0405b24CC1f7b5DBDA4139E2D89f5878379Cd51 :: TR33 on AVAX FUJI
-0xa28061b1258e2dCDE030db5eBF7F1ea0de4c81Df :: CO2 on AVAX FUJI
-0xF659A3109C9ea1b28fDA3BA9e4Be52aC2aC7A46a :: s0x Factory on AVAX FUJI
+0x20DB02Af8Fcc4D615611fCF6Cc31F623934C4781 :: Migration AVAX FUJI
+0xc278F07732220eB944Ef75ef2C8592d438A0579B :: v2Consumer
+0x5A604d07782B7303Bd2327D133F13A58bd17dc43 :: USDC on AVAX FUJI TESTNET
+0x722085855daB50c949785E4C926df7d6Cda60230 :: MLQ on AVAX FUJI
+0x5Dea8a438763BFFD73A18d8e5298643d33AeE5bD :: TR33 on AVAX FUJI
+0xeeA920766956b54147EA61FA2B8962Ad063402eB :: CO2 on AVAX FUJI
+0x0D0fE0b0D62Ad323355acAD09f0b6B5FDed6353F :: s0x Factory on AVAX FUJI
 0xA15f2a5e6700eEEB98236290e308E3f522494A86 :: ECO NFT on AVAX FUJI
-0x958730CA7BCE0CBf0E04CcB202a200Abc6f7c95f :: GardenPool on AVAX FUJI
+0x4FFB094260023dcFB5C17ae412a06D712a61a133 :: GardenPool on AVAX FUJI
 
 1 . Deploy USDC 
 2 . Deploy MLQ
@@ -37,11 +80,12 @@ Thats kind of it !
 
 greetings and blessings https://stereoIII6.dao
 
-
-
 */
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 pragma solidity ^0.8.7;
+
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -50,12 +94,145 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
+/** 
+0xb0897686c545045afc77cf20ec7a532e3120e0f1 :: Link Token Polygon Main
+0xAE975071Be8F8eE67addBC1A82488F1C24858067 :: VRF
+0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd :: 500 gwei Keyhash
+0xd729dc84e21ae57ffb6be0053bf2b0668aa2aaf300a2a7b2ddf7dc0bb6e875a8 :: 1000 gwei Keyhash
+
+0x326C977E6efc84E512bB9C30f76E30c160eD06FB :: Link Token Polygon Mumbai
+0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed :: VRF
+0x4b09e658ed251bcafeebbc69400383d49f344ace09b9576fe248bb02c003fe9f :: 500 gwei Keyhash
+
+0x5947BB275c521040051D82396192181b413227A3 :: Link Token AVAX Mainnet
+0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634 :: VRF
+0x89630569c9567e43c4fe7b1633258df9f2531b62f2352fa721cf3162ee4ecb46 :: 500 gwei Keyhash
+0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696 :: 1000 gwei Keyhash
+
+0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846 :: Link Token AVAX Testnet
+0x2eD832Ba664535e5886b75D64C46EB9a228C2610 :: VRF
+0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61 :: 300 gwei Keyhash
+
+0x6f43ff82cca38001b6699a8ac47a2d0e66939407 :: Link Token Fantom Mainnet
+0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634 :: VRF
+0x5881eea62f9876043df723cf89f0c2bb6f950da25e9dfe66995c24f919c8f8ab :: 10000 gwei Keyhash
+0x64ae04e5dba58bc08ba2d53eb33fe95bf71f5002789692fe78fb3778f16121c9 :: 20000 gwei Keyhash
+
+0xfaFedb041c0DD4fA2Dc0d87a6B0979Ee6FA7af5F :: Link Token Fantom Testnet
+0xbd13f08b8352A3635218ab9418E340c60d6Eb418 :: VRF
+0x121a143066e0f2f08b620784af77cccb35c6242460b4a8ee251b4b416abaebd4 :: 3000 gwei Keyhash
+
+ */
+contract VRFv2Consumer is VRFConsumerBaseV2 {
+    VRFCoordinatorV2Interface COORDINATOR;
+
+    // Your subscription ID.
+    uint64 s_subscriptionId;
+
+    // Rinkeby coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
+    bytes32 keyHash =
+        0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
+
+    uint32 callbackGasLimit = 100000;
+    uint16 requestConfirmations = 3;
+    uint32 numWords = 3;
+
+    uint256[] public s_randomWords;
+    uint256 public s_requestId;
+    address s_owner;
+
+    constructor(uint64 subscriptionId) VRFConsumerBaseV2(vrfCoordinator) {
+        COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
+        s_owner = msg.sender;
+        s_subscriptionId = subscriptionId;
+    }
+
+    // Assumes the subscription is funded sufficiently.
+    function requestRandomWords() external onlyOwner {
+        // Will revert if subscription is not set and funded.
+        s_requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            s_subscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
+        );
+    }
+
+    function fulfillRandomWords(
+        uint256, /* requestId */
+        uint256[] memory randomWords
+    ) internal override {
+        s_randomWords = randomWords;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == s_owner);
+        _;
+    }
+}
+
+// 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
 contract PriceConsumerV3 {
-    AggregatorV3Interface internal priceFeed;
+    AggregatorV3Interface internal ethUSDagg;
+    AggregatorV3Interface internal mainUSDagg;
 
-    constructor(address _adr) {
-        priceFeed = AggregatorV3Interface(_adr);
+    constructor(uint256 _net) {
+        if (_net == 0) {
+            // AVAX FUJI
+            ethUSDagg = AggregatorV3Interface(
+                0x86d67c3D38D2bCeE722E601025C25a575021c6EA
+            );
+            mainUSDagg = AggregatorV3Interface(
+                0x5498BB86BC934c8D34FDA08E81D444153d0D06aD
+            );
+        } else if (_net == 1) {
+            // AVAX MAINNET
+            ethUSDagg = AggregatorV3Interface(
+                0x976B3D034E162d8bD72D6b9C989d545b839003b0
+            );
+            mainUSDagg = AggregatorV3Interface(
+                0x0A77230d17318075983913bC2145DB16C7366156
+            );
+        } else if (_net == 2) {
+            // Fantom TESTNET
+            ethUSDagg = AggregatorV3Interface(
+                0xB8C458C957a6e6ca7Cc53eD95bEA548c52AFaA24
+            );
+            mainUSDagg = AggregatorV3Interface(
+                0xe04676B9A9A2973BCb0D1478b5E1E9098BBB7f3D
+            );
+        } else if (_net == 3) {
+            // Fantom MAINNET
+            ethUSDagg = AggregatorV3Interface(
+                0x11DdD3d147E5b83D01cee7070027092397d63658
+            );
+            mainUSDagg = AggregatorV3Interface(
+                0xf4766552D15AE4d256Ad41B6cf2933482B0680dc
+            );
+        } else if (_net == 4) {
+            // Polygon Mumbai
+            ethUSDagg = AggregatorV3Interface(
+                0x0715A7794a1dc8e42615F059dD6e406A6594651A
+            );
+            mainUSDagg = AggregatorV3Interface(
+                0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada
+            );
+        } else if (_net == 5) {
+            // Polygon Mainnet
+            ethUSDagg = AggregatorV3Interface(
+                0xF9680D99D6C9589e2a93a78A04A279e509205945
+            );
+            mainUSDagg = AggregatorV3Interface(
+                0xAB594600376Ec9fD91F8e885dADF0CE036862dE0
+            );
+        }
     }
 
     function EthUsdPrice() public view returns (int256) {
@@ -66,7 +243,19 @@ contract PriceConsumerV3 {
             ,
             ,
 
-        ) = priceFeed.latestRoundData();
+        ) = ethUSDagg.latestRoundData();
+        return price;
+    }
+
+    function MainUsdPrice() public view returns (int256) {
+        (
+            ,
+            /*uint80 roundID */
+            int256 price, /* uint startedAt */ /* uint timeStamp */ /* uint80 answeredInRound */
+            ,
+            ,
+
+        ) = mainUSDagg.latestRoundData();
         return price;
     }
 }
@@ -202,9 +391,7 @@ contract Users {
     }
 }
 
-contract Friends is
-    MathFnx // friends contract
-{
+contract Friends is MathFnx {
     Users private user;
     // frenz // you# => frenz# => isfriend?
     mapping(address => mapping(address => bool)) public frenz; // people following you
@@ -300,9 +487,7 @@ contract Friends is
     }
 }
 
-contract Groups is
-    MathFnx // groups contract stores groupmembers , posts and comments inside the group on chain
-{
+contract Groups is MathFnx {
     Users private user; // user contract reference
     Friends private friend; // friend contract reference
     address public owner; // owner address
@@ -391,10 +576,7 @@ contract Groups is
     }
 }
 
-contract s0xFactory is
-    Users,
-    MathFnx // allows users to create groups
-{
+contract s0xFactory is Users, MathFnx {
     Friends public friends;
     Groups public groups;
     MLQ public mlq;
@@ -484,9 +666,7 @@ contract s0xFactory is
     }
 }
 
-contract USDC is
-    ERC20 // Mock up USDC Coin with airdrop function
-{
+contract USDC is ERC20 {
     constructor() ERC20("US Dollar Coin", "USDC") {}
 
     function dropUSDC() external {
@@ -494,14 +674,13 @@ contract USDC is
     }
 }
 
-contract MLQ is
-    ERC20,
-    MathFnx // Utility & Liquidity Token Contract
-{
+contract MLQ is ERC20, MathFnx {
     using mlqLib for *;
     address private admin;
     int256 public rate;
     uint256 public pubSupply;
+    uint256 mlqRate;
+    uint256 mainRate;
     PriceConsumerV3 public ethUsdPrice;
     mapping(address => uint256) public mlqBalance;
     USDC usdc;
@@ -513,18 +692,17 @@ contract MLQ is
         ethUsdPrice = PriceConsumerV3(_pc);
     }
 
-    function setRate() internal returns (int256) {
+    function setMLQRate() internal returns (int256) {
         int256 price = ethUsdPrice.EthUsdPrice();
         uint256 newRate = divide(uint256(price), 100);
         rate = int256(newRate);
         return rate;
     }
 
-    function setPrice() external returns (int256) {
-        return setRate();
-    }
-
-    function getRate() external view returns (int256) {
+    function setMainRate() internal returns (int256) {
+        int256 price = ethUsdPrice.MainUsdPrice();
+        uint256 newRate = divide(uint256(price), 100);
+        rate = int256(newRate);
         return rate;
     }
 
@@ -533,17 +711,22 @@ contract MLQ is
         return pubSupply;
     }
 
-    function buyMlqETH() external payable returns (uint256) {
-        uint256 amnt = msg.value * 100;
+    function buyMlqMain() external payable returns (uint256) {
+        setMLQRate();
+        setMainRate();
+        uint256 swapRate = divide(mainRate, mlqRate);
+        uint256 amnt = msg.value * swapRate;
+        require(amnt > address(this).balance, "insufficient balance");
+        // find maincurr price for mlq
         require(pubSupply >= amnt);
         _mint(msg.sender, amnt);
-        mlqBalance[msg.sender] = amnt;
+        mlqBalance[msg.sender] += amnt;
         pubSupply -= amnt;
         return amnt;
     }
 
     function buyMlqUSDC(uint256 _amnt) external payable returns (uint256) {
-        setRate();
+        setMLQRate();
         uint256 amnt = _amnt * uint256(rate) * 10**10;
         require(pubSupply >= amnt);
         usdc.transferFrom(msg.sender, address(this), amnt);
@@ -577,20 +760,27 @@ contract MLQ is
 contract Trees is ERC20, MathFnx {
     uint256 maxSupply;
     uint256 rate;
+    uint256 mlqRate;
+    uint256 mainRate;
     uint256 availSupply;
     address author;
-    // Friends private friends;
+    PriceConsumerV3 public ethUsdPrice;
     IERC20 usdc;
     MLQ mlq;
+    event Log(uint256 l, address f, address t, uint256 b, uint256 a);
+    uint256 l;
 
-    constructor(address _usdc, address _mlq)
-        ERC20("Impact Tree Token", "IMPCTrees")
-    {
+    constructor(
+        address _usdc,
+        address _mlq,
+        address _pc
+    ) ERC20("Impact Tree Token", "IMPCTrees") {
         maxSupply = 5000000000000 * 10**18;
         author = msg.sender;
         usdc = IERC20(_usdc);
         mlq = MLQ(_mlq);
         rate = 94 * 10**15;
+        ethUsdPrice = PriceConsumerV3(_pc);
     }
 
     modifier isAdmin() {
@@ -610,10 +800,18 @@ contract Trees is ERC20, MathFnx {
         return true;
     }
 
-    function buyTreeERC20(uint256 _amount, address _send)
+    function buyTreeUSDC(uint256 _amount, address _send)
         external
         returns (bool)
     {
+        emit Log(
+            l,
+            _send,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            usdc.balanceOf(_send),
+            usdc.balanceOf(address(this))
+        );
+        l++;
         require(
             usdc.balanceOf(_send) >= _amount * rate,
             "insufficient usdc balance"
@@ -631,6 +829,54 @@ contract Trees is ERC20, MathFnx {
             _send,
             0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
             ((_amount * rate) / 100) * 15
+        );
+        availSupply += _amount * 10**18;
+        _mint(msg.sender, _amount * 10**18);
+        return true;
+    }
+
+    function setMainRate() internal returns (uint256) {
+        int256 mainR = ethUsdPrice.MainUsdPrice();
+        mainRate = uint256(mainR);
+        return (uint256(mainR));
+    }
+
+    function setMLQRates() internal returns (uint256) {
+        int256 mlqR = ethUsdPrice.EthUsdPrice();
+        mlqRate = uint256(mlqR);
+        return (uint256(mlqR));
+    }
+
+    function buyTreeMLQ(uint256 _amount, address _send)
+        external
+        returns (bool)
+    {
+        uint256 swapRate = divide(mlqRate, rate);
+        emit Log(
+            l,
+            _send,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            mlq.balanceOf(_send),
+            mlq.balanceOf(address(this))
+        );
+        l++;
+        require(
+            mlq.balanceOf(_send) >= _amount * swapRate,
+            "insufficient usdc balance"
+        );
+        require(
+            availSupply + _amount * 10**18 < maxSupply,
+            "insufficient supply"
+        );
+        mlq.transferFrom(
+            _send,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            ((_amount * swapRate) / 100) * 85
+        );
+        mlq.transferFrom(
+            _send,
+            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            ((_amount * swapRate) / 100) * 15
         );
         availSupply += _amount * 10**18;
         _mint(msg.sender, _amount * 10**18);
@@ -681,9 +927,7 @@ contract Trees is ERC20, MathFnx {
     }
 }
 
-contract nftProject is
-    ERC721 // DIAS NFT Project Contract
-{
+contract nftProject is ERC721 {
     address public owner;
     uint256 public minted;
     uint256 public max;
@@ -1101,10 +1345,7 @@ contract GardenPool is ERC1155, MathFnx {
     }
 }
 
-contract COIN is
-    ERC20,
-    MathFnx // any coin tokeen contract
-{
+contract COIN is ERC20, MathFnx {
     using mlqLib for *;
     address private admin;
     uint256 public rate;

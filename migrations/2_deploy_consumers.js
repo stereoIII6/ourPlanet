@@ -10,6 +10,7 @@ const PC = artifacts.require("PriceConsumerV3");
         V3 :: 
 */
 module.exports = function (deployer) {
-  deployer.deploy(PC, "0x86d67c3d38d2bcee722e601025c25a575021c6ea");
+  // 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
+  deployer.deploy(PC, 0);
   deployer.deploy(USDC);
 };

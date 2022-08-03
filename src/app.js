@@ -61,6 +61,7 @@ const cover = document.getElementById("cover");
 const close = document.getElementById("close");
 
 const buyTrees = document.getElementById("trees");
+const usdcBtn = document.getElementById("usdc_bal");
 
 let a = 0;
 let move = true;
@@ -266,6 +267,20 @@ const approveMLQ = async (e) => {
       console.log(err);
     });
 };
+const dropUSDCs = async (e) => {
+  e.preventDefault();
+  const usdc = await usdcData();
+  const drop = await usdc
+    .dropUSDC()
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+usdcBtn.addEventListener("click", dropUSDCs);
 const goUsdBuy = async (e) => {
   e.preventDefault();
   const trees = await treeData();
@@ -278,7 +293,7 @@ const goUsdBuy = async (e) => {
   console.log(amnt * 94 * 1e15);
   console.log(trees.address);
   const buy = await trees
-    .buyTreeERC20(amnt, sender)
+    .buyTreeUSDC(amnt, sender)
     .then((result) => {
       console.log(result);
       return result;
