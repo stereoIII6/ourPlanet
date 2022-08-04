@@ -62,6 +62,9 @@ const close = document.getElementById("close");
 
 const buyTrees = document.getElementById("trees");
 const usdcBtn = document.getElementById("usdc_bal");
+const treeBtn = document.getElementById("tree_bal");
+const mlqBtn = document.getElementById("mlq_bal");
+const co2Btn = document.getElementById("co2_bal");
 
 let a = 0;
 let move = true;
@@ -218,15 +221,16 @@ const onClickConnect = async (e) => {
     var networkTag = "Switch Network";
     // evaluate legal networks
     if (Number(network) === 1) networkTag = "ETH";
-    if (Number(network) === 137) networkTag = "Polygon";
+    if (Number(network) === 137) networkTag = "MTC";
     if (Number(network) === 100) networkTag = "xDai";
-    if (Number(network) === 10) networkTag = "Optimism";
-    if (Number(network) === 200) networkTag = "Arbitrum";
-    if (Number(network) === 43224) networkTag = "Avalanche";
-    if (Number(network) === 1312) networkTag = "ACAB";
-    if (Number(network) === 80001) networkTag = "Mumbai";
-    if (Number(network) === 43113) networkTag = "Fuji";
-    net_btn.innerHTML = networkTag;
+    if (Number(network) === 10) networkTag = "oETH";
+    if (Number(network) === 200) networkTag = "aETH";
+    if (Number(network) === 43224) networkTag = "AVAX";
+    if (Number(network) === 1312) networkTag = "ACAB_";
+    if (Number(network) === 80001) networkTag = "MTC*";
+    if (Number(network) === 43113) networkTag = "AVAX*";
+    let mainVal = await provider.getBalance(accounts[0]);
+    net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
     // console.log(await signer.getAddress());
     userData = await log();
   } catch (error) {
@@ -408,11 +412,25 @@ const log = async () => {
   profile_btn.innerHTML = "logging";
 
   const s0x = await s0xData();
+  const usdc = await usdcData();
+  const mlq = await mlqData();
+  const tree = await treeData();
+  const co2 = await co2Data();
+  const client = await signer.getAddress();
+  let usdcVal = await usdc.balanceOf(client);
+  let mlqVal = await mlq.balanceOf(client);
+  let treeVal = await tree.balanceOf(client);
+  let co2Val = await co2.balanceOf(client);
+
+  usdcBtn.innerHTML = (usdcVal / 1e18).toFixed(2) + " USDC";
+  mlqBtn.innerHTML = (mlqVal / 1e18).toFixed(1) + " MLQ";
+  treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " TR33";
+  co2Btn.innerHTML = (co2Val / 1e18).toFixed(1) + " CO2";
 
   console.log(s0x);
   // ask contract about user
   const isU = await s0x
-    .isU(await signer.getAddress())
+    .isU(client)
     .then((result) => {
       console.log(result, " :: RESULT");
       return result;

@@ -8,7 +8,7 @@ body {
   font-family: "Impact", cursive;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 50px 6em 70em 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 50px 6em 40em 50px;
   justify-items: center;
   color: black;
   background: white;
@@ -105,19 +105,29 @@ body {
 #title {
   grid-column: 4/10;
   grid-row: 2;
-  font-size: 5em;
+  font-size: 52px;
   text-align: center;
-  z-index: 100;
+  z-index: -1;
   font-weight: 900;
   color: #4c9071;
+  padding-top: 0.3em;
+  padding-left: 1em;
+  padding-right: 1em;
   -webkit-text-stroke-width: 3px;
   -webkit-text-stroke-color: #4c9071;
+}
+path {
+  fill: transparent;
+}
+
+text {
+  fill: #4c9071;
 }
 #globe {
   border-radius: 50%;
   background: #badbe1;
-  width: 60em;
-  height: 60em;
+  width: 40em;
+  height: 40em;
   grid-row: 3;
   grid-column: 4/10;
   overflow: hidden;
@@ -125,8 +135,8 @@ body {
 }
 #cover {
   border-radius: 50%;
-  width: 60em;
-  height: 60em;
+  width: 40em;
+  height: 40em;
   grid-row: 3;
   grid-column: 4/10;
   overflow: hidden;
@@ -141,7 +151,7 @@ body {
   background: rgba(ivory, 0.3);
   z-index: 222;
   display: none;
-  padding-top: 11em;
+  padding-top: 5em;
   justify-content: center;
 }
 #modal,
@@ -238,8 +248,8 @@ body {
   display: none;
 }
 #continents {
-  width: 60.3em;
-  height: 60.3em;
+  width: 40.3em;
+  height: 40.3em;
   display: grid;
   grid-template-rows:
     1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr
@@ -316,8 +326,8 @@ body {
 #land59,
 #land60 {
   background: mediumseagreen;
-  height: 0.88em;
-  width: 0.88em;
+  height: 0.6em;
+  width: 0.6em;
   border-radius: 3px;
 }
 #land:hover {
@@ -326,4 +336,14 @@ body {
 #nav {
   grid-row: 1;
   grid-column: 1/-1;
+}
+#foot {
+  grid-row: -1;
+  grid-column: 3/-3;
+  display: grid;
+  grid-template-columns: 4fr 3fr 2fr 2fr 2fr;
+  font-size: 0.5em;
+}
+#footLink {
+  text-align: center;
 }

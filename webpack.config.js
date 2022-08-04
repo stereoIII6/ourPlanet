@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { LoaderOptionsPlugin } = require("webpack");
 
 module.exports = {
@@ -35,6 +36,14 @@ module.exports = {
       title: "s0xiety",
       file: "index.html",
       template: "public/app.html",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "public/images", to: "images" },
+        { from: "public/cols", to: "cols" },
+        { from: "public/fonts", to: "fonts" },
+        { from: "public/layouts", to: "layouts" },
+      ],
     }),
   ],
 };

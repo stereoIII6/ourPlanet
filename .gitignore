@@ -4,4 +4,5 @@ ant_nft.md
 network_details.md
 ant_nft.md
 .env
+.env.launcher
 src/.env

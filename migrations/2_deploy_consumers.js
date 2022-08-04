@@ -1,6 +1,7 @@
 require("dotenv").config();
 const PC = artifacts.require("PriceConsumerV3");
 /* */ const USDC = artifacts.require("USDC"); // MockUp Testnet */
+const VRF = artifacts.require("VRFv2Consumer");
 /* 
     Fuji 
         ETH / USD :: 0x86d67c3D38D2bCeE722E601025C25a575021c6EA

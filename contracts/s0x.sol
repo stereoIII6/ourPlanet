@@ -143,7 +143,8 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
     uint16 requestConfirmations = 3;
     uint32 numWords = 3;
 
-    uint256[] public s_randomWords;
+    mapping(uint256 => uint256[]) public s_requestIdToRandomWords;
+    mapping(uint256 => address) public s_requestIdToAddress;
     uint256 public s_requestId;
     address s_owner;
 
@@ -153,23 +154,35 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         s_subscriptionId = subscriptionId;
     }
 
+    function randy(uint256 _rid) external view returns (uint256[] memory) {
+        return s_requestIdToRandomWords[_rid];
+    }
+
     // Assumes the subscription is funded sufficiently.
-    function requestRandomWords() external onlyOwner {
-        // Will revert if subscription is not set and funded.
-        s_requestId = COORDINATOR.requestRandomWords(
+    function requestRandomWords() external returns (uint256) {
+        uint256 requestId = COORDINATOR.requestRandomWords(
             keyHash,
             s_subscriptionId,
             requestConfirmations,
             callbackGasLimit,
             numWords
         );
+        s_requestIdToAddress[requestId] = msg.sender;
+
+        // Store the latest requestId for this example.
+        s_requestId = requestId;
+
+        // Return the requestId to the requester.
+        return requestId;
     }
 
-    function fulfillRandomWords(
-        uint256, /* requestId */
-        uint256[] memory randomWords
-    ) internal override {
-        s_randomWords = randomWords;
+    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords)
+        internal
+        override
+    {
+        // You can return the value to the requester,
+        // but this example simply stores it.
+        s_requestIdToRandomWords[requestId] = randomWords;
     }
 
     modifier onlyOwner() {
@@ -933,17 +946,26 @@ contract nftProject is ERC721 {
     uint256 public max;
     string public nam;
     string public sym;
+    VRFv2Consumer public vrf;
+    ERC20 public usdc;
+    MLQ public mlq;
     mapping(uint256 => bytes) public dias;
 
     constructor(
         address _owner,
         string memory _name,
-        string memory _sym
+        string memory _sym,
+        address _usdc,
+        address _vrf,
+        address _mlq
     ) ERC721(_name, _sym) {
         owner = _owner;
         max = 1000;
         nam = _name;
         sym = _sym;
+        vrf = VRFv2Consumer(_vrf);
+        usdc = ERC20(_usdc);
+        mlq = MLQ(_mlq);
     }
 
     function isOwner(address _adr) external view returns (bool) {
@@ -963,6 +985,11 @@ contract nftProject is ERC721 {
         require(minted < max);
         doMint(_amnt);
         return minted;
+    }
+
+    function getVrfId() internal returns (uint256[] memory) {
+        uint256 rid = vrf.requestRandomWords();
+        return vrf.randy(rid);
     }
 
     function doMint(uint256 _amnt) internal returns (uint256) {
@@ -1007,7 +1034,6 @@ contract nftProject is ERC721 {
 
 contract EcoMintNFT is nftProject {
     Trees public trees;
-    ERC20 public currency;
     uint256 nftPrice;
     uint256 val;
 
@@ -1016,10 +1042,11 @@ contract EcoMintNFT is nftProject {
         string memory _name,
         string memory _sym,
         address _treeAdr,
-        address _curr
-    ) nftProject(_owner, _name, _sym) {
+        address _usdc,
+        address _vrf,
+        address _mlq
+    ) nftProject(_owner, _name, _sym, _usdc, _vrf, _mlq) {
         trees = Trees(_treeAdr);
-        currency = ERC20(_curr);
         nftPrice = 25 * 10**18;
         val = 94 * 10**15;
     }
@@ -1033,16 +1060,13 @@ contract EcoMintNFT is nftProject {
         uint256 sub = nftPrice + val;
         uint256 total = _amnt * sub;
         uint256 fee = 94 * 10**15 * _amnt;
-        require(
-            total + fee < currency.balanceOf(msg.sender),
-            "insufficient funds"
-        );
-        currency.transferFrom(
+        require(total + fee < usdc.balanceOf(msg.sender), "insufficient funds");
+        usdc.transferFrom(
             msg.sender,
             0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
             fee
         );
-        currency.transferFrom(msg.sender, address(this), total);
+        usdc.transferFrom(msg.sender, address(this), total);
         trees.addClaim(msg.sender, _amnt * 10**18);
         doMint(_amnt);
         return minted;
