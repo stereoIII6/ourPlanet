@@ -244,8 +244,23 @@ text {
   grid-row: 3;
   grid-column: 7/-1;
 }
-#buyTreesDef {
+#buyTreesDef,
+#plantTreesDef {
   display: none;
+}
+#treebalance,
+#balance_maxer,
+#location_picker,
+#titler,
+#words,
+#bePlanter {
+  grid-column: 1/-1;
+}
+#gazi-north {
+  grid-column: 1/6;
+}
+#gazi-south {
+  grid-column: 6/-1;
 }
 #continents {
   width: 40.3em;

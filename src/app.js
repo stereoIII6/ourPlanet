@@ -13,6 +13,17 @@ import UAuth from "@uauth/js";
 import { toUtf8CodePoints } from "@ethersproject/strings";
 let accounts;
 let network;
+let words;
+
+const getWords = async () => {
+  words = await fetch("./words/words.json")
+    .then((response) => response.json())
+    .then((json) => {
+      words = json;
+      return words;
+    });
+};
+words = getWords();
 let user;
 const client = require("ipfs-http-client");
 const ipfs = client.create({
@@ -61,10 +72,14 @@ const cover = document.getElementById("cover");
 const close = document.getElementById("close");
 
 const buyTrees = document.getElementById("trees");
+const plantTrees = document.getElementById("plant");
+const mintCarbonds = document.getElementById("c02");
 const usdcBtn = document.getElementById("usdc_bal");
 const treeBtn = document.getElementById("tree_bal");
 const mlqBtn = document.getElementById("mlq_bal");
 const co2Btn = document.getElementById("co2_bal");
+const wordBox = document.getElementById("words");
+const maxer = document.getElementById("balance_maxer");
 
 let a = 0;
 let move = true;
@@ -161,8 +176,9 @@ const draw = (e) => {
 let mod = "none";
 const toggle = (e) => {
   console.log(mod);
-  if (mod == "none") {
+  if (mod === "none") {
     mod = "flex";
+    close.addEventListener("click", unlabelMe);
   } else mod = "none";
   modal.style.display = mod;
 };
@@ -179,6 +195,7 @@ const labelMe = (e) => {
 };
 const unlabelMe = (e) => {
   lab = "none";
+  mod = "none";
   label.style.display = lab;
   modal.style.display = lab;
 };
@@ -271,6 +288,18 @@ const approveMLQ = async (e) => {
       console.log(err);
     });
 };
+const refreshUSDC = async () => {
+  const usdc = await usdcData();
+  const client = await signer.getAddress();
+  let usdcVal = await usdc.balanceOf(client);
+  usdcBtn.innerHTML = (usdcVal / 1e18).toFixed(2) + " USDC";
+};
+const refreshTR33 = async () => {
+  const tree = await treeData();
+  const client = await signer.getAddress();
+  let treeVal = await tree.balanceOf(client);
+  treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " TR33";
+};
 const dropUSDCs = async (e) => {
   e.preventDefault();
   const usdc = await usdcData();
@@ -278,6 +307,17 @@ const dropUSDCs = async (e) => {
     .dropUSDC()
     .then((result) => {
       console.log(result);
+      usdcBtn.innerHTML = "XXX USDCs";
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  const dropped = drop
+    .wait()
+    .then((result) => {
+      console.log(result);
+      refreshUSDC();
       return result;
     })
     .catch((err) => {
@@ -306,68 +346,76 @@ const goUsdBuy = async (e) => {
       console.log(err);
     });
 };
-const grabTrees = (e) => {
+const grabTrees = async (e) => {
   trs = 101;
   e.preventDefault();
-  console.log("buy trees");
-  toggle();
-  modalHead.innerHTML = "BUY TR33 TOKENS";
-  modalBody.innerHTML = document.getElementById("buyTreesDef").innerHTML;
+  try {
+    const client = await signer.getAddress();
+    console.log("buy trees");
+    toggle();
+    modalHead.innerHTML = "BUY TR33 TOKENS";
+    modalBody.innerHTML = document.getElementById("buyTreesDef").innerHTML;
 
-  const sub = document.getElementById("sub");
-  const amnt = document.getElementById("amnt");
-  const add = document.getElementById("add");
-  const tenx = document.getElementById("tenx");
-  const div = document.getElementById("div");
-  const approve = document.getElementById("approve");
-  const treebuy = document.getElementById("treebuy");
-  amnt.innerHTML = `${trs} TR33S`;
-  approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-  treebuy.innerHTML = `BUY ${trs} TR33S`;
-  const more = (e) => {
-    trs++;
+    const sub = document.getElementById("sub");
+    const amnt = document.getElementById("amnt");
+    const add = document.getElementById("add");
+    const tenx = document.getElementById("tenx");
+    const div = document.getElementById("div");
+    const approve = document.getElementById("approve");
+    const treebuy = document.getElementById("treebuy");
     amnt.innerHTML = `${trs} TR33S`;
     approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
     treebuy.innerHTML = `BUY ${trs} TR33S`;
-    console.log(trs);
-  };
-  add.addEventListener("click", more);
-
-  const tenxy = (e) => {
-    if (trs < 1000000000) trs *= 10;
-    amnt.innerHTML = `${trs} TR33S`;
-    approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-    treebuy.innerHTML = `BUY ${trs} TR33S`;
-    console.log(trs);
-  };
-  tenx.addEventListener("click", tenxy);
-
-  const less = (e) => {
-    if (trs > 2) {
-      trs--;
+    const more = (e) => {
+      trs++;
       amnt.innerHTML = `${trs} TR33S`;
       approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
       treebuy.innerHTML = `BUY ${trs} TR33S`;
       console.log(trs);
-    }
-  };
-  sub.addEventListener("click", less);
+    };
+    add.addEventListener("click", more);
 
-  const divx = (e) => {
-    if (trs >= 10) {
-      trs = Math.floor(trs / 10);
+    const tenxy = (e) => {
+      if (trs < 1000000000) trs *= 10;
       amnt.innerHTML = `${trs} TR33S`;
       approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
       treebuy.innerHTML = `BUY ${trs} TR33S`;
-      console.log(trs.toFixed(0));
-    }
-  };
-  div.addEventListener("click", divx);
-  approve.addEventListener("click", approveUSDC);
-  // if (isApproved === true)
-  treebuy.addEventListener("click", goUsdBuy);
-  modalFoot.innerHTML = "* confirm your transaction with your metamask !";
-  close.addEventListener("click", unlabelMe);
+      console.log(trs);
+    };
+    tenx.addEventListener("click", tenxy);
+
+    const less = (e) => {
+      if (trs > 2) {
+        trs--;
+        amnt.innerHTML = `${trs} TR33S`;
+        approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
+        treebuy.innerHTML = `BUY ${trs} TR33S`;
+        console.log(trs);
+      }
+    };
+    sub.addEventListener("click", less);
+
+    const divx = (e) => {
+      if (trs >= 10) {
+        trs = Math.floor(trs / 10);
+        amnt.innerHTML = `${trs} TR33S`;
+        approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
+        treebuy.innerHTML = `BUY ${trs} TR33S`;
+        console.log(trs.toFixed(0));
+      }
+    };
+    div.addEventListener("click", divx);
+    approve.addEventListener("click", approveUSDC);
+    // if (isApproved === true)
+    treebuy.addEventListener("click", goUsdBuy);
+    modalFoot.innerHTML = "* confirm your transaction with your metamask !";
+    close.addEventListener("click", unlabelMe);
+  } catch {
+    modalHead.innerHTML = "Please Sign In first";
+    modalBody.innerHTML = "";
+    modalFoot.innerHTML = "* Your have to be connected to the blockchain !";
+    toggle();
+  }
 };
 buyTrees.addEventListener("click", grabTrees);
 const s0xData = async () => {
@@ -406,7 +454,52 @@ const gardenData = async () => {
 
   return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, signer);
 };
+let num1;
+let num2;
+let num3;
+let num4;
+const doRand = () => {
+  num1 = Math.floor(Math.random() * words.names.length);
+  num2 = Math.floor(Math.random() * words.verbs.length);
+  num3 = Math.floor(Math.random() * words.adjectives.length);
+  num4 = Math.floor(Math.random() * words.nouns.length);
+  // console.log(num1, num2, num3, num4);
+  return [num1, num2, num3, num4];
+};
+const goPlantForm = async (e) => {
+  e.preventDefault();
+  // get garden contract
+  try {
+    console.log("planting trees");
+    const tree = await treeData();
+    const client = await signer.getAddress();
+    let treeVal = await tree.balanceOf(client);
+    const garden = await gardenData();
+    const doMax = (e) => {
+      e.preventDefault();
+      console.log((treeVal / 1e18).toFixed(0));
+      treeBalance.value = (treeVal / 1e18).toFixed(0);
+    };
 
+    const nums = doRand();
+    const phrase = words.names[nums[0]] + " " + words.verbs[nums[1]] + " " + words.adjectives[nums[2]] + " " + words.nouns[nums[3]];
+    console.log(phrase, "now");
+    wordBox.innerHTML = "Your Tree Phrase : " + phrase;
+    modalHead.innerHTML = "Plant Your Trees";
+    modalBody.innerHTML = document.getElementById("plantTreesDef").innerHTML;
+    maxer.innerHTML = "Max. " + (treeVal / 1e18).toFixed(0) + " TR33s";
+    const treeBalance = document.getElementById("treebalance");
+    maxer.addEventListener("click", doMax);
+    modalFoot.innerHTML = "* Your data will be stored on the blockchain !";
+    toggle();
+  } catch {
+    modalHead.innerHTML = "Please Sign In first";
+    modalBody.innerHTML = "";
+    modalFoot.innerHTML = "* Your have to be connected to the blockchain !";
+    toggle();
+  }
+};
+plantTrees.addEventListener("click", goPlantForm);
 const log = async () => {
   console.log("logging user in...");
   profile_btn.innerHTML = "logging";

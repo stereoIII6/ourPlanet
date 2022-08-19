@@ -43,6 +43,7 @@ module.exports = {
         { from: "public/cols", to: "cols" },
         { from: "public/fonts", to: "fonts" },
         { from: "public/layouts", to: "layouts" },
+        { from: "public/words", to: "words" },
       ],
     }),
   ],

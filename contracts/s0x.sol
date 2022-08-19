@@ -1570,5 +1570,32 @@ contract s0xPool is MathFnx {
         return (_mIn, 0, 0);
     }
 }
+/*
+contract ecoverse is ERC1155 {
+    constructor() ERC721("Planters Certificate", "PCRT") {}
 
+    function mintCertificate(
+        string _dias,
+        uint256 _id,
+        uint256 _amnt,
+        string _loc
+    ) external returns (bool) {
+        // get trees from user
+        // place info on certificate dias
+        // set certificate info on contract
+        // return boolean
+        return true;
+    }
+
+    function editCertificate(uint256 _id, string _dias_new)
+        external isAdmin()
+        returns (bool)
+    {
+        // check approval
+        // find certificate
+        // overwrite certificate dias
+        return true;
+    }
+}
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
