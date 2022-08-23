@@ -5,7 +5,7 @@
   "main": "truffle-config.js",
   "scripts": {
     "start": "webpack serve",
-    "build": "webpack",
+    "build": "sudo webpack",
     "dev": "webpack serve",
     "compile": "sudo truffle compile",
     "migrate:dev": "sudo truffle migrate --network develop",

@@ -52,6 +52,7 @@ const GardenPool = require("../dist/contracts/GardenPool.json");
 const IERC20 = require("../dist/contracts/IERC20.json");
 const USDC = require("../dist/contracts/USDC.json");
 const MLQ = require("../dist/contracts/MLQ.json");
+const ecoverse = require("../dist/contracts/ecoverse.json");
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 let signer;
 
@@ -78,8 +79,6 @@ const usdcBtn = document.getElementById("usdc_bal");
 const treeBtn = document.getElementById("tree_bal");
 const mlqBtn = document.getElementById("mlq_bal");
 const co2Btn = document.getElementById("co2_bal");
-const wordBox = document.getElementById("words");
-const maxer = document.getElementById("balance_maxer");
 
 let a = 0;
 let move = true;
@@ -219,6 +218,15 @@ const conti = (e) => {
 };
 cover.addEventListener("mouseover", pause);
 cover.addEventListener("mouseout", conti);
+
+const netSwitch = (e) => {
+  e.preventDefault();
+  console.log("open switch");
+  modalHead.innerHTML = "Switch Network";
+  modalBody.innerHTML = document.getElementById("switchNetDef").innerHTML;
+  modalFoot.innerHTML = "* Your data will be stored on the blockchain !";
+  toggle();
+};
 const onClickConnect = async (e) => {
   e.preventDefault();
   try {
@@ -232,7 +240,7 @@ const onClickConnect = async (e) => {
     accounts = await ethereum.request({ method: "eth_requestAccounts" });
     await provider.send("eth_requestAccounts", []);
     signer = await provider.getSigner();
-    console.log(await signer.getAddress());
+    console.log(signer);
     // get network data
     network = await ethereum.request({ method: "net_version" });
     var networkTag = "Switch Network";
@@ -248,7 +256,8 @@ const onClickConnect = async (e) => {
     if (Number(network) === 43113) networkTag = "AVAX*";
     let mainVal = await provider.getBalance(accounts[0]);
     net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
-    // console.log(await signer.getAddress());
+    net_btn.addEventListener("click", netSwitch);
+    console.log(await signer.getAddress());
     userData = await log();
   } catch (error) {
     console.error("connect error", error);
@@ -272,6 +281,9 @@ const approveUSDC = async (e) => {
     .catch((err) => {
       console.log(err);
     });
+  doApprove.wait().then((result) => {
+    console.log(result);
+  });
 };
 const approveMLQ = async (e) => {
   e.preventDefault();
@@ -298,7 +310,7 @@ const refreshTR33 = async () => {
   const tree = await treeData();
   const client = await signer.getAddress();
   let treeVal = await tree.balanceOf(client);
-  treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " TR33";
+  treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " S33Ds";
 };
 const dropUSDCs = async (e) => {
   e.preventDefault();
@@ -345,6 +357,12 @@ const goUsdBuy = async (e) => {
     .catch((err) => {
       console.log(err);
     });
+  buy.wait().then((result) => {
+    console.log(result);
+    refreshTR33();
+    refreshUSDC();
+    toggle();
+  });
 };
 const grabTrees = async (e) => {
   trs = 101;
@@ -425,10 +443,12 @@ const s0xData = async () => {
   return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, signer);
 };
 const usdcData = async () => {
-  const deploymentKey = await Object.keys(USDC.networks)[0];
-  // console.log(Trees.abi);
-
-  return new ethers.Contract(USDC.networks[deploymentKey].address, USDC.abi, signer);
+  let adr;
+  let client = await signer.getAddress();
+  console.log(network, client);
+  if (Number(network) === 43113) adr = "0x5a604d07782b7303bd2327d133f13a58bd17dc43"; // Fuji AVAX*
+  if (Number(network) === 43224) adr = "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"; // Main AVAX*
+  return new ethers.Contract(adr, USDC.abi, signer);
 };
 const mlqData = async () => {
   const deploymentKey = await Object.keys(MLQ.networks)[0];
@@ -454,6 +474,12 @@ const gardenData = async () => {
 
   return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, signer);
 };
+const ecoData = async () => {
+  const deploymentKey = await Object.keys(ecoverse.networks)[0];
+  // console.log(GardenPool.abi);
+
+  return new ethers.Contract(ecoverse.networks[deploymentKey].address, ecoverse.abi, signer);
+};
 let num1;
 let num2;
 let num3;
@@ -466,30 +492,158 @@ const doRand = () => {
   // console.log(num1, num2, num3, num4);
   return [num1, num2, num3, num4];
 };
+let dias = {
+  owner: "0x0",
+  location: "",
+  trees: 0,
+  date: 0,
+  dias: {},
+};
+const setDias = async () => {
+  const tree = await treeData();
+  const client = await signer.getAddress();
+  const eco = await ecoData();
+  const deploymentKey = await Object.keys(ecoverse.networks)[0];
+  const diasShow = document.getElementById("dias");
+  const allowed = await tree
+    .allowance(client, ecoverse.networks[deploymentKey].address)
+    .then((result) => {
+      console.log(Number(result._hex));
+      return Number(result._hex);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  if (allowed >= BigInt(dias.trees * 1e18) && dias.location !== "") {
+    const bePlanter = document.getElementById("bePlanter");
+    bePlanter.innerHTML = "Plant " + dias.trees + " TR33s Now";
+    bePlanter.style.background = "#4c9071";
+    bePlanter.disabled = false;
+  } else {
+    bePlanter.style.background = "#badbe1";
+    bePlanter.disabled = true;
+    dias.date = Date(Date.now()).slice(4, 34);
+    diasShow.innerHTML = JSON.stringify(dias);
+    const approveTrees = document.getElementById("approveTrees");
+    if (dias.location !== "" && dias.trees > 99) {
+      approveTrees.disabled = false;
+      approveTrees.innerHTML = "Approve " + dias.trees + " TR33s";
+      approveTrees.style.background = "#4c9071";
+    } else {
+      approveTrees.disabled = true;
+      approveTrees.style.background = "#badbe1";
+    }
+  }
+};
 const goPlantForm = async (e) => {
   e.preventDefault();
-  // get garden contract
-  try {
-    console.log("planting trees");
-    const tree = await treeData();
-    const client = await signer.getAddress();
+  const client = await signer.getAddress();
+  let adrs = await signer.getAddress();
+  dias.owner = adrs.slice(0, 4) + "..." + adrs.slice(39, 42);
+  dias.date = Date(Date.now()).slice(4, 34);
+  dias.dias = { status: "sprouting" };
+  const tree = await treeData();
+  const doMax = async (e) => {
+    e.preventDefault();
     let treeVal = await tree.balanceOf(client);
-    const garden = await gardenData();
-    const doMax = (e) => {
-      e.preventDefault();
-      console.log((treeVal / 1e18).toFixed(0));
-      treeBalance.value = (treeVal / 1e18).toFixed(0);
-    };
-
+    console.log((treeVal / 1e18).toFixed(0));
+    const treeBalance = document.getElementById("treebalance");
+    treeBalance.value = (treeVal / 1e18).toFixed(0);
+    onTrees();
+  };
+  const onTrees = async () => {
+    const treeBalance = document.getElementById("treebalance");
+    dias.trees = treeBalance.value;
+    setDias();
+  };
+  const setPlantation = async (e) => {
+    const gaziNorth = document.getElementById("gazi-north");
+    const gaziSouth = document.getElementById("gazi-south");
+    const loc = document.getElementById("location");
+    console.log("go green", e.target.id);
+    if (e.target.id === "gazi-north") {
+      gaziNorth.style.background = "#4c9071";
+      gaziSouth.style.background = "#badbe1";
+      loc.innerHTML = "Your Plantation : Gazi North, Kenya";
+      dias.location = "Gazi North, Kenya";
+    } else if (e.target.id === "gazi-south") {
+      gaziNorth.style.background = "#badbe1";
+      gaziSouth.style.background = "#4c9071";
+      loc.innerHTML = "Your Plantation : Gazi South, Kenya";
+      dias.location = "Gazi South, Kenya";
+    }
+    setDias();
+  };
+  const goApproveTrees = async () => {
+    const eco = await ecoData();
+    const trees = await treeData();
+    const deploymentKey = await Object.keys(ecoverse.networks)[0];
+    const aprv = await trees
+      .approve(ecoverse.networks[deploymentKey].address, BigInt(dias.trees * 1e18))
+      .then((result) => {
+        console.log(result);
+        return result;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    const bePlanter = document.getElementById("bePlanter");
+    const approveTrees = document.getElementById("approveTrees");
+    aprv.wait().then((result) => {
+      bePlanter.disabled = false;
+      approveTrees.disabled = true;
+    });
+  };
+  const mintCert = async () => {
+    const eco = await ecoData();
+    const mint = await eco
+      .mintCertificate(dias, Date.now(), BigInt(dias.trees * 1e18), dias.location)
+      .then((result) => {
+        console.log(result);
+        return result;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    mint.wait().then((result) => {
+      refreshTR33();
+      toggle();
+    });
+  };
+  const fillIn = async () => {
+    let treeVal = await tree.balanceOf(client);
+    const wordBox = document.getElementById("words");
+    const maxer = document.getElementById("balance_maxer");
+    const gaziNorth = document.getElementById("gazi-north");
+    const gaziSouth = document.getElementById("gazi-south");
+    const diasShow = document.getElementById("dias");
+    const treeBalance = document.getElementById("treebalance");
+    const bePlanter = document.getElementById("bePlanter");
+    const approveTrees = document.getElementById("approveTrees");
+    approveTrees.disabled = true;
+    approveTrees.style.background = "#4c9071";
+    bePlanter.style.background = "#badbe1";
+    approveTrees.addEventListener("click", goApproveTrees);
+    bePlanter.addEventListener("click", mintCert);
+    bePlanter.disabled = true;
+    treeBalance.addEventListener("keyup", onTrees);
+    treeBalance.addEventListener("change", onTrees);
+    maxer.innerHTML = "Max. " + (treeVal / 1e18).toFixed(0) + " TR33s";
+    diasShow.innerHTML = JSON.stringify(dias);
+    maxer.addEventListener("click", doMax);
+    gaziNorth.addEventListener("click", setPlantation);
+    gaziSouth.addEventListener("click", setPlantation);
     const nums = doRand();
     const phrase = words.names[nums[0]] + " " + words.verbs[nums[1]] + " " + words.adjectives[nums[2]] + " " + words.nouns[nums[3]];
-    console.log(phrase, "now");
     wordBox.innerHTML = "Your Tree Phrase : " + phrase;
+  };
+  try {
+    // get garden contract
+
+    console.log("planting trees");
     modalHead.innerHTML = "Plant Your Trees";
     modalBody.innerHTML = document.getElementById("plantTreesDef").innerHTML;
-    maxer.innerHTML = "Max. " + (treeVal / 1e18).toFixed(0) + " TR33s";
-    const treeBalance = document.getElementById("treebalance");
-    maxer.addEventListener("click", doMax);
+    const fill = await fillIn();
     modalFoot.innerHTML = "* Your data will be stored on the blockchain !";
     toggle();
   } catch {
@@ -517,8 +671,8 @@ const log = async () => {
 
   usdcBtn.innerHTML = (usdcVal / 1e18).toFixed(2) + " USDC";
   mlqBtn.innerHTML = (mlqVal / 1e18).toFixed(1) + " MLQ";
-  treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " TR33";
-  co2Btn.innerHTML = (co2Val / 1e18).toFixed(1) + " CO2";
+  treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " S33Ds";
+  co2Btn.innerHTML = (co2Val / 1e18).toFixed(1) + " C4RB";
 
   console.log(s0x);
   // ask contract about user

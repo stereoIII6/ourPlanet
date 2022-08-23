@@ -133,11 +133,20 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
     // Your subscription ID.
     uint64 s_subscriptionId;
 
-    // Rinkeby coordinator. For other networks,
+    /* => */
+    // AVAX Fuji coordinator. For other networks,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
     address vrfCoordinator = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
     bytes32 keyHash =
         0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
+    // */
+
+    /* => / // AVAX Mainnet coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634;
+    bytes32 keyHash =
+        0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696;
+    // */
 
     uint32 callbackGasLimit = 100000;
     uint16 requestConfirmations = 3;
@@ -787,7 +796,7 @@ contract Trees is ERC20, MathFnx {
         address _usdc,
         address _mlq,
         address _pc
-    ) ERC20("Impact Tree Token", "IMPCTrees") {
+    ) ERC20("Seedling", "S33D") {
         maxSupply = 5000000000000 * 10**18;
         author = msg.sender;
         usdc = IERC20(_usdc);
@@ -1103,7 +1112,7 @@ contract Co2s is ERC20, MathFnx {
         address _contract,
         uint256 _percent,
         address _mlq
-    ) ERC20("Carbon token", "CO2") {
+    ) ERC20("Carbon Certificate", "C4RB") {
         maxSupply = 25000000000000 * 10**18;
         trees = IERC20(_contract);
         per = _percent;
@@ -1570,32 +1579,68 @@ contract s0xPool is MathFnx {
         return (_mIn, 0, 0);
     }
 }
-/*
-contract ecoverse is ERC1155 {
-    constructor() ERC721("Planters Certificate", "PCRT") {}
+
+contract ecoverse is ERC721 {
+    address admin;
+    address trees;
+    Trees tree;
+    mapping(uint256 => bytes) dias;
+    mapping(uint256 => uint256) amount;
+    mapping(uint256 => bytes) location;
+    mapping(uint256 => address) ownedBy;
+    mapping(uint256 => uint256) stamped;
+
+    constructor(address _trees) ERC721("Tree Token", "TR33") {
+        admin = msg.sender;
+        tree = Trees(_trees);
+    }
+
+    modifier isAdmin() {
+        require(msg.sender == admin);
+        _;
+    }
 
     function mintCertificate(
-        string _dias,
+        string memory _dias,
         uint256 _id,
         uint256 _amnt,
-        string _loc
+        string memory _loc
     ) external returns (bool) {
         // get trees from user
+        tree.transferFrom(msg.sender, address(this), _amnt);
         // place info on certificate dias
+        dias[_id] = bytes(_dias);
         // set certificate info on contract
+        amount[_id] = _amnt;
+        location[_id] = bytes(_loc);
+        ownedBy[_id] = msg.sender;
+        stamped[_id] = block.timestamp;
+        // mint certificate
+        _mint(msg.sender, _id);
         // return boolean
         return true;
     }
 
-    function editCertificate(uint256 _id, string _dias_new)
-        external isAdmin()
-        returns (bool)
-    {
+    function editCertificate(
+        uint256 _id,
+        string memory _dias_new,
+        string memory _loc_new
+    ) external isAdmin returns (bool) {
         // check approval
+        require(msg.sender == ownedBy[_id]);
         // find certificate
         // overwrite certificate dias
+        dias[_id] = bytes(_dias_new);
+        location[_id] = bytes(_loc_new);
         return true;
     }
 }
-*/
+
+// MAINNET CHECKLIST
+
+// safe & clean deploy address
+// 2x multisig exit safe address output wallets
+// token names and symbols
+//
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

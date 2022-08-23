@@ -245,16 +245,69 @@ text {
   grid-column: 7/-1;
 }
 #buyTreesDef,
-#plantTreesDef {
+#plantTreesDef,
+#switchNetDef {
   display: none;
+}
+#avax,
+#avaxFuji,
+#polygon,
+#polygonMumbai,
+#fantom,
+#fantomTest {
+  grid-column: 1/-1;
+  color: ivory;
+}
+#avax,
+#avaxFuji {
+  background: tomato;
+}
+h1,
+h2,
+h3 {
+  padding: 0;
+  margin: 0;
+  grid-column: 1/ -1;
+}
+#polygon,
+#polygonMumbai {
+  background: purple;
+}
+#fantom,
+#fantomTest {
+  background: cadetblue;
+}
+#avax {
+  grid-row: 1/3;
+}
+#avaxFuji {
+  grid-row: 3/5;
+}
+#polygon {
+  grid-row: 5/7;
+}
+#polygonMumbai {
+  grid-row: 7/9;
+}
+#fantom {
+  grid-row: 9/11;
+}
+#fantomTest {
+  grid-row: 11/13;
 }
 #treebalance,
 #balance_maxer,
 #location_picker,
 #titler,
 #words,
-#bePlanter {
+#bePlanter,
+#location,
+#dias,
+#approveTrees {
   grid-column: 1/-1;
+}
+#dias {
+  font-size: 0.5em;
 }
 #gazi-north {
   grid-column: 1/6;

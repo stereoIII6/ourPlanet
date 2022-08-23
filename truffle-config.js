@@ -92,7 +92,7 @@ module.exports = {
       provider: () => new HDWalletProvider(mnemonic, process.env.FUJI_URL),
       network_id: 43113,
       confirmations: 10,
-      timeoutBlocks: 200,
+      timeoutBlocks: 2000,
       skipDryRun: true,
     },
     fujix: {
