@@ -229,19 +229,19 @@ text {
   text-align: center;
 }
 #approve {
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 1/7;
 }
 #treebuy {
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 7/-1;
 }
 #approve_m {
-  grid-row: 3;
+  grid-row: 5;
   grid-column: 1/7;
 }
 #treebuy_m {
-  grid-row: 3;
+  grid-row: 5;
   grid-column: 7/-1;
 }
 #buyTreesDef,
@@ -264,7 +264,8 @@ text {
 }
 h1,
 h2,
-h3 {
+h3,
+.full {
   padding: 0;
   margin: 0;
   grid-column: 1/ -1;

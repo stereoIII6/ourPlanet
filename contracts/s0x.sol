@@ -57,25 +57,6 @@ Here are the source codes you will need to test the functionality of the eco min
 Hope that helps the easiest way is to deploy all the contracts in remix and try to 
 
 
-0x20DB02Af8Fcc4D615611fCF6Cc31F623934C4781 :: Migration AVAX FUJI
-0xc278F07732220eB944Ef75ef2C8592d438A0579B :: v2Consumer
-0x5A604d07782B7303Bd2327D133F13A58bd17dc43 :: USDC on AVAX FUJI TESTNET
-0x722085855daB50c949785E4C926df7d6Cda60230 :: MLQ on AVAX FUJI
-0x5Dea8a438763BFFD73A18d8e5298643d33AeE5bD :: TR33 on AVAX FUJI
-0xeeA920766956b54147EA61FA2B8962Ad063402eB :: CO2 on AVAX FUJI
-0x0D0fE0b0D62Ad323355acAD09f0b6B5FDed6353F :: s0x Factory on AVAX FUJI
-0xA15f2a5e6700eEEB98236290e308E3f522494A86 :: ECO NFT on AVAX FUJI
-0x4FFB094260023dcFB5C17ae412a06D712a61a133 :: GardenPool on AVAX FUJI
-
-1 . Deploy USDC 
-2 . Deploy MLQ
-3 . Deploy Trees using USDC Adress as input param
-4 . Deploy ECO using a) account address b) token name c) token symbol d) tree contract address e) usdc contract address
-5 . In USDC / call dropUSDC function to collect USDC funds
-6 . In USDC / approve ECO contract as Spender of your USDC balance
-7 . In ECO / call ecoMint using number of tokens to buy as input param
-8 . In Trees / call getClaims to receive TR33 Tokens 
-
 Thats kind of it !
 
 greetings and blessings https://stereoIII6.dao
@@ -98,64 +79,129 @@ import "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
-/** 
-0xb0897686c545045afc77cf20ec7a532e3120e0f1 :: Link Token Polygon Main
-0xAE975071Be8F8eE67addBC1A82488F1C24858067 :: VRF
-0xcc294a196eeeb44da2888d17c0625cc88d70d9760a69d58d853ba6581a9ab0cd :: 500 gwei Keyhash
-0xd729dc84e21ae57ffb6be0053bf2b0668aa2aaf300a2a7b2ddf7dc0bb6e875a8 :: 1000 gwei Keyhash
+//      MINIMAL LAUNCH CHECKLIST AVAX, FANTOM, POLYGON , XDAI                                               (√)
+//                                                                                                          /#/
+// 1 ) validation that safe adrress is accessible for everyone                                              ( )
+// 2 ) production VRF subscription ID                                                                       ( )
+// 3 ) validate vrf consumer addresses                                                                      ( )
+// 4 ) validate price consumer addresses                                                                    ( )
+// 5 ) test price exchange rates weth/usdc mlq/usdc main/usdc on all networks from frontend                 ( )
+//      a ) MLQ                                                                                             ( )
+//      b ) S33D                                                                                            ( )
+//      c ) CO2                                                                                             ( )
+// 6 ) test direct payment on contract with ud ens and ether address                                        ( )
+//      a ) MLQ                                                                                             ( )
+//      b ) S33D                                                                                            ( )
+//      c ) NFT & ECONFT **                                                                                 ( )**
+// 7 ) test carbon vesting in high speed                                                                    ( )
+// 8 ) test user profile and ipfs pinning function **                                                       ( )**
+// 9 ) test group , posting and direct messaging **                                                         ( )**
+// 10 ) test impact solbond profile NFT interface **                                                        ( )**
+// 11 ) test impact marketplace dias interface **                                                           ( )**
+//      a ) Layers **                                                                                       ( )**
+//      b ) Keys **                                                                                         ( )**
+//      c ) Actions **                                                                                      ( )**
+//      d ) Spec Combos **                                                                                  ( )**
+// 12 ) fractio testing dias object syntax ****                                                             ( )****
+// 13 ) afl8 testing ****                                                                                   ( )****
+// 14 ) drntl testing ****                                                                                  ( )****
+//      a ) Governance ****                                                                                 ( )****
+//      b ) Umbrella ****                                                                                   ( )****
+//      c ) Project ****                                                                                    ( )****
+//      d ) Holder ****                                                                                     ( )****
+//
+//      Phase 1 Migration Script
+//      ** Phase 2 Migration Script
+//      **** Phase 3 Migration Script
 
-0x326C977E6efc84E512bB9C30f76E30c160eD06FB :: Link Token Polygon Mumbai
-0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed :: VRF
-0x4b09e658ed251bcafeebbc69400383d49f344ace09b9576fe248bb02c003fe9f :: 500 gwei Keyhash
+// 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
+contract exitSafes {
+    // ** CHECKLIST **
+    // validation that safe adrress is accessible for everyone
+    address impact;
+    address fortrees;
 
-0x5947BB275c521040051D82396192181b413227A3 :: Link Token AVAX Mainnet
-0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634 :: VRF
-0x89630569c9567e43c4fe7b1633258df9f2531b62f2352fa721cf3162ee4ecb46 :: 500 gwei Keyhash
-0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696 :: 1000 gwei Keyhash
+    constructor(uint256 _net) {
+        if (_net == 1) {
+            impact = 0x7c3348aa2Cb61784952EC22cD06e69594c47b785;
+            fortrees = 0x6A583112f5536f6cC1c45019b8e61Ccc828B1368;
+        } else if (_net == 6) {
+            impact = 0x34E9108143157FfDb4168d6C8861987e81089306;
+            fortrees = 0x0cA8dD80519B7cEE294f25DdC132d8Fc1DbD7218;
+        } else {
+            impact = 0x47d77319d00a8ffc5ebbdcfd706b50f10bd8da57;
+            fortrees = 0x7a1579D65c0BD9028c48B8e0C350aB0F625AA45d;
+        }
+    }
+}
 
-0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846 :: Link Token AVAX Testnet
-0x2eD832Ba664535e5886b75D64C46EB9a228C2610 :: VRF
-0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61 :: 300 gwei Keyhash
-
-0x6f43ff82cca38001b6699a8ac47a2d0e66939407 :: Link Token Fantom Mainnet
-0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634 :: VRF
-0x5881eea62f9876043df723cf89f0c2bb6f950da25e9dfe66995c24f919c8f8ab :: 10000 gwei Keyhash
-0x64ae04e5dba58bc08ba2d53eb33fe95bf71f5002789692fe78fb3778f16121c9 :: 20000 gwei Keyhash
-
-0xfaFedb041c0DD4fA2Dc0d87a6B0979Ee6FA7af5F :: Link Token Fantom Testnet
-0xbd13f08b8352A3635218ab9418E340c60d6Eb418 :: VRF
-0x121a143066e0f2f08b620784af77cccb35c6242460b4a8ee251b4b416abaebd4 :: 3000 gwei Keyhash
-
- */
 contract VRFv2Consumer is VRFConsumerBaseV2 {
     VRFCoordinatorV2Interface COORDINATOR;
 
     // Your subscription ID.
     uint64 s_subscriptionId;
+    uint256 net;
 
-    /* => */
-    // AVAX Fuji coordinator. For other networks,
-    // see https://docs.chain.link/docs/vrf-contracts/#configurations
-    address vrfCoordinator = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
-    bytes32 keyHash =
-        0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
-    // */
-
-    /* => / // AVAX Mainnet coordinator. For other networks,
-    // see https://docs.chain.link/docs/vrf-contracts/#configurations
-    address vrfCoordinator = 0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634;
-    bytes32 keyHash =
-        0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696;
-    // */
-
-    uint32 callbackGasLimit = 100000;
-    uint16 requestConfirmations = 3;
-    uint32 numWords = 3;
+    uint32 constant callbackGasLimit = 100000;
+    uint16 constant requestConfirmations = 3;
+    uint32 constant numWords = 7;
 
     mapping(uint256 => uint256[]) public s_requestIdToRandomWords;
     mapping(uint256 => address) public s_requestIdToAddress;
     uint256 public s_requestId;
     address s_owner;
+
+    // 0 Fuji // 1 Avax // 2 Fantom Test // 3 Fantom Main // 4 Polygon Mumbai // 5 Polygon Main
+    /* 5 => /
+    // Polygon Main coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0xAE975071Be8F8eE67addBC1A82488F1C24858067;
+    bytes32 keyHash =
+        0xd729dc84e21ae57ffb6be0053bf2b0668aa2aaf300a2a7b2ddf7dc0bb6e875a8;
+    // */
+
+    /* 4 => */
+    // Polygon Mumbai coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed;
+    bytes32 keyHash =
+        0x4b09e658ed251bcafeebbc69400383d49f344ace09b9576fe248bb02c003fe9f;
+
+    // */
+
+    /* 3 => /
+    // Fantom Main coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634;
+    bytes32 keyHash =
+        0x64ae04e5dba58bc08ba2d53eb33fe95bf71f5002789692fe78fb3778f16121c9;
+
+    // */
+
+    /* 2 => /
+    // Fantom Test coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0xbd13f08b8352A3635218ab9418E340c60d6Eb418;
+    bytes32 keyHash =
+        0x121a143066e0f2f08b620784af77cccb35c6242460b4a8ee251b4b416abaebd4;
+    // */
+
+    /* 1 => /
+    // AVAX coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
+    bytes32 keyHash =
+        0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696;
+    // */
+
+    /* 0 => /
+    // AVAX Fuji coordinator. For other networks,
+    // see https://docs.chain.link/docs/vrf-contracts/#configurations
+    address vrfCoordinator = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
+    bytes32 keyHash =
+        0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
+
+    // */
 
     constructor(uint64 subscriptionId) VRFConsumerBaseV2(vrfCoordinator) {
         COORDINATOR = VRFCoordinatorV2Interface(vrfCoordinator);
@@ -192,11 +238,6 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         // You can return the value to the requester,
         // but this example simply stores it.
         s_requestIdToRandomWords[requestId] = randomWords;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == s_owner);
-        _;
     }
 }
 
@@ -257,28 +298,14 @@ contract PriceConsumerV3 {
         }
     }
 
-    function EthUsdPrice() public view returns (int256) {
-        (
-            ,
-            /*uint80 roundID */
-            int256 price, /* uint startedAt */ /* uint timeStamp */ /* uint80 answeredInRound */
-            ,
-            ,
-
-        ) = ethUSDagg.latestRoundData();
-        return price;
+    // gives back weth price in $
+    function EthUsdPrice() external view returns (int256 price) {
+        (, price, , , ) = ethUSDagg.latestRoundData();
     }
 
-    function MainUsdPrice() public view returns (int256) {
-        (
-            ,
-            /*uint80 roundID */
-            int256 price, /* uint startedAt */ /* uint timeStamp */ /* uint80 answeredInRound */
-            ,
-            ,
-
-        ) = mainUSDagg.latestRoundData();
-        return price;
+    // gives back network gas currency price in $
+    function MainUsdPrice() external view returns (int256 price) {
+        (, price, , , ) = mainUSDagg.latestRoundData();
     }
 }
 
@@ -312,28 +339,19 @@ contract MathFnx {
     }
 }
 
-library mlqLib {
+library MLQlib {
     // MLQ Token Extension
-    uint256 public constant mlqRate = 100;
-    uint256 public constant mlqDig = 10**18;
-    uint256 public constant maxSupply = 3 * 10**9 * mlqDig;
-    uint256 public constant pubSupply = 1 * 10**9 * mlqDig;
-    uint256 public constant poolReserve = 1 * 10**9 * mlqDig;
-    uint256 public constant circReserve = 1 * 10**9 * mlqDig;
+    uint256 public constant MLQ_RATE = 100;
+    uint256 public constant MLQ_DIG = 10**18;
+    uint256 public constant MAX_SUPPLY = 3 * 10**9 * MLQ_DIG;
+    uint256 public constant PUB_SUPPLY = 1 * 10**9 * MLQ_DIG;
+    uint256 public constant POOL_RESERVE = 1 * 10**9 * MLQ_DIG;
+    uint256 public constant CIRC_RESERVE = 1 * 10**9 * MLQ_DIG;
 }
 
 contract Users {
     // user data storage for conglomerate
     address private s0x; // s0x admin
-
-    constructor() {
-        s0x = msg.sender; // admin initialization
-        makeUser(
-            s0x,
-            '{"name":"s0x admin","email":"type.stereo@pm.me","image":"https://ipfs.io/ipfs/QmXNciGvGJGRV2HHE82oLoicvwatB8sqsydxn7P3NSP1nW"}',
-            99
-        ); // admin user account setup
-    }
 
     struct Impact {
         uint256 action;
@@ -347,29 +365,45 @@ contract Users {
     mapping(address => uint256) private roles;
     // only admin allowed function modifier
     mapping(address => Impact) public impx;
+    mapping(address => string) public name;
+
     modifier isAdmin() {
         require(msg.sender == s0x);
         _;
+    }
+
+    constructor() {
+        s0x = msg.sender; // admin initialization
+        makeUser(
+            s0x,
+            '{"name":"s0xAdmin","email":"type.stereo@pm.me","image":"https://ipfs.io/ipfs/QmXNciGvGJGRV2HHE82oLoicvwatB8sqsydxn7P3NSP1nW"}',
+            99,
+            "s0xAdmin"
+        ); // admin user account setup
     }
 
     // takes address , dias , and role to create and store a user profile in user mapping
     function makeUser(
         address _adr,
         bytes memory _dias,
-        uint256 _r
+        uint256 _r,
+        string memory _name
     ) internal returns (bool) {
         users[_adr] = _dias;
         roles[_adr] = _r;
         impx[_adr] = Impact(0, 0, 0);
+        name[_adr] = _name;
+        isUser[_adr] = true;
         return true;
     }
 
     // takes dias to create guest user profile
-    function createUserAccount(string memory _dias, address _user)
-        external
-        returns (bool)
-    {
-        return makeUser(_user, bytes(_dias), 2);
+    function createUserAccount(
+        string memory _dias,
+        address _user,
+        string calldata _name
+    ) external returns (bool) {
+        return makeUser(_user, bytes(_dias), 2, _name);
     }
 
     // takes address , dias , and role to admin edit and store a user profile in user mapping
@@ -378,12 +412,14 @@ contract Users {
         string memory _dias,
         uint256 _r
     ) external isAdmin returns (bool) {
-        return makeUser(_adr, bytes(_dias), _r);
+        string memory _name = name[_adr];
+        return makeUser(_adr, bytes(_dias), _r, _name);
     }
 
     // takes address , dias , and role to edit and store your user profile in user mapping
     function editUser(string memory _dias) external returns (bool) {
-        return makeUser(msg.sender, bytes(_dias), 2);
+        string memory _name = name[msg.sender];
+        return makeUser(msg.sender, bytes(_dias), 2, _name);
     }
 
     // shows user dias by address input
@@ -406,6 +442,10 @@ contract Users {
     // shows role by address input
     function getRole(address _adr) external view returns (uint256) {
         return roles[_adr];
+    }
+
+    function getName(address _adr) external view returns (string memory) {
+        return name[_adr];
     }
 
     function isU(address _adr) external view returns (bool) {
@@ -607,7 +647,7 @@ contract s0xFactory is Users, MathFnx {
     mapping(address => mapping(uint256 => address)) public groupByCount;
 
     constructor(address _mlq) Users() MathFnx() {
-        mlq = MLQ(_mlq);
+        mlq = MLQ(payable(_mlq));
         friends = new Friends(address(this));
         fAdr = address(friends);
     }
@@ -696,12 +736,12 @@ contract USDC is ERC20 {
     }
 }
 
-contract MLQ is ERC20, MathFnx {
-    using mlqLib for *;
+contract MLQ is ERC20, MathFnx, exitSafes {
+    using MLQlib for *;
     address private admin;
     int256 public rate;
-    uint256 public pubSupply;
-    uint256 mlqRate;
+    uint256 public PUB_SUPPLY;
+    uint256 MLQ_RATE;
     uint256 mainRate;
     PriceConsumerV3 public ethUsdPrice;
     mapping(address => uint256) public mlqBalance;
@@ -710,7 +750,7 @@ contract MLQ is ERC20, MathFnx {
     constructor(address _usdc, address _pc) ERC20("Milquidity Token", "MLQ") {
         admin = msg.sender;
         usdc = USDC(_usdc);
-        setSupply(mlqLib.pubSupply);
+        setSupply(MLQlib.PUB_SUPPLY);
         ethUsdPrice = PriceConsumerV3(_pc);
     }
 
@@ -729,32 +769,32 @@ contract MLQ is ERC20, MathFnx {
     }
 
     function setSupply(uint256 _newSupply) internal returns (uint256) {
-        pubSupply = _newSupply;
-        return pubSupply;
+        PUB_SUPPLY = _newSupply;
+        return PUB_SUPPLY;
     }
 
     function buyMlqMain() external payable returns (uint256) {
         setMLQRate();
         setMainRate();
-        uint256 swapRate = divide(mainRate, mlqRate);
+        uint256 swapRate = divide(mainRate, MLQ_RATE);
         uint256 amnt = msg.value * swapRate;
         require(amnt > address(this).balance, "insufficient balance");
         // find maincurr price for mlq
-        require(pubSupply >= amnt);
+        require(PUB_SUPPLY >= amnt);
         _mint(msg.sender, amnt);
         mlqBalance[msg.sender] += amnt;
-        pubSupply -= amnt;
+        PUB_SUPPLY -= amnt;
         return amnt;
     }
 
     function buyMlqUSDC(uint256 _amnt) external payable returns (uint256) {
         setMLQRate();
         uint256 amnt = _amnt * uint256(rate) * 10**10;
-        require(pubSupply >= amnt);
+        require(PUB_SUPPLY >= amnt);
         usdc.transferFrom(msg.sender, address(this), amnt);
         _mint(msg.sender, _amnt * 10**18);
         mlqBalance[msg.sender] = _amnt * 10**18;
-        pubSupply -= amnt;
+        PUB_SUPPLY -= amnt;
         return amnt;
     }
 
@@ -763,7 +803,7 @@ contract MLQ is ERC20, MathFnx {
     }
 
     function withdraw(uint256 _amnt) external returns (uint256) {
-        uint256 amnt = mlqLib.mlqDig * _amnt;
+        uint256 amnt = MLQlib.MLQ_DIG * _amnt;
         require(admin == msg.sender);
         require(mlqBalance[address(this)] >= amnt);
         transferFrom(address(this), admin, amnt);
@@ -777,12 +817,22 @@ contract MLQ is ERC20, MathFnx {
         usdc.transferFrom(address(this), admin, usdc.balanceOf(address(this)));
         return address(this).balance;
     }
+
+    receive() external payable {
+        uint256 ethAmntImpact = divide(msg.value, 100) * 15;
+        uint256 ethAmntTrees = msg.value - ethAmntImpact;
+        payable(impact).transfer(ethAmntImpact);
+        payable(fortrees).transfer(ethAmntTrees);
+        uint256 swapRate = divide(MLQ_RATE, uint256(rate));
+        uint256 trees = msg.value * swapRate;
+        transfer(msg.sender, trees);
+    }
 }
 
-contract Trees is ERC20, MathFnx {
-    uint256 maxSupply;
+contract Trees is ERC20, MathFnx, exitSafes {
+    uint256 MAX_SUPPLY;
     uint256 rate;
-    uint256 mlqRate;
+    uint256 MLQ_RATE;
     uint256 mainRate;
     uint256 availSupply;
     address author;
@@ -797,10 +847,10 @@ contract Trees is ERC20, MathFnx {
         address _mlq,
         address _pc
     ) ERC20("Seedling", "S33D") {
-        maxSupply = 5000000000000 * 10**18;
+        MAX_SUPPLY = 5000000000000 * 10**18;
         author = msg.sender;
         usdc = IERC20(_usdc);
-        mlq = MLQ(_mlq);
+        mlq = MLQ(payable(_mlq));
         rate = 94 * 10**15;
         ethUsdPrice = PriceConsumerV3(_pc);
     }
@@ -829,7 +879,7 @@ contract Trees is ERC20, MathFnx {
         emit Log(
             l,
             _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            impact,
             usdc.balanceOf(_send),
             usdc.balanceOf(address(this))
         );
@@ -839,19 +889,11 @@ contract Trees is ERC20, MathFnx {
             "insufficient usdc balance"
         );
         require(
-            availSupply + _amount * 10**18 < maxSupply,
+            availSupply + _amount * 10**18 < MAX_SUPPLY,
             "insufficient supply"
         );
-        usdc.transferFrom(
-            _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            ((_amount * rate) / 100) * 85
-        );
-        usdc.transferFrom(
-            _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            ((_amount * rate) / 100) * 15
-        );
+        usdc.transferFrom(_send, fortrees, ((_amount * rate) / 100) * 85);
+        usdc.transferFrom(_send, impact, ((_amount * rate) / 100) * 15);
         availSupply += _amount * 10**18;
         _mint(msg.sender, _amount * 10**18);
         return true;
@@ -865,7 +907,7 @@ contract Trees is ERC20, MathFnx {
 
     function setMLQRates() internal returns (uint256) {
         int256 mlqR = ethUsdPrice.EthUsdPrice();
-        mlqRate = uint256(mlqR);
+        MLQ_RATE = uint256(mlqR);
         return (uint256(mlqR));
     }
 
@@ -873,11 +915,11 @@ contract Trees is ERC20, MathFnx {
         external
         returns (bool)
     {
-        uint256 swapRate = divide(mlqRate, rate);
+        uint256 swapRate = divide(MLQ_RATE, rate);
         emit Log(
             l,
             _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
+            fortrees,
             mlq.balanceOf(_send),
             mlq.balanceOf(address(this))
         );
@@ -887,19 +929,11 @@ contract Trees is ERC20, MathFnx {
             "insufficient usdc balance"
         );
         require(
-            availSupply + _amount * 10**18 < maxSupply,
+            availSupply + _amount * 10**18 < MAX_SUPPLY,
             "insufficient supply"
         );
-        mlq.transferFrom(
-            _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            ((_amount * swapRate) / 100) * 85
-        );
-        mlq.transferFrom(
-            _send,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            ((_amount * swapRate) / 100) * 15
-        );
+        mlq.transferFrom(_send, fortrees, ((_amount * swapRate) / 100) * 85);
+        mlq.transferFrom(_send, impact, ((_amount * swapRate) / 100) * 15);
         availSupply += _amount * 10**18;
         _mint(msg.sender, _amount * 10**18);
         return true;
@@ -922,7 +956,7 @@ contract Trees is ERC20, MathFnx {
     }
 
     function setMLQ(address _mlq) external isAdmin returns (bool) {
-        mlq = MLQ(_mlq);
+        mlq = MLQ(payable(_mlq));
         return true;
     }
 
@@ -936,6 +970,16 @@ contract Trees is ERC20, MathFnx {
         return rate;
     }
 
+    receive() external payable {
+        uint256 ethAmntImpact = divide(msg.value, 100) * 15;
+        uint256 ethAmntTrees = msg.value - ethAmntImpact;
+        payable(impact).transfer(ethAmntImpact);
+        payable(fortrees).transfer(ethAmntTrees);
+        uint256 swapRate = divide(MLQ_RATE, rate);
+        uint256 trees = msg.value * swapRate;
+        transfer(msg.sender, trees);
+    }
+
     function withdraw(uint256 _eth, uint256 _tree)
         external
         isAdmin
@@ -943,8 +987,8 @@ contract Trees is ERC20, MathFnx {
     {
         require(_tree * 10**18 <= balanceOf(address(this)));
         require(_eth * 10**18 <= address(this).balance);
-        transfer(payable(author), _tree * 10**18);
-        payable(author).transfer(_eth * 10**18);
+        transfer(payable(impact), _tree * 10**18);
+        payable(impact).transfer(_eth * 10**18);
         return true;
     }
 }
@@ -974,7 +1018,7 @@ contract nftProject is ERC721 {
         sym = _sym;
         vrf = VRFv2Consumer(_vrf);
         usdc = ERC20(_usdc);
-        mlq = MLQ(_mlq);
+        mlq = MLQ(payable(_mlq));
     }
 
     function isOwner(address _adr) external view returns (bool) {
@@ -1041,7 +1085,7 @@ contract nftProject is ERC721 {
     }
 }
 
-contract EcoMintNFT is nftProject {
+contract EcoMintNFT is nftProject, exitSafes, MathFnx {
     Trees public trees;
     uint256 nftPrice;
     uint256 val;
@@ -1055,7 +1099,7 @@ contract EcoMintNFT is nftProject {
         address _vrf,
         address _mlq
     ) nftProject(_owner, _name, _sym, _usdc, _vrf, _mlq) {
-        trees = Trees(_treeAdr);
+        trees = Trees(payable(_treeAdr));
         nftPrice = 25 * 10**18;
         val = 94 * 10**15;
     }
@@ -1068,14 +1112,11 @@ contract EcoMintNFT is nftProject {
         require(minted < max);
         uint256 sub = nftPrice + val;
         uint256 total = _amnt * sub;
-        uint256 fee = 94 * 10**15 * _amnt;
+        uint256 fee = 3 * 10**18;
         require(total + fee < usdc.balanceOf(msg.sender), "insufficient funds");
-        usdc.transferFrom(
-            msg.sender,
-            0x8cF3c63Be0BC3d1478496B6449316babD225F78a,
-            fee
-        );
-        usdc.transferFrom(msg.sender, address(this), total);
+        usdc.transferFrom(msg.sender, impact, fee);
+        usdc.transferFrom(msg.sender, fortrees, divide(total, 100) * 85);
+        usdc.transferFrom(msg.sender, impact, divide(total, 100) * 15);
         trees.addClaim(msg.sender, _amnt * 10**18);
         doMint(_amnt);
         return minted;
@@ -1085,7 +1126,7 @@ contract EcoMintNFT is nftProject {
 contract Co2s is ERC20, MathFnx {
     IERC20 internal trees;
     MLQ mlq;
-    uint256 maxSupply;
+    uint256 MAX_SUPPLY;
     uint256 rate;
     uint256 availSupply;
     address author;
@@ -1113,10 +1154,10 @@ contract Co2s is ERC20, MathFnx {
         uint256 _percent,
         address _mlq
     ) ERC20("Carbon Certificate", "C4RB") {
-        maxSupply = 25000000000000 * 10**18;
+        MAX_SUPPLY = 25000000000000 * 10**18;
         trees = IERC20(_contract);
         per = _percent;
-        mlq = MLQ(_mlq);
+        mlq = MLQ(payable(_mlq));
         author = msg.sender;
     }
 
@@ -1133,7 +1174,7 @@ contract Co2s is ERC20, MathFnx {
         require(msg.value >= _trees * 10**14, "not enough funds for asset");
         require(_trees <= trees.balanceOf(msg.sender), "insufficient balance");
         require(
-            5 * _trees * 10**18 <= maxSupply - availSupply,
+            5 * _trees * 10**18 <= MAX_SUPPLY - availSupply,
             "insufficient supply"
         );
         bonds.push(
@@ -1163,7 +1204,7 @@ contract Co2s is ERC20, MathFnx {
         require(msg.value >= _trees * 10**14);
         require(_trees <= trees.balanceOf(msg.sender));
         uint256 treez = _trees * 10**18;
-        require(5 * treez <= maxSupply - availSupply);
+        require(5 * treez <= MAX_SUPPLY - availSupply);
         uint256 p = divide(100, bonds[_b].amount) * treez;
         bonds[_b].amount += treez;
         bonds[_b].co2 += 5 * treez;
@@ -1379,11 +1420,11 @@ contract GardenPool is ERC1155, MathFnx {
 }
 
 contract COIN is ERC20, MathFnx {
-    using mlqLib for *;
+    using MLQlib for *;
     address private admin;
     uint256 public rate;
-    uint256 public pubSupply;
-    uint256 public maxSupply;
+    uint256 public PUB_SUPPLY;
+    uint256 public MAX_SUPPLY;
     string public title;
     mapping(address => uint256) public coinBalance;
 
@@ -1396,7 +1437,7 @@ contract COIN is ERC20, MathFnx {
     ) ERC20(_name, _sym) {
         admin = _admin;
         setRate(_rate);
-        maxSupply = _supply;
+        MAX_SUPPLY = _supply;
         title = _name;
     }
 
@@ -1410,7 +1451,7 @@ contract COIN is ERC20, MathFnx {
     }
 
     function getMax() external view returns (uint256) {
-        return maxSupply;
+        return MAX_SUPPLY;
     }
 
     function getName() external view returns (string memory) {
@@ -1418,16 +1459,16 @@ contract COIN is ERC20, MathFnx {
     }
 
     function getMinted() external view returns (uint256) {
-        return pubSupply;
+        return PUB_SUPPLY;
     }
 
     function buyMlq(uint256 _amnt) external payable returns (uint256) {
-        uint256 amnt = mlqLib.mlqDig * _amnt;
-        require(pubSupply >= amnt);
+        uint256 amnt = MLQlib.MLQ_DIG * _amnt;
+        require(PUB_SUPPLY >= amnt);
         require(divide(msg.value, 100) >= amnt);
         _mint(msg.sender, amnt);
         coinBalance[msg.sender] = amnt;
-        pubSupply += amnt;
+        PUB_SUPPLY += amnt;
         return amnt;
     }
 
@@ -1436,7 +1477,7 @@ contract COIN is ERC20, MathFnx {
     }
 
     function withdraw(uint256 _amnt) external returns (uint256) {
-        uint256 amnt = mlqLib.mlqDig * _amnt;
+        uint256 amnt = MLQlib.MLQ_DIG * _amnt;
         require(admin == msg.sender);
         require(coinBalance[address(this)] >= amnt);
         transferFrom(address(this), admin, amnt);
@@ -1474,7 +1515,7 @@ contract s0xPool is MathFnx {
         uint256 id;
         string name;
         address adr;
-        uint256 maxSupply;
+        uint256 MAX_SUPPLY;
         uint256 mintedSupply;
         uint256 priceInEth;
     }
@@ -1592,7 +1633,7 @@ contract ecoverse is ERC721 {
 
     constructor(address _trees) ERC721("Tree Token", "TR33") {
         admin = msg.sender;
-        tree = Trees(_trees);
+        tree = Trees(payable(_trees));
     }
 
     modifier isAdmin() {

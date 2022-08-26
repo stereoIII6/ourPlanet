@@ -11,6 +11,7 @@ import "../public/app.scss";
 import { sha256 } from "crypto-hash";
 import UAuth from "@uauth/js";
 import { toUtf8CodePoints } from "@ethersproject/strings";
+import { sortedIndex } from "underscore";
 let accounts;
 let network;
 let words;
@@ -53,7 +54,7 @@ const IERC20 = require("../dist/contracts/IERC20.json");
 const USDC = require("../dist/contracts/USDC.json");
 const MLQ = require("../dist/contracts/MLQ.json");
 const ecoverse = require("../dist/contracts/ecoverse.json");
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+let provider = new ethers.providers.Web3Provider(window.ethereum);
 let signer;
 
 // const wallet = new Wallet(process.env.PKEY, provider);
@@ -151,6 +152,7 @@ const africa = [
   [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
+
 const draw = (e) => {
   let i = 0;
   // console.log(lines.length);
@@ -225,7 +227,102 @@ const netSwitch = (e) => {
   modalHead.innerHTML = "Switch Network";
   modalBody.innerHTML = document.getElementById("switchNetDef").innerHTML;
   modalFoot.innerHTML = "* Your data will be stored on the blockchain !";
+  const getFuji = document.getElementById("avaxFuji");
+  const getAvax = document.getElementById("avax");
+  const getMumbai = document.getElementById("polygonMumbai");
+  const getPoly = document.getElementById("polygon");
+
+  const goFuji = async () => {
+    const change = await ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0xA869",
+          chainName: "Avalanche Testnet C-Chain",
+          nativeCurrency: {
+            name: "Avalanche Fuji",
+            symbol: "AVAX",
+            decimals: 18, //In number form
+          },
+          rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
+          blockExplorerUrls: ["https://testnet.snowtrace.io/"],
+        },
+      ],
+    });
+    netSwap(e);
+  };
+  const goAvax = async () => {
+    const change = await ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0xA86A",
+          chainName: "Avalanche Testnet C-Chain",
+          nativeCurrency: {
+            name: "Avalanche",
+            symbol: "AVAX",
+            decimals: 18, //In number form
+          },
+          rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
+          blockExplorerUrls: ["https://testnet.snowtrace.io/"],
+        },
+      ],
+    });
+    netSwap(e);
+  };
+  const goMumbai = async () => {
+    const change = await ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0x13881",
+          chainName: "Polygon Mumbai",
+          nativeCurrency: {
+            name: "Polygon Mumbai",
+            symbol: "MATIC",
+            decimals: 18, //In number form
+          },
+          rpcUrls: ["https://polygon-testnet.public.blastapi.io"],
+          blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+        },
+      ],
+    });
+    netSwap(e);
+  };
+  const goPoly = async () => {
+    const change = await ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0x89",
+          chainName: "Polygon",
+          nativeCurrency: {
+            name: "Polygon",
+            symbol: "MATIC",
+            decimals: 18, //In number form
+          },
+          rpcUrls: ["https://polygon-mainnet.public.blastapi.io"],
+          blockExplorerUrls: ["https://polygonscan.com"],
+        },
+      ],
+    });
+    netSwap(e);
+  };
+  getFuji.addEventListener("click", goFuji);
+  getAvax.addEventListener("click", goAvax);
+  getMumbai.addEventListener("click", goMumbai);
+  getPoly.addEventListener("click", goPoly);
   toggle();
+};
+const netSwap = async (e) => {
+  console.log("swapped network");
+  toggle();
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  accounts = await ethereum.request({ method: "eth_requestAccounts" });
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+  network = await ethereum.request({ method: "net_version" });
+  await onClickConnect(e);
 };
 const onClickConnect = async (e) => {
   e.preventDefault();
@@ -246,13 +343,13 @@ const onClickConnect = async (e) => {
     var networkTag = "Switch Network";
     // evaluate legal networks
     if (Number(network) === 1) networkTag = "ETH";
-    if (Number(network) === 137) networkTag = "MTC";
+    if (Number(network) === 80001) networkTag = "MTC*";
     if (Number(network) === 100) networkTag = "xDai";
     if (Number(network) === 10) networkTag = "oETH";
     if (Number(network) === 200) networkTag = "aETH";
     if (Number(network) === 43224) networkTag = "AVAX";
     if (Number(network) === 1312) networkTag = "ACAB_";
-    if (Number(network) === 80001) networkTag = "MTC*";
+    if (Number(network) === 137) networkTag = "MTC";
     if (Number(network) === 43113) networkTag = "AVAX*";
     let mainVal = await provider.getBalance(accounts[0]);
     net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
@@ -271,7 +368,13 @@ const approveUSDC = async (e) => {
   console.log(signer.getAddress());
   const usdc = await usdcData();
   const trees = await treeData();
-  const deploymentKey = await Object.keys(Trees.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(Trees.networks)[a];
+
   const doApprove = await usdc
     .approve(trees.address, BigInt(trs * 94 * 1e15))
     .then((result) => {
@@ -283,6 +386,11 @@ const approveUSDC = async (e) => {
     });
   doApprove.wait().then((result) => {
     console.log(result);
+    const approve = document.getElementById("approve");
+    approve.style.gridColumn = "1";
+    approve.innerHTML = "√";
+    const treebuy = document.getElementById("treebuy");
+    treebuy.style.gridColumn = "2 / -1";
   });
 };
 const approveMLQ = async (e) => {
@@ -368,12 +476,18 @@ const grabTrees = async (e) => {
   trs = 101;
   e.preventDefault();
   try {
+    const usdc = await usdcData();
+    const trees = await treeData();
     const client = await signer.getAddress();
-    console.log("buy trees");
+    const allowed = await usdc.allowance(client, trees.address);
+    const usdcBalance = await usdc.balanceOf(client);
+    const usdcAlwd = document.getElementById("usdcalwd");
+    const usdcMax = document.getElementById("maxusdc");
+    usdcAlwd.innerHTML = (Number(allowed._hex) / 1e18).toFixed(2) + " USDC";
+    usdcMax.innerHTML = "Approve Max. " + (Number(usdcBalance._hex) / 1e18).toFixed(2) + " USDC";
     toggle();
     modalHead.innerHTML = "BUY TR33 TOKENS";
     modalBody.innerHTML = document.getElementById("buyTreesDef").innerHTML;
-
     const sub = document.getElementById("sub");
     const amnt = document.getElementById("amnt");
     const add = document.getElementById("add");
@@ -381,9 +495,17 @@ const grabTrees = async (e) => {
     const div = document.getElementById("div");
     const approve = document.getElementById("approve");
     const treebuy = document.getElementById("treebuy");
-    amnt.innerHTML = `${trs} TR33S`;
-    approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-    treebuy.innerHTML = `BUY ${trs} TR33S`;
+    amnt.innerHTML = `${trs} S33Ds`;
+    if (allowed >= BigInt(trs * 94 * 1e15)) {
+      approve.innerHTML = `√`;
+      approve.style.gridColumn = "1";
+      treebuy.style.gridColumn = "2/-1";
+      treebuy.innerHTML = `BUY ${trs} S33Ds`;
+    } else {
+      amnt.innerHTML = `${trs} TR33S`;
+      approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
+      treebuy.innerHTML = `BUY ${trs} TR33S`;
+    }
     const more = (e) => {
       trs++;
       amnt.innerHTML = `${trs} TR33S`;
@@ -437,45 +559,76 @@ const grabTrees = async (e) => {
 };
 buyTrees.addEventListener("click", grabTrees);
 const s0xData = async () => {
-  const deploymentKey = await Object.keys(s0xFactory.networks)[0];
-  // console.log(Trees.abi);
-
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(s0xFactory.networks)[a];
   return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, signer);
 };
 const usdcData = async () => {
   let adr;
   let client = await signer.getAddress();
   console.log(network, client);
-  if (Number(network) === 43113) adr = "0x5a604d07782b7303bd2327d133f13a58bd17dc43"; // Fuji AVAX*
-  if (Number(network) === 43224) adr = "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"; // Main AVAX*
+  /* AVAX* */ if (Number(network) === 43113) adr = "0x5a604d07782b7303bd2327d133f13a58bd17dc43"; // Fuji AVAX*
+  /* AVAX */ if (Number(network) === 43224) adr = "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"; // Main AVAX
+  /* MTC* */ if (Number(network) === 80001) adr = "0xCfA542b644F8FfA46e79d88cF4E7347E49aD2ddc"; // Mumbai Polygon*
+  /* MTC */ if (Number(network) === 137) adr = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; // Main Polygon
+
   return new ethers.Contract(adr, USDC.abi, signer);
 };
 const mlqData = async () => {
-  const deploymentKey = await Object.keys(MLQ.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(MLQ.networks)[a];
   // console.log(Trees.abi);
 
   return new ethers.Contract(MLQ.networks[deploymentKey].address, MLQ.abi, signer);
 };
 const treeData = async () => {
-  const deploymentKey = await Object.keys(Trees.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(Trees.networks)[a];
   // console.log(Trees.abi);
 
   return new ethers.Contract(Trees.networks[deploymentKey].address, Trees.abi, signer);
 };
 const co2Data = async () => {
-  const deploymentKey = await Object.keys(CO2.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(CO2.networks)[a];
   // console.log(CO2.abi);
 
   return new ethers.Contract(CO2.networks[deploymentKey].address, CO2.abi, signer);
 };
 const gardenData = async () => {
-  const deploymentKey = await Object.keys(GardenPool.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(GardenPool.networks)[a];
   // console.log(GardenPool.abi);
 
   return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, signer);
 };
 const ecoData = async () => {
-  const deploymentKey = await Object.keys(ecoverse.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(ecoverse.networks)[a];
   // console.log(GardenPool.abi);
 
   return new ethers.Contract(ecoverse.networks[deploymentKey].address, ecoverse.abi, signer);
@@ -503,7 +656,12 @@ const setDias = async () => {
   const tree = await treeData();
   const client = await signer.getAddress();
   const eco = await ecoData();
-  const deploymentKey = await Object.keys(ecoverse.networks)[0];
+  let a;
+  if (Number(network) === 43113) a = 0;
+  if (Number(network) === 43224) a = 1;
+  if (Number(network) === 80001) a = 1;
+  if (Number(network) === 137) a = 3;
+  const deploymentKey = await Object.keys(ecoverse.networks)[a];
   const diasShow = document.getElementById("dias");
   const allowed = await tree
     .allowance(client, ecoverse.networks[deploymentKey].address)
@@ -577,7 +735,12 @@ const goPlantForm = async (e) => {
   const goApproveTrees = async () => {
     const eco = await ecoData();
     const trees = await treeData();
-    const deploymentKey = await Object.keys(ecoverse.networks)[0];
+    let a;
+    if (Number(network) === 43113) a = 0;
+    if (Number(network) === 43224) a = 1;
+    if (Number(network) === 80001) a = 1;
+    if (Number(network) === 137) a = 3;
+    const deploymentKey = await Object.keys(ecoverse.networks)[a];
     const aprv = await trees
       .approve(ecoverse.networks[deploymentKey].address, BigInt(dias.trees * 1e18))
       .then((result) => {
@@ -663,18 +826,52 @@ const log = async () => {
   const mlq = await mlqData();
   const tree = await treeData();
   const co2 = await co2Data();
+  console.log(s0x.address, mlq.address, tree.address, co2.address);
   const client = await signer.getAddress();
-  let usdcVal = await usdc.balanceOf(client);
-  let mlqVal = await mlq.balanceOf(client);
-  let treeVal = await tree.balanceOf(client);
-  let co2Val = await co2.balanceOf(client);
+  // console.log(client, s0x, usdc, mlq, tree, co2);
+  let usdcVal = await usdc
+    .balanceOf(client)
+    .then((result) => {
+      console.log(result);
+      return result !== null || undefined ? result : 0;
+    })
+    .catch((err) => {
+      // console.error(err);
+    });
+  let mlqVal = await mlq
+    .balanceOf(client)
+    .then((result) => {
+      console.log(result);
+      return result !== null || undefined ? result : 0;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  let treeVal = await tree
+    .balanceOf(client)
+    .then((result) => {
+      console.log(result);
+      return result !== null || undefined ? result : 0;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  let co2Val = await co2
+    .balanceOf(client)
+    .then((result) => {
+      console.log(result);
+      return result !== null || undefined ? result : 0;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 
   usdcBtn.innerHTML = (usdcVal / 1e18).toFixed(2) + " USDC";
   mlqBtn.innerHTML = (mlqVal / 1e18).toFixed(1) + " MLQ";
   treeBtn.innerHTML = (treeVal / 1e18).toFixed(0) + " S33Ds";
   co2Btn.innerHTML = (co2Val / 1e18).toFixed(1) + " C4RB";
 
-  console.log(s0x);
+  // console.log(s0x);
   // ask contract about user
   const isU = await s0x
     .isU(client)
@@ -687,8 +884,18 @@ const log = async () => {
     });
   console.log("You are a user ? Response : ", isU);
   if (isU) {
+    const client = await signer.getAddress();
     const role = await s0x
-      .getRole(await signer.getAddress())
+      .getRole(client)
+      .then((result) => {
+        console.log(Number(result._hex));
+        return result;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    const name = await s0x
+      .getName(client)
       .then((result) => {
         console.log(result);
         return result;
@@ -696,20 +903,23 @@ const log = async () => {
       .catch((err) => {
         console.log(err);
       });
-    if (role === 99) {
+    if (Number(role._hex) === 99) {
       // user is admin
+      console.log("admin");
+      profile_btn.innerHTML = "@" + name;
     }
-    if (role === 88) {
+    if (Number(role._hex) === 88) {
       // user is producer
     }
-    if (role === 77) {
+    if (Number(role._hex) === 77) {
       // user is promoter
     }
-    if (role === 11) {
+    if (Number(role._hex) === 11) {
       // user is client
     }
-    if (role === 11) {
+    if (Number(role._hex) === 2) {
       // user is client
+      profile_btn.innerHTML = name;
     }
   } else {
     // is not a user
@@ -733,6 +943,10 @@ const addUser = async (e) => {
     .catch((err) => {
       console.log(err);
     });
+  userData.wait().then((result) => {
+    console.log("finished");
+    toggle();
+  });
 };
 const doSignUp = (e) => {
   modalHead.innerHTML = "SIGN UP FORM";
