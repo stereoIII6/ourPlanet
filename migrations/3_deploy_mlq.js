@@ -16,5 +16,5 @@ module.exports = function (deployer) {
 
   if (netty === 4) usdcadr = "0xCfA542b644F8FfA46e79d88cF4E7347E49aD2ddc"; // Mumbai Polygon 80001
   if (netty === 5) usdcadr = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; // Main Polygon 137
-  deployer.deploy(MLQ, usdcadr, PC.address);
+  deployer.deploy(MLQ, usdcadr, PC.address, netty);
 };

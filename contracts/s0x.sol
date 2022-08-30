@@ -81,7 +81,7 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 //      MINIMAL LAUNCH CHECKLIST AVAX, FANTOM, POLYGON , XDAI                                               (√)
 //                                                                                                          /#/
-// 1 ) validation that safe adrress is accessible for everyone                                              ( )
+// 1 ) validation that safe adrress is accessible for everyone                                              (√)
 // 2 ) production VRF subscription ID                                                                       ( )
 // 3 ) validate vrf consumer addresses                                                                      ( )
 // 4 ) validate price consumer addresses                                                                    ( )
@@ -114,7 +114,22 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 //      ** Phase 2 Migration Script
 //      **** Phase 3 Migration Script
 
-// 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
+// tasks
+
+/**
+
+Upload Form integration for avatar image 
+
+Profile section under profile button 
+
+Soulbound Profile Extension 
+
+TREE Token Display 
+
+
+ */
+
+// 0 Fuji // 1 Avax // 2 Fantom Test // 3 Fantom Main // 4 Polygon Mumbai // 5 Polygon Main
 contract exitSafes {
     // ** CHECKLIST **
     // validation that safe adrress is accessible for everyone
@@ -123,13 +138,24 @@ contract exitSafes {
 
     constructor(uint256 _net) {
         if (_net == 1) {
+            // AVAX
             impact = 0x7c3348aa2Cb61784952EC22cD06e69594c47b785;
             fortrees = 0x6A583112f5536f6cC1c45019b8e61Ccc828B1368;
-        } else if (_net == 6) {
+        } else if (_net == 3) {
+            // FANTOM Opera
+            impact = 0x26C546A99D845B836E4938B120791C5DA2c32a7d;
+            fortrees = 0xF4D48CcD13A54400FcC3F5555dA95143a5470dbC;
+        } else if (_net == 2) {
+            // Fantom Test
+            impact = 0xB668bB8c7E4B0bCEd0A4099beF6d6d7D42F3B810;
+            fortrees = 0x9e84864E46Ca1644d2e60D89A127FDC7347ee056;
+        } else if (_net == 5) {
+            // Polygon
             impact = 0x34E9108143157FfDb4168d6C8861987e81089306;
             fortrees = 0x0cA8dD80519B7cEE294f25DdC132d8Fc1DbD7218;
         } else {
-            impact = 0x47d77319d00a8ffc5ebbdcfd706b50f10bd8da57;
+            // FALLBACK
+            impact = 0x47d77319d00A8FFc5ebbdCFd706B50F10bd8Da57;
             fortrees = 0x7a1579D65c0BD9028c48B8e0C350aB0F625AA45d;
         }
     }
@@ -736,6 +762,7 @@ contract USDC is ERC20 {
     }
 }
 
+// 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
 contract MLQ is ERC20, MathFnx, exitSafes {
     using MLQlib for *;
     address private admin;
@@ -747,7 +774,11 @@ contract MLQ is ERC20, MathFnx, exitSafes {
     mapping(address => uint256) public mlqBalance;
     USDC usdc;
 
-    constructor(address _usdc, address _pc) ERC20("Milquidity Token", "MLQ") {
+    constructor(
+        address _usdc,
+        address _pc,
+        uint256 _net
+    ) ERC20("Milquidity Token", "MLQ") exitSafes(_net) {
         admin = msg.sender;
         usdc = USDC(_usdc);
         setSupply(MLQlib.PUB_SUPPLY);
@@ -829,6 +860,7 @@ contract MLQ is ERC20, MathFnx, exitSafes {
     }
 }
 
+// 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
 contract Trees is ERC20, MathFnx, exitSafes {
     uint256 MAX_SUPPLY;
     uint256 rate;
@@ -845,8 +877,9 @@ contract Trees is ERC20, MathFnx, exitSafes {
     constructor(
         address _usdc,
         address _mlq,
-        address _pc
-    ) ERC20("Seedling", "S33D") {
+        address _pc,
+        uint256 _net
+    ) ERC20("Seedling", "S33D") exitSafes(_net) {
         MAX_SUPPLY = 5000000000000 * 10**18;
         author = msg.sender;
         usdc = IERC20(_usdc);
@@ -1085,6 +1118,7 @@ contract nftProject is ERC721 {
     }
 }
 
+// 0 Fuji // 1 Avax // 2 Fantom Test // 4 Fantom Main // 5 Polygon Mumbai // 6 Polygon Main
 contract EcoMintNFT is nftProject, exitSafes, MathFnx {
     Trees public trees;
     uint256 nftPrice;
@@ -1097,8 +1131,9 @@ contract EcoMintNFT is nftProject, exitSafes, MathFnx {
         address _treeAdr,
         address _usdc,
         address _vrf,
-        address _mlq
-    ) nftProject(_owner, _name, _sym, _usdc, _vrf, _mlq) {
+        address _mlq,
+        uint256 _net
+    ) nftProject(_owner, _name, _sym, _usdc, _vrf, _mlq) exitSafes(_net) {
         trees = Trees(payable(_treeAdr));
         nftPrice = 25 * 10**18;
         val = 94 * 10**15;

@@ -935,7 +935,7 @@ const addUser = async (e) => {
   const account = await signer.getAddress();
   console.log(String(account), `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`);
   userData = await s0x
-    .createUserAccount(`{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`, String(account))
+    .createUserAccount(`{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`, String(account), document.getElementById("su_name").value)
     .then((result) => {
       console.log(result);
       return result;
@@ -945,6 +945,8 @@ const addUser = async (e) => {
     });
   userData.wait().then((result) => {
     console.log("finished");
+    profile_btn.innerHTML = document.getElementById("su_name").value;
+    profile_btn.removeEventListener("click", doSignUp);
     toggle();
   });
 };
