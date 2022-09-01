@@ -12,6 +12,8 @@ import { sha256 } from "crypto-hash";
 import UAuth from "@uauth/js";
 import { toUtf8CodePoints } from "@ethersproject/strings";
 import { sortedIndex } from "underscore";
+import { create as ipfsHttpClient } from "ipfs-http-client";
+import { Buffer } from "buffer";
 let accounts;
 let network;
 let words;
@@ -26,11 +28,17 @@ const getWords = async () => {
 };
 words = getWords();
 let user;
-const client = require("ipfs-http-client");
-const ipfs = client.create({
+
+const projectId = "2E7kMR0TPtUcbgHMJOdJqUlCAkD";
+const projectSecret = "4521c0699f3423a82430c762af3cb06a";
+const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
+const cliento = ipfsHttpClient({
   host: "ipfs.infura.io",
-  port: "5001",
+  port: 5001,
   protocol: "https",
+  headers: {
+    authorization: auth,
+  },
 });
 const uauth = new UAuth({
   clientID: "101df3a0-41df-4c22-8edf-0cf4db92a61c",
@@ -817,6 +825,7 @@ const goPlantForm = async (e) => {
   }
 };
 plantTrees.addEventListener("click", goPlantForm);
+
 const log = async () => {
   console.log("logging user in...");
   profile_btn.innerHTML = "logging";
@@ -919,7 +928,17 @@ const log = async () => {
     }
     if (Number(role._hex) === 2) {
       // user is client
-      profile_btn.innerHTML = name;
+      const udata = await s0x
+        .showUser(client)
+        .then((result) => {
+          console.log(result);
+          return JSON.parse(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      profile_btn.innerHTML = "<img src='" + udata.avatar + "' id='uavt' />" + name;
     }
   } else {
     // is not a user
@@ -987,18 +1006,21 @@ const captureFile = (e) => {
 const uploadAFile = async (e) => {
   e.preventDefault();
   console.log("pushing to ipfs");
-  const result = await ipfs.add(UpBuff);
+  const result = await cliento.add(UpBuff);
   console.log("Ipfs Result", result);
+  const submitIpfs = document.getElementById("submitIpfs");
   submitIpfs.innerHTML =
     result.path.slice(0, 2) +
     "..." +
     result.path.slice(result.path.length - 2, result.path.length) +
     ' <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>';
   submitIpfs.value = result.path;
-  fileURL.value = "https://ipfs.io/ipfs/" + result.path;
+  const suAvt = document.getElementById("su_avt");
+  const avt = document.getElementById("avt");
+  suAvt.value = "https://ipfs.io/ipfs/" + result.path;
   submitIpfs.removeEventListener("click", uploadAFile);
   submitIpfs.addEventListener("click", copyToClip);
-  usimg.src = "https://ipfs.io/ipfs/" + result.path;
+  // usimg.src = "https://ipfs.io/ipfs/" + result.path;
   avt.src = "https://ipfs.io/ipfs/" + result.path;
 };
 const copyToClip = (e) => {
