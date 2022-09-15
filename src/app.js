@@ -937,7 +937,8 @@ const log = async () => {
         .catch((err) => {
           console.log(err);
         });
-
+      profile_btn.removeEventListener("click", goProfile);
+      profile_btn.addEventListener("click", viewProfile);
       profile_btn.innerHTML = "<img src='" + udata.avatar + "' id='uavt' />" + name;
     }
   } else {
@@ -947,6 +948,27 @@ const log = async () => {
     profile_btn.removeEventListener("click", goProfile);
     profile_btn.addEventListener("click", doSignUp);
   }
+};
+const viewProfile = async (e) => {
+  e.preventDefault();
+  const s0x = await s0xData();
+  const tree = await treeData();
+
+  const client = await signer.getAddress();
+  const name = await s0x
+    .getName(client)
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  console.log("view profile !");
+  modalHead.innerHTML = name + "'s Profile";
+  modalBody.innerHTML = "";
+  modalFoot.innerHTML = "Your data is saved on the Blockchain !";
+  toggle();
 };
 const addUser = async (e) => {
   e.preventDefault();

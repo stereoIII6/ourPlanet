@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": ".."
+	},
+	{
+		"path": "../../s0xiety"
+	}
+],
+  "settings": {
+    "DockerRun.DisableDockerrc": true,
+    "DockerRun.DisableAutoGenerateConfig": true
+  }
+}

@@ -38,7 +38,6 @@
     "accelerometer": "^1.2.0",
     "bignumber": "^1.1.0",
     "crypto-hash": "^2.0.1",
-    "dotenv": "^8.6.0",
     "elliptic": "^6.5.4",
     "ethers": "^5.5.2",
     "gridjs": "^5.0.2",
@@ -59,10 +58,13 @@
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.5.1",
+    "dotenv": "^16.0.2",
     "html-webpack-plugin": "^5.5.0",
     "sass": "^1.47.0",
     "sass-loader": "^12.4.0",
     "style-loader": "^3.3.1",
+    "truffle-plugin-verify": "^0.5.28",
+    "truffle-privatekey-provider": "^1.5.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.2"

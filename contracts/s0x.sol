@@ -186,7 +186,7 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         0xd729dc84e21ae57ffb6be0053bf2b0668aa2aaf300a2a7b2ddf7dc0bb6e875a8;
     // */
 
-    /* 4 => */
+    /* 4 => /
     // Polygon Mumbai coordinator. For other networks,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
     address vrfCoordinator = 0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed;
@@ -220,7 +220,7 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         0x06eb0e2ea7cca202fc7c8258397a36f33d88568d2522b37aaa3b14ff6ee1b696;
     // */
 
-    /* 0 => /
+    /* 0 => */
     // AVAX Fuji coordinator. For other networks,
     // see https://docs.chain.link/docs/vrf-contracts/#configurations
     address vrfCoordinator = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
@@ -1158,6 +1158,39 @@ contract EcoMintNFT is nftProject, exitSafes, MathFnx {
     }
 }
 
+contract RiteWhabbits is EcoMintNFT {
+    constructor(
+        address _owner,
+        string memory _name,
+        string memory _sym,
+        address _treeAdr,
+        address _usdc,
+        address _vrf,
+        address _mlq,
+        uint256 _net
+    ) EcoMintNFT(_owner, _name, _sym, _treeAdr, _usdc, _vrf, _mlq, _net) {}
+
+    mapping(uint256 => bytes) private _tokenStatus;
+    mapping(uint256 => uint256) private _tokenVRF;
+    mapping(uint256 => bytes) private _tokenTraitScramble;
+    struct Traits {
+        uint256 bg0; // far landscape
+        uint256 bg1; // mid
+        uint256 bg2; // near
+        uint256 bodybg0; // min body shape
+        uint256 bodybg1; // female shape < .5
+        uint256 bodybg2; // male shape >= .5
+        uint256 hair;
+        uint256 hat;
+        uint256 eyes;
+        uint256 eyebrows;
+        uint256 glasses;
+        uint256 nose;
+        uint256 mouth;
+        uint256 beard;
+    }
+}
+
 contract Co2s is ERC20, MathFnx {
     IERC20 internal trees;
     MLQ mlq;
@@ -1656,17 +1689,30 @@ contract s0xPool is MathFnx {
     }
 }
 
-contract ecoverse is ERC721 {
+contract ecoverse is nftProject {
     address admin;
     address trees;
     Trees tree;
-    mapping(uint256 => bytes) dias;
     mapping(uint256 => uint256) amount;
     mapping(uint256 => bytes) location;
     mapping(uint256 => address) ownedBy;
     mapping(uint256 => uint256) stamped;
 
-    constructor(address _trees) ERC721("Tree Token", "TR33") {
+    constructor(
+        address _trees,
+        address _usdc,
+        address _mlq,
+        address _vrf
+    )
+        nftProject(
+            msg.sender,
+            "Plantation Certificate",
+            "PLNT8",
+            _usdc,
+            _vrf,
+            _mlq
+        )
+    {
         admin = msg.sender;
         tree = Trees(payable(_trees));
     }
