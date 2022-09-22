@@ -932,6 +932,12 @@ contract Trees is ERC20, MathFnx, exitSafes {
         return true;
     }
 
+    function buyTreesMainnet(uint256 _amount, address _send)
+        external
+        payable
+        returns (uint256)
+    {}
+
     function setMainRate() internal returns (uint256) {
         int256 mainR = ethUsdPrice.MainUsdPrice();
         mainRate = uint256(mainR);
