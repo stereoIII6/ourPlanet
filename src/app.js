@@ -85,9 +85,13 @@ const buyTrees = document.getElementById("trees");
 const plantTrees = document.getElementById("plant");
 const mintCarbonds = document.getElementById("c02");
 const usdcBtn = document.getElementById("usdc_bal");
+usdcBtn.style.display = "none";
 const treeBtn = document.getElementById("tree_bal");
+treeBtn.style.display = "none";
 const mlqBtn = document.getElementById("mlq_bal");
+mlqBtn.style.display = "none";
 const co2Btn = document.getElementById("co2_bal");
+co2Btn.style.display = "none";
 
 let a = 0;
 let move = true;
