@@ -33,7 +33,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "s0xiety",
+      title: "ecoverse",
       file: "index.html",
       template: "public/app.html",
     }),

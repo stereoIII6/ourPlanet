@@ -935,8 +935,25 @@ contract Trees is ERC20, MathFnx, exitSafes {
     function buyTreesMainnet(uint256 _amount, address _send)
         external
         payable
-        returns (uint256)
-    {}
+        returns (bool)
+    {
+        uint256 swapRate = divide(mainRate, rate);
+        emit Log(l, _send, fortrees, _send.balance, address(this).balance);
+        l++;
+        require(
+            _send.balance >= _amount * swapRate,
+            "insufficient usdc balance"
+        );
+        require(
+            availSupply + _amount * 10**18 < MAX_SUPPLY,
+            "insufficient supply"
+        );
+        payable(fortrees).transfer(((_amount * swapRate) / 100) * 85);
+        payable(impact).transfer(((_amount * swapRate) / 100) * 15);
+        availSupply += _amount * 10**18;
+        _mint(msg.sender, _amount * 10**18);
+        return true;
+    }
 
     function setMainRate() internal returns (uint256) {
         int256 mainR = ethUsdPrice.MainUsdPrice();
