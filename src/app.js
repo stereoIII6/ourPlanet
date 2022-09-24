@@ -28,7 +28,7 @@ const getWords = async () => {
 };
 words = getWords();
 let user;
-
+let aa = 0;
 const projectId = "2E7kMR0TPtUcbgHMJOdJqUlCAkD";
 const projectSecret = "4521c0699f3423a82430c762af3cb06a";
 const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
@@ -177,10 +177,10 @@ const draw = (e) => {
     let j = 0;
     while (j < 60) {
       // lines[i].children[j].style.opacity = africa[i][j + a];
-      if (africa[i][j + a] === 0) {
+      if (africa[i][j + aa] === 0) {
         lines[i].children[j].style.background = "#badbe1";
         lines[i].children[j].style.border = "1px solid #4c8690";
-      } else if (africa[i][j + a] === 1) {
+      } else if (africa[i][j + aa] === 1) {
         lines[i].children[j].style.background = "#4c9071";
         lines[i].children[j].style.border = "0px solid #4c9071";
       }
@@ -207,7 +207,7 @@ const labelMe = (e) => {
   label.position = "absolute";
   labelhead.innerHTML = "Ecoverse Geoxel";
   labelbody.innerHTML = "<div style='grid-row: 3; grid-column: 1/-1; text-align: center;'>LANDMARK CONTENT COMING SOON ...</div>";
-  labelfoot.innerHTML = `${-6 * (Number(e.target.parentNode.id.slice(-2)) - 31)}° ${Number(e.target.parentNode.id.slice(-2)) - 31 < 0 ? "North" : "South"} / ${Number(e.target.id.slice(-2)) + a < 91 ? (Number(e.target.id.slice(-2)) + a) * 4 : (Number(e.target.id.slice(-2)) + a - 91) * 4}° from GMT`;
+  labelfoot.innerHTML = `${-6 * (Number(e.target.parentNode.id.slice(-2)) - 31)}° ${Number(e.target.parentNode.id.slice(-2)) - 31 < 0 ? "North" : "South"} / ${Number(e.target.id.slice(-2)) + aa < 91 ? (Number(e.target.id.slice(-2)) + aa) * 4 : (Number(e.target.id.slice(-2)) + aa - 91) * 4}° from GMT`;
   label.addEventListener("click", unlabelMe);
 };
 const unlabelMe = (e) => {
@@ -221,8 +221,8 @@ const goProfile = (e) => {
   e.preventDefault();
 };
 const rotate = () => {
-  if (a === 91) a = 0;
-  if (move === true) a++;
+  if (aa === 91) aa = 0;
+  if (move === true) aa++;
   draw();
 };
 setInterval(rotate, 250);
@@ -430,6 +430,7 @@ const onClickConnect = async (e) => {
       networkTag = "MTC*";
       a = 2; // a = 18;
     }
+    console.log("net check : ", network, a);
     let mainVal = await provider.getBalance(accounts[0]);
     net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
     net_btn.addEventListener("click", netSwitch);
@@ -619,6 +620,7 @@ const grabTrees = async (e) => {
   trs = 101;
   e.preventDefault();
   try {
+    console.log("open modal !");
     const usdc = await usdcData();
     const trees = await treeData();
     const client = await signer.getAddress();
@@ -629,6 +631,7 @@ const grabTrees = async (e) => {
     usdcAlwd.innerHTML = (Number(allowed._hex) / 1e18).toFixed(2) + " USDC";
     usdcMax.innerHTML = "Approve Max. " + (Number(usdcBalance._hex) / 1e18).toFixed(2) + " USDC";
     toggle();
+    console.log("allowed : ", allowed);
     modalHead.innerHTML = "BUY TR33 TOKENS";
     modalBody.innerHTML = document.getElementById("buyTreesDef").innerHTML;
     const sub = document.getElementById("sub");
@@ -702,8 +705,8 @@ const grabTrees = async (e) => {
 };
 buyTrees.addEventListener("click", grabTrees);
 
-console.log("net check :: ", network, a);
 const s0xData = async () => {
+  console.log("net check :: ", network, a);
   const deploymentKey = await Object.keys(s0xFactory.networks)[a];
   return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, signer);
 };
