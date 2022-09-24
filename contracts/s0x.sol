@@ -937,6 +937,7 @@ contract Trees is ERC20, MathFnx, exitSafes {
         payable
         returns (bool)
     {
+        setMainRate();
         uint256 swapRate = divide(mainRate, rate);
         emit Log(l, _send, fortrees, _send.balance, address(this).balance);
         l++;

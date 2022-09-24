@@ -105,6 +105,7 @@ let garden;
 let s0x;
 let usdc;
 let userData = {};
+let networkTag;
 
 const africa = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -192,7 +193,7 @@ const draw = (e) => {
 };
 let mod = "none";
 const toggle = (e) => {
-  console.log(mod);
+  console.log("toggle", mod);
   if (mod === "none") {
     mod = "flex";
     close.addEventListener("click", unlabelMe);
@@ -357,7 +358,7 @@ const onClickConnect = async (e) => {
     // get network data
     network = await ethereum.request({ method: "net_version" });
 
-    var networkTag = "Switch Network";
+    networkTag = "Switch Network";
     // evaluate legal networks
     if (Number(network) === 1) {
       networkTag = "ETH";
@@ -445,16 +446,21 @@ let trs;
 let isApproved = false;
 const approveUSDC = async (e) => {
   e.preventDefault();
-  console.log(signer.getAddress());
   const usdc = await usdcData();
   const trees = await treeData();
-
-  const deploymentKey = await Object.keys(Trees.networks)[a];
-
+  const approve = document.getElementById("approve");
+  const treebuy = document.getElementById("treebuy");
   const doApprove = await usdc
     .approve(trees.address, BigInt(trs * 94 * 1e15))
     .then((result) => {
-      console.log(result);
+      console.log("approve : ", result);
+      const amnt = BigInt(trs * 94 * 1e15);
+      console.log(amnt);
+      console.log();
+      approve.style.gridColumn = "1 / 7";
+      treebuy.style.gridColumn = "7 / -1";
+      approve.innerHTML = "Approving " + Number(amnt) / 1e18 + " USDCs";
+      approve.removeEventListener("click", approveUSDC);
       return result;
     })
     .catch((err) => {
@@ -462,27 +468,13 @@ const approveUSDC = async (e) => {
     });
   doApprove.wait().then((result) => {
     console.log(result);
-    const approve = document.getElementById("approve");
     approve.style.gridColumn = "1";
     approve.innerHTML = "√";
-    const treebuy = document.getElementById("treebuy");
     treebuy.style.gridColumn = "2 / -1";
+    approve.style.background = "#badbe1";
+    treebuy.style.background = "#4c9071";
+    return result;
   });
-};
-const approveMLQ = async (e) => {
-  e.preventDefault();
-  console.log(signer.getAddress());
-  const trees = await treeData();
-  console.log(BigInt(trs * 94));
-  const doApprove = await trees
-    .approveUSDC(BigInt(trs * 94 * 1e15))
-    .then((result) => {
-      console.log(result);
-      return result;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 const refreshUSDC = async () => {
   const client = await signer.getAddress();
@@ -598,6 +590,7 @@ const goUsdBuy = async (e) => {
   console.log(amnt, sender);
   const usdc = await usdcData();
   const balance = await usdc.balanceOf(await signer.getAddress());
+  const treebuy = document.getElementById("treebuy");
   console.log(Number(balance._hex));
   console.log(amnt * 94 * 1e15);
   console.log(trees.address);
@@ -605,6 +598,7 @@ const goUsdBuy = async (e) => {
     .buyTreeUSDC(amnt, sender)
     .then((result) => {
       console.log(result);
+      treebuy.innerHTML = "BUYING " + amnt + " S33Ds";
       return result;
     })
     .catch((err) => {
@@ -617,11 +611,64 @@ const goUsdBuy = async (e) => {
     toggle();
   });
 };
+const goMtcBuy = async (e) => {
+  e.preventDefault();
+  const trees = await treeData();
+  const amnt = trs;
+  const sender = await signer.getAddress();
+  console.log(amnt, sender);
+  const balance = await provider.getBalance(accounts[0]);
+  const treebuy = document.getElementById("treebuy");
+  console.log("balance : ", Number(balance._hex));
+  console.log("amount : ", amnt * 94 * 1e15);
+  console.log(trees.address);
+  const buy = await trees
+    .buyTreesMainnet(amnt, sender)
+    .then((result) => {
+      console.log(result);
+      treebuy.innerHTML = "BUYING " + amnt + " S33Ds";
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  buy.wait().then((result) => {
+    console.log(result);
+    refreshTR33();
+    refreshUSDC();
+    toggle();
+  });
+};
+const check = () => {
+  const approve = document.getElementById("approve");
+  const treebuy = document.getElementById("treebuy");
+  const approvem = document.getElementById("approve_m");
+  const treebuym = document.getElementById("treebuy_m");
+  if (allowed >= BigInt(trs * 94 * 1e15)) {
+    approve.innerHTML = `√`;
+    approve.style.gridColumn = "1";
+    treebuy.style.gridColumn = "2/-1";
+    treebuy.innerHTML = `BUY ${trs} S33Ds`;
+    approve.style.background = "#badbe1";
+    treebuy.style.background = "#4c9071";
+    approvem.style.background = "#badbe1";
+    treebuym.style.background = "#4c9071";
+  } else {
+    amnt.innerHTML = `${trs} S33Ds`;
+    approve.style.gridColumn = "1 / 7";
+    treebuy.style.gridColumn = "7 /-1";
+    approve.style.background = "#4c9071";
+    treebuy.style.background = "#badbe1";
+    approvem.style.background = "#4c9071";
+    treebuym.style.background = "#badbe1";
+    approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
+    treebuy.innerHTML = `BUY ${trs} S33Ds`;
+  }
+};
 const grabTrees = async (e) => {
   trs = 101;
   e.preventDefault();
   try {
-    console.log("open modal !");
     const usdc = await usdcData();
     const trees = await treeData();
     const client = await signer.getAddress();
@@ -629,12 +676,16 @@ const grabTrees = async (e) => {
     const usdcBalance = await usdc.balanceOf(client);
     const usdcAlwd = document.getElementById("usdcalwd");
     const usdcMax = document.getElementById("maxusdc");
+    const mainMax = document.getElementById("maxmain");
+    const balance = await provider.getBalance(accounts[0]);
     usdcAlwd.innerHTML = (Number(allowed._hex) / 1e18).toFixed(2) + " USDC";
     usdcMax.innerHTML = "Approve Max. " + (Number(usdcBalance._hex) / 1e18).toFixed(2) + " USDC";
-    toggle();
-    console.log("allowed : ", allowed);
-    modalHead.innerHTML = "BUY TR33 TOKENS";
+    mainMax.innerHTML = (balance / 1e18).toFixed(2) + " " + networkTag;
+    console.log(client, allowed, usdcBalance, usdcAlwd, usdcMax);
+    modalHead.innerHTML = "BUY S33D TOKENS";
     modalBody.innerHTML = document.getElementById("buyTreesDef").innerHTML;
+    toggle();
+    console.log("open modal !");
     const sub = document.getElementById("sub");
     const amnt = document.getElementById("amnt");
     const add = document.getElementById("add");
@@ -642,31 +693,30 @@ const grabTrees = async (e) => {
     const div = document.getElementById("div");
     const approve = document.getElementById("approve");
     const treebuy = document.getElementById("treebuy");
+    const treebuym = document.getElementById("treebuy_m");
     amnt.innerHTML = `${trs} S33Ds`;
-    if (allowed >= BigInt(trs * 94 * 1e15)) {
-      approve.innerHTML = `√`;
-      approve.style.gridColumn = "1";
-      treebuy.style.gridColumn = "2/-1";
-      treebuy.innerHTML = `BUY ${trs} S33Ds`;
-    } else {
-      amnt.innerHTML = `${trs} TR33S`;
-      approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-      treebuy.innerHTML = `BUY ${trs} TR33S`;
-    }
+    approve.style.background = "#4c9071";
+    treebuy.style.background = "#badbe1";
+    treebuym.style.gridColumn = "1 / -1";
+    check();
     const more = (e) => {
       trs++;
-      amnt.innerHTML = `${trs} TR33S`;
+      amnt.innerHTML = `${trs} S33Ds`;
       approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-      treebuy.innerHTML = `BUY ${trs} TR33S`;
+      treebuy.innerHTML = `BUY ${trs} S33Ds`;
+      treebuym.innerHTML = `BUY ${trs} S33Ds`;
+      check();
       console.log(trs);
     };
     add.addEventListener("click", more);
 
     const tenxy = (e) => {
       if (trs < 1000000000) trs *= 10;
-      amnt.innerHTML = `${trs} TR33S`;
+      amnt.innerHTML = `${trs} S33Ds`;
       approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-      treebuy.innerHTML = `BUY ${trs} TR33S`;
+      treebuy.innerHTML = `BUY ${trs} S33Ds`;
+      treebuym.innerHTML = `BUY ${trs} S33Ds`;
+      check();
       console.log(trs);
     };
     tenx.addEventListener("click", tenxy);
@@ -674,10 +724,12 @@ const grabTrees = async (e) => {
     const less = (e) => {
       if (trs > 2) {
         trs--;
-        amnt.innerHTML = `${trs} TR33S`;
+        amnt.innerHTML = `${trs} S33Ds`;
         approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-        treebuy.innerHTML = `BUY ${trs} TR33S`;
+        treebuy.innerHTML = `BUY ${trs} S33Ds`;
+        treebuym.innerHTML = `BUY ${trs} S33Ds`;
         console.log(trs);
+        check();
       }
     };
     sub.addEventListener("click", less);
@@ -685,23 +737,26 @@ const grabTrees = async (e) => {
     const divx = (e) => {
       if (trs >= 10) {
         trs = Math.floor(trs / 10);
-        amnt.innerHTML = `${trs} TR33S`;
+        amnt.innerHTML = `${trs} S33Ds`;
         approve.innerHTML = `APPROVE ${(trs * 0.094).toFixed(3)} USDC`;
-        treebuy.innerHTML = `BUY ${trs} TR33S`;
+        treebuy.innerHTML = `BUY ${trs} S33Ds`;
+        treebuym.innerHTML = `BUY ${trs} S33Ds`;
         console.log(trs.toFixed(0));
+        check();
       }
     };
     div.addEventListener("click", divx);
     approve.addEventListener("click", approveUSDC);
     // if (isApproved === true)
     treebuy.addEventListener("click", goUsdBuy);
+    treebuym.addEventListener("click", goMtcBuy);
     modalFoot.innerHTML = "* confirm your transaction with your metamask !";
     close.addEventListener("click", unlabelMe);
   } catch {
     modalHead.innerHTML = "Please Sign In first";
     modalBody.innerHTML = "";
     modalFoot.innerHTML = "* Your have to be connected to the blockchain !";
-    toggle();
+    // toggle();
   }
 };
 buyTrees.addEventListener("click", grabTrees);
