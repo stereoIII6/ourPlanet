@@ -219,6 +219,7 @@ const unlabelMe = (e) => {
 
 const goProfile = (e) => {
   e.preventDefault();
+  console.log("go Profile !");
 };
 const rotate = () => {
   if (aa === 91) aa = 0;
@@ -1000,6 +1001,8 @@ const log = async () => {
       // user is admin
       console.log("admin");
       profile_btn.innerHTML = "@" + name;
+      profile_btn.removeEventListener("click", goProfile);
+      profile_btn.addEventListener("click", viewProfile);
     }
     if (Number(role._hex) === 88) {
       // user is producer
@@ -1037,7 +1040,7 @@ const log = async () => {
 const viewProfile = async (e) => {
   e.preventDefault();
   const s0x = await s0xData();
-  const tree = await treeData();
+  const eco = await ecoData();
 
   const client = await signer.getAddress();
   const name = await s0x
@@ -1049,9 +1052,20 @@ const viewProfile = async (e) => {
     .catch((err) => {
       console.log(err);
     });
-  console.log("view profile !");
+  const userData = await s0x
+    .showUser(client)
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  const dat = JSON.parse(userData);
+  const balance = await eco.balanceOf(client);
+  console.log("view profile !", Number(balance._hex));
   modalHead.innerHTML = name + "'s Profile";
-  modalBody.innerHTML = "";
+  modalBody.innerHTML = "<img style='grid-row:1;grid-column:1/-1;width:100%;' src='" + dat.avatar + "' /> <p style='grid-row:1;grid-column:1/7;text-align:center'>" + balance + " Plantations</p><p style='grid-row:1;grid-column:7/-1;text-align:center'>" + dat.email + "</p>";
   modalFoot.innerHTML = "Your data is saved on the Blockchain !";
   toggle();
 };
@@ -1060,10 +1074,13 @@ const addUser = async (e) => {
   const s0x = await s0xData();
   const account = await signer.getAddress();
   console.log(String(account), `{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`);
+  const signupBtn = document.getElementById("signup_btn");
   userData = await s0x
     .createUserAccount(`{"name":"${document.getElementById("su_name").value}","email":"${document.getElementById("su_email").value}","avatar":"${document.getElementById("su_avt").value}"}`, String(account), document.getElementById("su_name").value)
     .then((result) => {
       console.log(result);
+      signupBtn.innerHTML = "STORING YOUR DATA";
+      profile_btn.removeEventListener("click", doSignUp);
       return result;
     })
     .catch((err) => {
@@ -1071,8 +1088,8 @@ const addUser = async (e) => {
     });
   userData.wait().then((result) => {
     console.log("finished");
-    profile_btn.innerHTML = document.getElementById("su_name").value;
-    profile_btn.removeEventListener("click", doSignUp);
+    // profile_btn.innerHTML = document.getElementById("su_name").value;
+
     toggle();
   });
 };

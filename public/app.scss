@@ -13,8 +13,7 @@ body {
   justify-items: center;
   color: $col;
   background: $bg;
-  background-image: url("https://ipfs.io/ipfs/QmT8GAxbmJp2jG5GjqC4cCZQAGgBXhfSQFRQXCQnVpGxY8");
-  background-size: cover;
+
   overflow: hidden;
   font-family: "Montserrat", sans-serif;
 }
@@ -54,7 +53,7 @@ body {
   margin-top: 1em;
   padding: 0.5em;
   grid-column: 1/7;
-  color: black;
+  color: white;
 }
 #mainlinks {
   grid-column: 1/5;
