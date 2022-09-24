@@ -97,7 +97,7 @@ plntBtn.style.display = "none";
 const co2Btn = document.getElementById("co2_bal");
 co2Btn.style.display = "none";
 
-let a = 0;
+let a;
 let move = true;
 let trees;
 let co2;
@@ -358,15 +358,78 @@ const onClickConnect = async (e) => {
 
     var networkTag = "Switch Network";
     // evaluate legal networks
-    if (Number(network) === 1) networkTag = "ETH";
-    if (Number(network) === 80001) networkTag = "MTC*";
-    if (Number(network) === 100) networkTag = "xDai";
-    if (Number(network) === 10) networkTag = "oETH";
-    if (Number(network) === 200) networkTag = "aETH";
-    if (Number(network) === 43224) networkTag = "AVAX";
-    if (Number(network) === 1312) networkTag = "ACAB_";
-    if (Number(network) === 137) networkTag = "MTC";
-    if (Number(network) === 43113) networkTag = "AVAX*";
+    if (Number(network) === 1) {
+      networkTag = "ETH";
+      // a = 0;
+    }
+    if (Number(network) === 10) {
+      networkTag = "oETH";
+      // a = 1;
+    }
+    if (Number(network) === 69) {
+      networkTag = "okETH*";
+      // a = 3;
+    }
+    if (Number(network) === 100) {
+      networkTag = "xDai";
+      // a = 4;
+    }
+    if (Number(network) === 137) {
+      networkTag = "MTC";
+      // a = 0; // a = 5;
+    }
+    if (Number(network) === 200) {
+      networkTag = "axETH";
+      // a = 6;
+    }
+    if (Number(network) === 250) {
+      networkTag = "FTM";
+      // a = 7;
+    }
+    if (Number(network) === 300) {
+      networkTag = "oxETH*";
+      // a = 8;
+    }
+    if (Number(network) === 420) {
+      networkTag = "ogETH*";
+      // a = 0; // a = 9;
+    }
+    if (Number(network) === 1312) {
+      networkTag = "ACAB_";
+      // a = 10;
+    }
+    if (Number(network) === 4002) {
+      networkTag = "FTM*";
+      // a = 0; // a = 11;
+    }
+    if (Number(network) === 5777) {
+      networkTag = "DEV*";
+      a = 0; // a = 12;
+    }
+    if (Number(network) === 9000) {
+      networkTag = "EVMOS*";
+      // a = 0; // a = 13;
+    }
+    if (Number(network) === 9001) {
+      networkTag = "EVMOS";
+      // a = 0; // a = 14;
+    }
+    if (Number(network) === 42161) {
+      networkTag = "aETH";
+      // a = 15;
+    }
+    if (Number(network) === 43113) {
+      networkTag = "AVAX*";
+      // a = 1; // a = 16;
+    }
+    if (Number(network) === 43224) {
+      networkTag = "AVAX";
+      a = 1; // a = 17;
+    }
+    if (Number(network) === 80001) {
+      networkTag = "MTC*";
+      a = 2; // a = 18;
+    }
     let mainVal = await provider.getBalance(accounts[0]);
     net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
     net_btn.addEventListener("click", netSwitch);
@@ -383,11 +446,7 @@ const approveUSDC = async (e) => {
   console.log(signer.getAddress());
   const usdc = await usdcData();
   const trees = await treeData();
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 1;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
+
   const deploymentKey = await Object.keys(Trees.networks)[a];
 
   const doApprove = await usdc
@@ -642,13 +701,9 @@ const grabTrees = async (e) => {
   }
 };
 buyTrees.addEventListener("click", grabTrees);
+
+console.log("net check :: ", network, a);
 const s0xData = async () => {
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 1;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
-  console.log("net check :: ", network, a);
   const deploymentKey = await Object.keys(s0xFactory.networks)[a];
   return new ethers.Contract(s0xFactory.networks[deploymentKey].address, s0xFactory.abi, signer);
 };
@@ -664,57 +719,30 @@ const usdcData = async () => {
   return new ethers.Contract(adr, USDC.abi, signer);
 };
 const mlqData = async () => {
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 1;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
-  signer = await provider.getSigner();
   const deploymentKey = await Object.keys(MLQ.networks)[a];
   // console.log(Trees.abi);
 
   return new ethers.Contract(MLQ.networks[deploymentKey].address, MLQ.abi, signer);
 };
 const treeData = async () => {
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 2;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
-  signer = await provider.getSigner();
   const deploymentKey = await Object.keys(Trees.networks)[a];
   console.log(Trees.abi, a, deploymentKey, Trees.networks[deploymentKey].address, signer);
 
   return new ethers.Contract(Trees.networks[deploymentKey].address, Trees.abi, signer);
 };
 const co2Data = async () => {
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 1;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
   const deploymentKey = await Object.keys(CO2.networks)[a];
   // console.log(CO2.abi);
 
   return new ethers.Contract(CO2.networks[deploymentKey].address, CO2.abi, signer);
 };
 const gardenData = async () => {
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 1;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
   const deploymentKey = await Object.keys(GardenPool.networks)[a];
   // console.log(GardenPool.abi);
 
   return new ethers.Contract(GardenPool.networks[deploymentKey].address, GardenPool.abi, signer);
 };
 const ecoData = async () => {
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 2;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
   const deploymentKey = await Object.keys(ecoverse.networks)[a];
   // console.log(GardenPool.abi);
 
@@ -743,11 +771,7 @@ const setDias = async () => {
   const tree = await treeData();
   const client = await signer.getAddress();
   const eco = await ecoData();
-  let a;
-  if (Number(network) === 43113) a = 0;
-  if (Number(network) === 43224) a = 1;
-  if (Number(network) === 80001) a = 1;
-  if (Number(network) === 137) a = 3;
+
   const deploymentKey = await Object.keys(ecoverse.networks)[a];
   const diasShow = document.getElementById("dias");
   const allowed = await tree
@@ -759,19 +783,25 @@ const setDias = async () => {
     .catch((err) => {
       console.log(err);
     });
+  const bePlanter = document.getElementById("bePlanter");
+  const approveTrees = document.getElementById("approveTrees");
   if (allowed >= BigInt(dias.trees * 1e18) && dias.location !== "") {
-    const bePlanter = document.getElementById("bePlanter");
     bePlanter.innerHTML = "Plant " + dias.trees + " TR33s Now";
     bePlanter.style.background = "#4c9071";
     bePlanter.disabled = false;
+    bePlanter.style.display = "block";
+    approveTrees.style.display = "none";
   } else {
     bePlanter.style.background = "#badbe1";
     bePlanter.disabled = true;
+
     dias.date = Date(Date.now()).slice(4, 34);
     diasShow.innerHTML = JSON.stringify(dias);
     const approveTrees = document.getElementById("approveTrees");
-    if (dias.location !== "" && dias.trees > 99) {
+    if (dias.location !== "" && dias.trees > allowed) {
       approveTrees.disabled = false;
+      approveTrees.style.display = "block";
+      bePlanter.style.display = "none";
       approveTrees.innerHTML = "Approve " + dias.trees + " TR33s";
       approveTrees.style.background = "#4c9071";
     } else {
@@ -782,11 +812,20 @@ const setDias = async () => {
 };
 const goPlantForm = async (e) => {
   e.preventDefault();
+  const eco = await ecoData();
+  const trees = await treeData();
   const client = await signer.getAddress();
   let adrs = await signer.getAddress();
   dias.owner = adrs.slice(0, 4) + "..." + adrs.slice(39, 42);
   dias.date = Date(Date.now()).slice(4, 34);
   dias.dias = { status: "sprouting" };
+  const bePlanter = document.getElementById("bePlanter");
+  const approveTrees = document.getElementById("approveTrees");
+
+  const deploymentKey = await Object.keys(ecoverse.networks)[a];
+  const allowed = await trees.allowance(client, ecoverse.networks[deploymentKey].address);
+  if (allowed <= BigInt(dias.trees * 1e18)) bePlanter.style.display = "none";
+  else approveTrees.style.display = "none";
   const tree = await treeData();
   const doMax = async (e) => {
     e.preventDefault();
@@ -822,34 +861,39 @@ const goPlantForm = async (e) => {
   const goApproveTrees = async () => {
     const eco = await ecoData();
     const trees = await treeData();
-    let a;
-    if (Number(network) === 43113) a = 0;
-    if (Number(network) === 43224) a = 1;
-    if (Number(network) === 80001) a = 1;
-    if (Number(network) === 137) a = 3;
+
     const deploymentKey = await Object.keys(ecoverse.networks)[a];
+    const approveTrees = document.getElementById("approveTrees");
+    const bePlanter = document.getElementById("bePlanter");
+    const allowed = await trees.allowance(client, ecoverse.networks[deploymentKey].address);
+    if (allowed <= BigInt(dias.trees * 1e18)) bePlanter.style.display = "none";
+    else approveTrees.style.display = "none";
     const aprv = await trees
       .approve(ecoverse.networks[deploymentKey].address, BigInt(dias.trees * 1e18))
       .then((result) => {
         console.log(result);
+        approveTrees.innerHTML = "Approval in progress !";
         return result;
       })
       .catch((err) => {
         console.log(err);
+        approveTrees.innerHTML = err.data.messgae.split(": ")[1];
       });
-    const bePlanter = document.getElementById("bePlanter");
-    const approveTrees = document.getElementById("approveTrees");
     aprv.wait().then((result) => {
       bePlanter.disabled = false;
+      bePlanter.style.display = "block";
       approveTrees.disabled = true;
+      approveTrees.style.display = "none";
     });
   };
   const mintCert = async () => {
     const eco = await ecoData();
+    const bePlanter = document.getElementById("bePlanter");
     const mint = await eco
       .mintCertificate(dias, Date.now(), BigInt(dias.trees * 1e18), dias.location)
       .then((result) => {
         console.log(result);
+        bePlanter.innerHTML = "Planting in progress !";
         return result;
       })
       .catch((err) => {
