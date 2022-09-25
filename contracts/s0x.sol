@@ -949,6 +949,7 @@ contract Trees is ERC20, MathFnx, exitSafes {
             availSupply + _amount * 10**18 < MAX_SUPPLY,
             "insufficient supply"
         );
+        require(msg.value >= _amount * swapRate, "insufficient usdc balance");
         payable(fortrees).transfer(((_amount * swapRate) / 100) * 85);
         payable(impact).transfer(((_amount * swapRate) / 100) * 15);
         availSupply += _amount * 10**18;
@@ -960,10 +961,6 @@ contract Trees is ERC20, MathFnx, exitSafes {
         int256 mainR = ethUsdPrice.MainUsdPrice();
         mainRate = uint256(mainR);
         return (uint256(mainR));
-    }
-
-    function getMainRate() external returns (uint256) {
-        return setMainRate();
     }
 
     function setMLQRates() internal returns (uint256) {

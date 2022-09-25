@@ -406,7 +406,7 @@ const onClickConnect = async (e) => {
     }
     if (Number(network) === 5777) {
       networkTag = "DEV*";
-      a = 0; // a = 12;
+      // a = 12;
     }
     if (Number(network) === 9000) {
       networkTag = "EVMOS*";
@@ -426,11 +426,11 @@ const onClickConnect = async (e) => {
     }
     if (Number(network) === 43224) {
       networkTag = "AVAX";
-      a = 1; // a = 17;
+      a = 0; // a = 17;
     }
     if (Number(network) === 80001) {
       networkTag = "MTC*";
-      a = 2; // a = 18;
+      a = 1; // a = 18;
     }
     console.log("net check : ", network, a);
     let mainVal = await provider.getBalance(accounts[0]);
@@ -614,25 +614,29 @@ const goUsdBuy = async (e) => {
 const goMtcBuy = async (e) => {
   e.preventDefault();
   const trees = await treeData();
-  const rate = await trees
-    .getMainRate()
-    .then((result) => {
-      return Number(result._hex);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  let rate;
+  const setRate = await trees.setMainRate();
+  setRate.wait().then(async () => {
+    rate = await mainRate
+      .then((result) => {
+        console.log("rate : ", result);
+        return Number(result._hex);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+  console.log("rate : ", rate);
   const amnt = trs;
   const sender = await signer.getAddress();
-  console.log(amnt, sender);
+  console.log("BUY MTC : ", amnt, sender, rate);
   const balance = await provider.getBalance(accounts[0]);
   const treebuy = document.getElementById("treebuy");
   console.log("balance : ", Number(balance._hex));
   const price = amnt * rate * 94 * 1e15;
-  console.log("amount : ");
   console.log(trees.address);
   const buy = await trees
-    .buyTreesMainnet(amnt, sender, { value: BigInt(price) })
+    .buyTreesMainnet(amnt, sender)
     .then((result) => {
       console.log(result);
       treebuy.innerHTML = "BUYING " + amnt + " S33Ds";
