@@ -614,16 +614,25 @@ const goUsdBuy = async (e) => {
 const goMtcBuy = async (e) => {
   e.preventDefault();
   const trees = await treeData();
+  const rate = await trees
+    .getMainRate()
+    .then((result) => {
+      return Number(result._hex);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
   const amnt = trs;
   const sender = await signer.getAddress();
   console.log(amnt, sender);
   const balance = await provider.getBalance(accounts[0]);
   const treebuy = document.getElementById("treebuy");
   console.log("balance : ", Number(balance._hex));
-  console.log("amount : ", amnt * 94 * 1e15);
+  const price = amnt * rate * 94 * 1e15;
+  console.log("amount : ");
   console.log(trees.address);
   const buy = await trees
-    .buyTreesMainnet(amnt, sender)
+    .buyTreesMainnet(amnt, sender, { value: BigInt(price) })
     .then((result) => {
       console.log(result);
       treebuy.innerHTML = "BUYING " + amnt + " S33Ds";

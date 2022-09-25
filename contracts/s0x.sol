@@ -962,6 +962,10 @@ contract Trees is ERC20, MathFnx, exitSafes {
         return (uint256(mainR));
     }
 
+    function getMainRate() external returns (uint256) {
+        return setMainRate();
+    }
+
     function setMLQRates() internal returns (uint256) {
         int256 mlqR = ethUsdPrice.EthUsdPrice();
         MLQ_RATE = uint256(mlqR);
