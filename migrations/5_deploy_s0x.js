@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const MLQ = artifacts.require("MLQ");
 const s0xFactory = artifacts.require("s0xFactory");
-const ecoverse = artifacts.require("ecoverse");
 const Trees = artifacts.require("Trees");
 const Co2s = artifacts.require("Co2s");
 const VRF = artifacts.require("VRFv2Consumer");
@@ -10,7 +9,7 @@ const VRF = artifacts.require("VRFv2Consumer");
 module.exports = function (deployer) {
   let usdcadr;
   // 0 Fuji // 1 Avax // 2 Fantom Test // 3 Fantom Main // 4 Polygon Mumbai // 5 Polygon Main
-  const netty = 0;
+  const netty = 4;
   if (netty === 0) usdcadr = "0x5a604d07782b7303bd2327d133f13a58bd17dc43"; // Fuji AVAX
   if (netty === 1) usdcadr = "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"; // Mainnetty AVAX
 
@@ -22,5 +21,4 @@ module.exports = function (deployer) {
 
   deployer.deploy(s0xFactory, MLQ.address);
   deployer.deploy(Co2s, Trees.address, 2, MLQ.address);
-  deployer.deploy(ecoverse, Trees.address, usdcadr, VRF.address, MLQ.address);
 };

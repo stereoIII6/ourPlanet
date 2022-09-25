@@ -422,11 +422,11 @@ const onClickConnect = async (e) => {
     }
     if (Number(network) === 43113) {
       networkTag = "AVAX*";
-      // a = 1; // a = 16;
+      a = 0; // a = 16;
     }
     if (Number(network) === 43224) {
       networkTag = "AVAX";
-      a = 0; // a = 17;
+      // a = 17;
     }
     if (Number(network) === 80001) {
       networkTag = "MTC*";
@@ -615,7 +615,7 @@ const goMtcBuy = async (e) => {
   e.preventDefault();
   const trees = await treeData();
   let rate;
-  const setRate = await trees.setMainRate();
+  const setRate = await trees.makeRate();
   setRate.wait().then(async () => {
     rate = await mainRate
       .then((result) => {
@@ -711,6 +711,7 @@ const grabTrees = async (e) => {
     approve.style.background = "#4c9071";
     treebuy.style.background = "#badbe1";
     treebuym.style.gridColumn = "1 / -1";
+    treebuym.style.background = "#4c9071";
     check();
     const more = (e) => {
       trs++;

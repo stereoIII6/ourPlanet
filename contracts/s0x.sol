@@ -957,6 +957,10 @@ contract Trees is ERC20, MathFnx, exitSafes {
         return true;
     }
 
+    function makeRate() external returns (uint256) {
+        return setMainRate();
+    }
+
     function setMainRate() internal returns (uint256) {
         int256 mainR = ethUsdPrice.MainUsdPrice();
         mainRate = uint256(mainR);
@@ -1219,7 +1223,6 @@ contract RiteWhabbits is EcoMintNFT {
 contract Co2s is ERC20, MathFnx {
     IERC20 internal trees;
     MLQ mlq;
-    uint256 MAX_SUPPLY;
     uint256 rate;
     uint256 availSupply;
     address author;
@@ -1228,18 +1231,25 @@ contract Co2s is ERC20, MathFnx {
         uint256 id;
         address adr;
         uint256 amount;
-        uint256 region;
+        string region;
         uint256 stamp;
-        uint256 duration;
+        uint256 end;
         uint256 co2;
     }
-
+    struct Tx {
+        uint256 tid;
+        uint256 bid;
+        uint256 co2;
+        uint256 date;
+    }
     mapping(address => uint256) public myBonds;
     mapping(address => mapping(uint256 => uint256)) public myBondedCo2;
-
+    mapping(address => uint256) public myTxCount;
+    mapping(address => mapping(uint256 => uint256)) public myTxs;
     Bond[] public bonds;
-    uint256 c;
-    uint256 b;
+    Tx[] public txs;
+    uint256 t;
+
     uint256 per;
 
     constructor(
@@ -1247,7 +1257,6 @@ contract Co2s is ERC20, MathFnx {
         uint256 _percent,
         address _mlq
     ) ERC20("Carbon Certificate", "C4RB") {
-        MAX_SUPPLY = 25000000000000 * 10**18;
         trees = IERC20(_contract);
         per = _percent;
         mlq = MLQ(payable(_mlq));
@@ -1259,94 +1268,60 @@ contract Co2s is ERC20, MathFnx {
         _;
     }
 
-    function growTrees(
-        uint256 _trees,
-        uint256 _region,
-        uint256 _duration
-    ) external payable returns (bool) {
-        require(msg.value >= _trees * 10**14, "not enough funds for asset");
-        require(_trees <= trees.balanceOf(msg.sender), "insufficient balance");
-        require(
-            5 * _trees * 10**18 <= MAX_SUPPLY - availSupply,
-            "insufficient supply"
+    function setBondRate(uint256 _rate) external returns (uint256) {
+        return rate = _rate;
+    }
+
+    function createBond(
+        uint256 _amnt,
+        string memory _loc,
+        uint256 _stamp,
+        address _sender,
+        uint256 _id
+    ) external returns (uint256) {
+        bonds[_id] = Bond(
+            _id,
+            _sender,
+            _amnt,
+            _loc,
+            _stamp,
+            _stamp + 3600 * 24 * 365 * 5,
+            _amnt * 5
         );
-        bonds.push(
-            Bond(
-                b,
-                msg.sender,
-                _trees * 10**18,
-                _region,
-                block.timestamp,
-                _duration,
-                5 * _trees * 10**18
-            )
-        );
-        availSupply += 5 * _trees * 10**18;
-        myBondedCo2[msg.sender][myBonds[msg.sender]] = b;
-        myBonds[msg.sender]++;
-        trees.transferFrom(msg.sender, payable(address(this)), _trees * 10**18);
-        b++;
-        return true;
+        myBondedCo2[_sender][myBonds[_sender]] = _id;
+        return myBonds[_sender]++;
     }
 
-    function growMoreTrees(uint256 _trees, uint256 _b)
-        external
-        payable
-        returns (bool)
-    {
-        require(msg.value >= _trees * 10**14);
-        require(_trees <= trees.balanceOf(msg.sender));
-        uint256 treez = _trees * 10**18;
-        require(5 * treez <= MAX_SUPPLY - availSupply);
-        uint256 p = divide(100, bonds[_b].amount) * treez;
-        bonds[_b].amount += treez;
-        bonds[_b].co2 += 5 * treez;
-        bonds[_b].duration += bonds[_b].duration * p;
-        uint256 fee = divide(treez, (100 / per));
-        trees.transfer(payable(address(this)), treez - fee);
-        trees.transfer(payable(address(this)), fee);
-        return true;
+    function _checkBond(uint256 _id) internal view returns (uint256) {
+        Bond memory bond = bonds[_id];
+        require(msg.sender == bond.adr);
+        if (bond.end > block.timestamp) {
+            uint256 diff = bond.end - block.timestamp;
+            uint256 perc = ((3600 * 24 * 365 * 5) / 100) * diff;
+            uint256 mod = bond.co2 % 100;
+            uint256 eq = ((bond.co2 - mod) / 100) * perc;
+            return eq;
+        } else {
+            return bond.co2;
+        }
     }
 
-    function growLessTrees(uint256 _trees, uint256 _b)
-        external
-        payable
-        returns (bool)
-    {
-        require(msg.value >= _trees * 10**15);
-        uint256 treez = _trees * 10**18;
-        require(
-            treez <= bonds[myBondedCo2[msg.sender][myBonds[msg.sender]]].amount
-        );
-        bonds[_b].amount -= treez;
-        bonds[_b].co2 -= 5 * treez;
-        uint256 fee = divide(treez, (100 / per));
-        trees.transfer(payable(msg.sender), treez - fee);
-        trees.transfer(payable(address(this)), fee);
-        return true;
+    function checkBond(uint256 _id) external view returns (uint256) {
+        return _checkBond(_id);
     }
 
-    function calcFreeCo2(uint256 _b) internal view returns (uint256, uint256) {
-        uint256 total = bonds[_b].duration * 60 * 60 * 24 * 365;
-        uint256 passed = block.timestamp - bonds[_b].stamp;
-        uint256 pDur = divide(100 * 10**18, total) * passed;
-        uint256 freeCo2 = divide(100 * 10**18, bonds[_b].co2) * pDur;
-        return (freeCo2, passed);
-    }
-
-    function releaseFreeCo2(uint256 _m) external returns (bool) {
-        uint256 _b = myBondedCo2[msg.sender][_m]; // get b_id
-        (uint256 free, uint256 passed) = calcFreeCo2(_b); // get free co2 & passed time
-        require(1 * 10**18 <= free); // check amount
-        bonds[_b].co2 -= free; // edit bonds data subtract
-        bonds[_b].stamp = block.timestamp;
-        uint256 addTime = divide(passed, (100 / per));
-        bonds[_b].duration += addTime;
-
-        uint256 fee = divide(free, (100 / per));
-        _mint(msg.sender, (free - fee)); // mint free co2
-        _mint(address(this), fee);
-        return true;
+    function claimBond(uint256 _id) external returns (uint256 eq) {
+        Bond memory bond = bonds[_id];
+        require(msg.sender == bond.adr);
+        eq = _checkBond(_id);
+        if (eq > 1 * 10**16) {
+            bond.co2 = bond.co2 - eq;
+            txs[t] = Tx(t, _id, eq, block.timestamp);
+            myTxs[msg.sender][myTxCount[msg.sender]] = t;
+            myTxCount[msg.sender]++;
+            bonds[_id] = bond;
+            _mint(bond.adr, eq);
+        }
     }
 
     function withdraw(
@@ -1718,16 +1693,19 @@ contract ecoverse is nftProject {
     address admin;
     address trees;
     Trees tree;
+    Co2s co2s;
     mapping(uint256 => uint256) amount;
     mapping(uint256 => bytes) location;
     mapping(uint256 => address) ownedBy;
     mapping(uint256 => uint256) stamped;
+    mapping(address => uint256) claimable;
 
     constructor(
         address _trees,
         address _usdc,
         address _mlq,
-        address _vrf
+        address _vrf,
+        address _co2
     )
         nftProject(
             msg.sender,
@@ -1740,6 +1718,7 @@ contract ecoverse is nftProject {
     {
         admin = msg.sender;
         tree = Trees(payable(_trees));
+        co2s = Co2s(payable(_co2));
     }
 
     modifier isAdmin() {
@@ -1764,6 +1743,7 @@ contract ecoverse is nftProject {
         stamped[_id] = block.timestamp;
         // mint certificate
         _mint(msg.sender, _id);
+        co2s.createBond(_amnt, _loc, block.timestamp, msg.sender, _id);
         // return boolean
         return true;
     }
@@ -1772,7 +1752,7 @@ contract ecoverse is nftProject {
         uint256 _id,
         string memory _dias_new,
         string memory _loc_new
-    ) external isAdmin returns (bool) {
+    ) external returns (bool) {
         // check approval
         require(msg.sender == ownedBy[_id]);
         // find certificate
