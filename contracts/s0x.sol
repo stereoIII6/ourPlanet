@@ -1227,6 +1227,7 @@ contract Co2s is ERC20, MathFnx {
     uint256 availSupply;
     address author;
     uint256 time;
+    nftProject nft;
     Friends private friends;
     struct Bond {
         uint256 id;
@@ -1270,6 +1271,17 @@ contract Co2s is ERC20, MathFnx {
     modifier isAdmin() {
         require(msg.sender == author);
         _;
+    }
+
+    function setNFT(address _nft) external returns (address) {
+        nft = nftProject(_nft);
+        return address(nft);
+    }
+
+    function showNFTdata(uint256 _id) external view returns (string memory) {
+        // read NFT data by ID
+        bytes memory see_dias = nft.dias(_id);
+        return string(see_dias);
     }
 
     function setBondRate(uint256 _rate) external returns (uint256) {
@@ -1781,9 +1793,10 @@ contract ecoverse is nftProject {
 
 // MAINNET CHECKLIST
 
-// safe & clean deploy address
-// 2x multisig exit safe address output wallets
-// token names and symbols
-//
+// new safe & clean deploy address √
+// 2x multisig exit safe address output wallets √
+// token names and symbols √
+// migration on the right network √
+// funded vrf link subs on 0xe55E1a1C7C8A82648aEdBb2853a01306CE97Df87 √
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

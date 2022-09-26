@@ -12,9 +12,14 @@ const VRF = artifacts.require("VRFv2Consumer");
 */
 module.exports = function (deployer) {
   // 0 Fuji // 1 Avax // 2 Fantom Test // 3 Fantom Main // 4 Polygon Mumbai // 5 Polygon Main
-  const net = 0;
+  let network = await ethereum.request({ method: "net_version" });
+  let nets = Number(network);
+  console.log(nets);
+  const net = 4;
   deployer.deploy(PC, net);
-  deployer.deploy(VRF, 321);
+  if (net == 0) deployer.deploy(VRF, 423);
+  if (net == 4) deployer.deploy(VRF, 2022);
+  if (net == 5) deployer.deploy(VRF, 320);
 
   // if (net === 0 || net === 2 || net === 4) deployer.deploy(USDC);
   // we only need to deploy usdc contract on testnet on mainnet we use existing contracts

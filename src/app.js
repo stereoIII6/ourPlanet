@@ -1241,6 +1241,7 @@ const doSignUp = (e) => {
 let UpBuff;
 const captureFile = (e) => {
   e.preventDefault();
+  const submitIpfs = document.getElementById("submitIpfs");
   console.log("file captured", e.target.files[0]);
   const file = e.target.files[0];
   const reader = new window.FileReader();
