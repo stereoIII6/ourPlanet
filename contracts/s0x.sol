@@ -1226,6 +1226,7 @@ contract Co2s is ERC20, MathFnx {
     uint256 rate;
     uint256 availSupply;
     address author;
+    uint256 time;
     Friends private friends;
     struct Bond {
         uint256 id;
@@ -1255,12 +1256,15 @@ contract Co2s is ERC20, MathFnx {
     constructor(
         address _contract,
         uint256 _percent,
-        address _mlq
+        address _mlq,
+        uint256 _net
     ) ERC20("Carbon Certificate", "C4RB") {
         trees = IERC20(_contract);
         per = _percent;
         mlq = MLQ(payable(_mlq));
         author = msg.sender;
+        if (_net == 1 || _net == 3 || _net == 5) time = 3600 * 24 * 365 * 5;
+        else time = 60 * 5;
     }
 
     modifier isAdmin() {
@@ -1286,7 +1290,7 @@ contract Co2s is ERC20, MathFnx {
             _amnt,
             _loc,
             _stamp,
-            _stamp + 3600 * 24 * 365 * 5,
+            _stamp + time,
             _amnt * 5
         );
         myBondedCo2[_sender][myBonds[_sender]] = _id;
@@ -1308,8 +1312,8 @@ contract Co2s is ERC20, MathFnx {
         require(msg.sender == bond.adr);
         if (bond.end > block.timestamp) {
             uint256 diff = bond.end - block.timestamp;
-            uint256 modo = (3600 * 24 * 365 * 5) % 100;
-            uint256 perc = (((3600 * 24 * 365 * 5) - modo) / 100) * diff;
+            uint256 modo = (time) % 100;
+            uint256 perc = (((time) - modo) / 100) * diff;
             uint256 mod = bond.co2 % 100;
             uint256 eq = ((bond.co2 - mod) / 100) * perc;
             return eq;
