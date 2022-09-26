@@ -121,6 +121,18 @@ body {
   text-align: center;
   margin-top: 1em;
 }
+#rampNet,
+#transak,
+#bitfinex,
+#coinbase,
+#airdrop {
+  grid-column: 1/-1;
+  text-align: center;
+  margin-top: 1em;
+  height: 70px;
+  overflow: hidden;
+}
+
 #title {
   grid-column: 4/10;
   grid-row: 2;
@@ -266,7 +278,8 @@ text {
 #buyTreesDef,
 #plantTreesDef,
 #switchNetDef,
-#user_avt {
+#user_avt,
+#onRampDef {
   display: none;
 }
 #avax,

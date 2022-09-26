@@ -33,6 +33,7 @@
     "@metamask/detect-provider": "^1.2.0",
     "@openzeppelin/contracts": "^4.4.1",
     "@openzeppelin/test-helpers": "^0.5.15",
+    "@ramp-network/ramp-instant-sdk": "^3.2.3",
     "@truffle/hdwallet-provider": "^2.0.0",
     "@uauth/js": "^1.1.0",
     "accelerometer": "^1.2.0",

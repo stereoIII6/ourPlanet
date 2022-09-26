@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { toUtf8CodePoints } from "@ethersproject/strings";
 import { sortedIndex } from "underscore";
 import { create as ipfsHttpClient } from "ipfs-http-client";
+import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 import { Buffer } from "buffer";
 let accounts;
 let network;
@@ -558,6 +559,48 @@ const refreshNet = async () => {
   net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
   net_btn.addEventListener("click", netSwitch);
 };
+const getRampNet = (e) => {
+  e.preventDefault();
+  new RampInstantSDK({
+    hostAppName: "Impact Ecoverse",
+    hostLogoUrl: "https://rampnetwork.github.io/assets/misc/test-logo.png",
+  }).show();
+};
+const getBitfinex = (e) => {
+  e.preventDefault();
+  const bf_url = "https://www.bitfinex.com/sign-up?refcode=f6uAS258H";
+  window.open(bf_url, "_blank");
+};
+const getCoinbase = (e) => {
+  e.preventDefault();
+  const cb_url = "https://www.coinbase.com/";
+  window.open(cb_url, "_blank");
+};
+const getCrypto = async (e) => {
+  e.preventDefault();
+  modalHead.innerHTML = "On Ramp Cryptos now !";
+  modalBody.innerHTML = document.getElementById("onRampDef").innerHTML;
+  const airdrop = document.getElementById("airdrop");
+  const rampNet = document.getElementById("rampNet");
+  const bitfinex = document.getElementById("bitfinex");
+  const coinbase = document.getElementById("coinbase");
+  const transak = document.getElementById("transak");
+  rampNet.style.background = "darkgrey";
+  airdrop.style.background = "darkgrey";
+  transak.style.background = "white";
+  coinbase.style.background = "white";
+  bitfinex.style.background = "darkgrey";
+  airdrop.addEventListener("click", dropUSDCs);
+  rampNet.addEventListener("click", getRampNet);
+  bitfinex.addEventListener("click", getBitfinex);
+  coinbase.addEventListener("click", getCoinbase);
+  if (Number(network) == 80001) airdrop.style.display = "block";
+  else airdrop.style.display = "none";
+  transak.style.display = "none";
+  modalFoot.innerHTML = "You can buy crypto from one of our suggested on ramp partners !";
+  toggle();
+};
+
 const dropUSDCs = async (e) => {
   e.preventDefault();
   const usdc = await usdcData();
@@ -582,7 +625,7 @@ const dropUSDCs = async (e) => {
       console.log(err);
     });
 };
-usdcBtn.addEventListener("click", dropUSDCs);
+usdcBtn.addEventListener("click", getCrypto);
 const goUsdBuy = async (e) => {
   e.preventDefault();
   const trees = await treeData();
@@ -707,13 +750,18 @@ const grabTrees = async (e) => {
     const tenx = document.getElementById("tenx");
     const div = document.getElementById("div");
     const approve = document.getElementById("approve");
+    const approvem = document.getElementById("approve_m");
     const treebuy = document.getElementById("treebuy");
     const treebuym = document.getElementById("treebuy_m");
+    const maxmain = document.getElementById("maxmain");
     amnt.innerHTML = `${trs} S33Ds`;
     approve.style.background = "#4c9071";
     treebuy.style.background = "#badbe1";
     treebuym.style.gridColumn = "1 / -1";
     treebuym.style.background = "#4c9071";
+    treebuym.style.display = "none";
+    approvem.style.display = "none";
+    maxmain.style.display = "none";
     check();
     const more = (e) => {
       trs++;
