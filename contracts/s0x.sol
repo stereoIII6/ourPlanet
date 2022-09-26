@@ -1272,13 +1272,14 @@ contract Co2s is ERC20, MathFnx {
         return rate = _rate;
     }
 
-    function createBond(
+    function _createBond(
         uint256 _amnt,
         string memory _loc,
         uint256 _stamp,
         address _sender,
         uint256 _id
-    ) external returns (uint256) {
+    ) internal returns (uint256) {
+        // is owner of token ?
         bonds[_id] = Bond(
             _id,
             _sender,
@@ -1292,12 +1293,23 @@ contract Co2s is ERC20, MathFnx {
         return myBonds[_sender]++;
     }
 
+    function createBond(
+        uint256 _amnt,
+        string memory _loc,
+        uint256 _stamp,
+        address _sender,
+        uint256 _id
+    ) external returns (uint256) {
+        return _createBond(_amnt, _loc, _stamp, _sender, _id);
+    }
+
     function _checkBond(uint256 _id) internal view returns (uint256) {
         Bond memory bond = bonds[_id];
         require(msg.sender == bond.adr);
         if (bond.end > block.timestamp) {
             uint256 diff = bond.end - block.timestamp;
-            uint256 perc = ((3600 * 24 * 365 * 5) / 100) * diff;
+            uint256 modo = (3600 * 24 * 365 * 5) % 100;
+            uint256 perc = (((3600 * 24 * 365 * 5) - modo) / 100) * diff;
             uint256 mod = bond.co2 % 100;
             uint256 eq = ((bond.co2 - mod) / 100) * perc;
             return eq;
@@ -1743,7 +1755,7 @@ contract ecoverse is nftProject {
         stamped[_id] = block.timestamp;
         // mint certificate
         _mint(msg.sender, _id);
-        co2s.createBond(_amnt, _loc, block.timestamp, msg.sender, _id);
+        // co2s.createBond(_amnt, _loc, block.timestamp, msg.sender, _id);
         // return boolean
         return true;
     }

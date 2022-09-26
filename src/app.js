@@ -10,6 +10,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import "../public/app.scss";
 import { sha256 } from "crypto-hash";
 import UAuth from "@uauth/js";
+import { v4 as uuidv4 } from "uuid";
 import { toUtf8CodePoints } from "@ethersproject/strings";
 import { sortedIndex } from "underscore";
 import { create as ipfsHttpClient } from "ipfs-http-client";
@@ -613,11 +614,12 @@ const goUsdBuy = async (e) => {
 };
 const goMtcBuy = async (e) => {
   e.preventDefault();
+  console.log("go buy mtc");
   const trees = await treeData();
   let rate;
   const setRate = await trees.makeRate();
-  setRate.wait().then(async () => {
-    rate = await mainRate
+  setRate.wait().then(async (res) => {
+    rate = await trees.mainRate
       .then((result) => {
         console.log("rate : ", result);
         return Number(result._hex);
@@ -634,9 +636,9 @@ const goMtcBuy = async (e) => {
   const treebuy = document.getElementById("treebuy");
   console.log("balance : ", Number(balance._hex));
   const price = amnt * rate * 94 * 1e15;
-  console.log(trees.address);
+  console.log("pricetag : ", trees.address, price);
   const buy = await trees
-    .buyTreesMainnet(amnt, sender)
+    .buyTreesMainnet(amnt, sender, { value: BigInt(price) })
     .then((result) => {
       console.log(result);
       treebuy.innerHTML = "BUYING " + amnt + " S33Ds";
@@ -962,8 +964,12 @@ const goPlantForm = async (e) => {
   const mintCert = async () => {
     const eco = await ecoData();
     const bePlanter = document.getElementById("bePlanter");
+    let nowId = uuidv4();
+    let hold = nowId.split("-");
+    let take = BigInt(String(parseInt(hold[0], 16)) + String(parseInt(hold[1], 16)) + String(parseInt(hold[2], 16)) + String(parseInt(hold[3], 16)) + String(parseInt(hold[4], 16)));
+    console.log(take);
     const mint = await eco
-      .mintCertificate(dias, Date.now(), BigInt(dias.trees * 1e18), dias.location)
+      .mintCertificate(dias, take, BigInt(dias.trees * 1e18), dias.location)
       .then((result) => {
         console.log(result);
         bePlanter.innerHTML = "Planting in progress !";
@@ -972,13 +978,16 @@ const goPlantForm = async (e) => {
       .catch((err) => {
         console.log(err);
       });
-    mint.wait().then((result) => {
+    mint.wait().then(async () => {
       refreshUSDC();
       refreshNet();
       refreshTR33();
-      toggle();
+      bePlanter.innerHTML = "Create a Bond now !";
+      bePlanter.removeEventListener("click", mintCert);
+      bePlanter.addEventListener("click", goCreateBond);
     });
   };
+
   const fillIn = async () => {
     let treeVal = await tree.balanceOf(client);
     const wordBox = document.getElementById("words");
