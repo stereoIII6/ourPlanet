@@ -1064,7 +1064,12 @@ contract nftProject is ERC721 {
     VRFv2Consumer public vrf;
     ERC20 public usdc;
     MLQ public mlq;
+    // token id # => dias obj %
     mapping(uint256 => bytes) public dias;
+    // user address @ => nft count #
+    mapping(address => uint256) public nftCount;
+    // user address @ => nft count # => nft id #
+    mapping(address => mapping(uint256 => uint256)) public ntfIdByCount;
 
     constructor(
         address _owner,
@@ -1105,6 +1110,10 @@ contract nftProject is ERC721 {
     function getVrfId() internal returns (uint256[] memory) {
         uint256 rid = vrf.requestRandomWords();
         return vrf.randy(rid);
+    }
+
+    function grabIds(uint256 count) external view returns (uint256 ids) {
+        return ids = ntfIdByCount[msg.sender][count];
     }
 
     function doMint(uint256 _amnt) internal returns (uint256) {
@@ -1245,13 +1254,14 @@ contract Co2s is ERC20, MathFnx {
         uint256 date;
     }
     mapping(address => uint256) public myBonds;
+    mapping(uint256 => uint256) public allBonds;
     mapping(address => mapping(uint256 => uint256)) public myBondedCo2;
     mapping(address => uint256) public myTxCount;
     mapping(address => mapping(uint256 => uint256)) public myTxs;
     Bond[] public bonds;
     Tx[] public txs;
     uint256 t;
-
+    uint256 b;
     uint256 per;
 
     constructor(
@@ -1295,18 +1305,15 @@ contract Co2s is ERC20, MathFnx {
         address _sender,
         uint256 _id
     ) internal returns (uint256) {
-        // is owner of token ?
-        bonds[_id] = Bond(
-            _id,
-            _sender,
-            _amnt,
-            _loc,
-            _stamp,
-            _stamp + time,
-            _amnt * 5
+        require(msg.sender == _sender, "you do not own the plantation");
+        bonds.push(
+            Bond(_id, _sender, _amnt, _loc, _stamp, _stamp + time, _amnt * 5)
         );
+        allBonds[b] = _id;
         myBondedCo2[_sender][myBonds[_sender]] = _id;
-        return myBonds[_sender]++;
+        myBonds[_sender]++;
+        b++;
+        return b - 1;
     }
 
     function createBond(
@@ -1722,11 +1729,10 @@ contract ecoverse is nftProject {
     address trees;
     Trees tree;
     Co2s co2s;
-    mapping(uint256 => uint256) amount;
-    mapping(uint256 => bytes) location;
-    mapping(uint256 => address) ownedBy;
-    mapping(uint256 => uint256) stamped;
-    mapping(address => uint256) claimable;
+    mapping(uint256 => uint256) public amount;
+    mapping(uint256 => bytes) public location;
+    mapping(uint256 => address) public ownedBy;
+    mapping(uint256 => uint256) public stamped;
 
     constructor(
         address _trees,
@@ -1769,11 +1775,14 @@ contract ecoverse is nftProject {
         location[_id] = bytes(_loc);
         ownedBy[_id] = msg.sender;
         stamped[_id] = block.timestamp;
-        // mint certificate
         _mint(msg.sender, _id);
-        // co2s.createBond(_amnt, _loc, block.timestamp, msg.sender, _id);
-        // return boolean
+        ntfIdByCount[msg.sender][nftCount[msg.sender]] = _id;
+        nftCount[msg.sender]++;
         return true;
+    }
+
+    function showDias(uint256 _id) external view returns (string memory) {
+        return string(dias[_id]);
     }
 
     function editCertificate(

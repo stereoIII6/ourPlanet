@@ -5,7 +5,7 @@
 //          stereodocbush@gmail.com     //
 //                                      //
 //////////////////////////////////////////
-import { ethers, VoidSigner, Wallet } from "ethers";
+import { ethers, VoidSigner, Wallet, utils } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import "../public/app.scss";
 import { sha256 } from "crypto-hash";
@@ -60,7 +60,6 @@ const s0xFactory = require("../dist/contracts/s0xFactory.json");
 const Trees = require("../dist/contracts/Trees.json");
 const CO2 = require("../dist/contracts/Co2s.json");
 const GardenPool = require("../dist/contracts/GardenPool.json");
-const IERC20 = require("../dist/contracts/IERC20.json");
 const USDC = require("../dist/contracts/USDC.json");
 const MLQ = require("../dist/contracts/MLQ.json");
 const ecoverse = require("../dist/contracts/ecoverse.json");
@@ -70,8 +69,6 @@ let signer;
 // const wallet = new Wallet(process.env.PKEY, provider);
 // links & buttons
 const lines = document.getElementsByClassName("bars");
-const goWest = document.getElementById("goWest");
-const goEast = document.getElementById("goEast");
 const modal = document.getElementById("modal-stage");
 const modalHead = document.getElementById("modal-header");
 const modalBody = document.getElementById("modal-body");
@@ -522,6 +519,7 @@ const refreshECO = async () => {
     plntBtn.innerHTML = Number(ecoVal._hex) + " PCRTs";
     plntBtn.style.display = "block";
     actions.innerHTML = "You just have to wait for your C4RBs !";
+    co2Btn.style.display = "block";
     console.log("eco refresh", actions, Number(ecoVal._hex));
   } else {
     treeBtn.style.display = "none";
@@ -559,6 +557,7 @@ const refreshNet = async () => {
   net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
   net_btn.addEventListener("click", netSwitch);
 };
+const refreshCo2 = async () => {};
 const getRampNet = (e) => {
   e.preventDefault();
   new RampInstantSDK({
@@ -594,7 +593,7 @@ const getCrypto = async (e) => {
   rampNet.addEventListener("click", getRampNet);
   bitfinex.addEventListener("click", getBitfinex);
   coinbase.addEventListener("click", getCoinbase);
-  if (Number(network) == 80001) airdrop.style.display = "block";
+  if (Number(network) == 80001 || Number(network) == 43113) airdrop.style.display = "block";
   else airdrop.style.display = "none";
   transak.style.display = "none";
   modalFoot.innerHTML = "You can buy crypto from one of our suggested on ramp partners !";
@@ -619,6 +618,7 @@ const dropUSDCs = async (e) => {
     .then((result) => {
       console.log(result);
       refreshUSDC();
+      toggle();
       return result;
     })
     .catch((err) => {
@@ -884,6 +884,7 @@ const doRand = () => {
   return [num1, num2, num3, num4];
 };
 let dias = {
+  id: "",
   owner: "0x0",
   location: "",
   trees: 0,
@@ -917,8 +918,8 @@ const setDias = async () => {
   } else {
     bePlanter.style.background = "#badbe1";
     bePlanter.disabled = true;
-
-    dias.date = Date(Date.now()).slice(4, 34);
+    let ms = Date.now();
+    dias.date = Number(String(ms).slice(0, -3));
     diasShow.innerHTML = JSON.stringify(dias);
     const approveTrees = document.getElementById("approveTrees");
     if (dias.location !== "" && dias.trees > allowed) {
@@ -939,8 +940,9 @@ const goPlantForm = async (e) => {
   const trees = await treeData();
   const client = await signer.getAddress();
   let adrs = await signer.getAddress();
-  dias.owner = adrs.slice(0, 4) + "..." + adrs.slice(39, 42);
-  dias.date = Date(Date.now()).slice(4, 34);
+  dias.owner = adrs;
+  let ms = Date.now();
+  dias.date = Number(String(ms).slice(0, -3));
   dias.dias = { status: "sprouting" };
   const bePlanter = document.getElementById("bePlanter");
   const approveTrees = document.getElementById("approveTrees");
@@ -996,6 +998,7 @@ const goPlantForm = async (e) => {
       .then((result) => {
         console.log(result);
         approveTrees.innerHTML = "Approval in progress !";
+        console.log("dias input : ", dias, "trees : ", dias.trees, "location : ", dias.location);
         return result;
       })
       .catch((err) => {
@@ -1009,33 +1012,129 @@ const goPlantForm = async (e) => {
       approveTrees.style.display = "none";
     });
   };
+  const findTokens = async () => {
+    const eco = await ecoData();
+
+    const getTokenAmount = await eco
+      .nftCount(accounts[0])
+      .then((res) => {
+        console.log("ids : ", res);
+        return Number(res._hex);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    let ids = [];
+    let diasArr = [];
+    for (let i = 0; i < getTokenAmount; i++) {
+      ids[i] = await eco
+        .grabIds(i)
+        .then((res) => {
+          // console.log(res, BigInt(res._hex));
+          return BigInt(res._hex);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      // console.log(ids);
+    }
+
+    console.log("idcheck : ", getTokenAmount, ids[ids.length - 1]);
+    const last = await eco
+      .showDias(ids[ids.length - 1])
+      .then((res) => {
+        console.log(res);
+        const lastDias = JSON.parse(res);
+        return lastDias;
+      })
+      .then(async (lastDias) => {
+        // console.log("do bond", lastDias.trees, lastDias.location, lastDias.date, lastDias.owner, BigInt(lastDias.id));
+        return lastDias;
+      })
+      .catch((err) => {
+        console.error(err.data.message);
+      });
+    for (let i = 0; i < getTokenAmount; i++) {
+      const makeDiasArr = await eco
+        .showDias(ids[i])
+        .then((res) => {
+          console.log(res);
+          const lastDias = JSON.parse(res);
+          return lastDias;
+        })
+        .then(async (lastDias) => {
+          // console.log("do bond", lastDias.trees, lastDias.location, lastDias.date, lastDias.owner, BigInt(lastDias.id));
+          diasArr[i] = lastDias;
+          return lastDias;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+    console.log(last);
+    return diasArr;
+  };
+  const goCreateBond = async () => {
+    const co2 = await co2Data();
+    const last = await findTokens();
+    console.log("creating bond : ", last);
+    const bonding = await co2
+      .createBond(last[last.length - 1].trees, last[last.length - 1].location, last[last.length - 1].date, last[last.length - 1].owner, last[last.length - 1].id)
+      .then((res) => {
+        console.log(res);
+
+        bePlanter.innerHTML = "bonding your plantation to the ecoverse";
+        return res;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    bonding.wait().then((res) => {
+      toggle();
+    });
+  };
   const mintCert = async () => {
     const eco = await ecoData();
     const bePlanter = document.getElementById("bePlanter");
     let nowId = uuidv4();
     let hold = nowId.split("-");
     let take = BigInt(String(parseInt(hold[0], 16)) + String(parseInt(hold[1], 16)) + String(parseInt(hold[2], 16)) + String(parseInt(hold[3], 16)) + String(parseInt(hold[4], 16)));
-    console.log(take);
+    dias.id = String(take);
+    console.log("dias input : ", dias, "trees : ", dias.trees, "location : ", dias.location, take);
     const mint = await eco
-      .mintCertificate(dias, take, BigInt(dias.trees * 1e18), dias.location)
+      .mintCertificate(JSON.stringify(dias), take, BigInt(dias.trees * 1e18), dias.location)
       .then((result) => {
         console.log(result);
         bePlanter.innerHTML = "Planting in progress !";
+        console.log("dias input : ", dias, "trees : ", dias.trees, "location : ", dias.location);
         return result;
       })
       .catch((err) => {
         console.log(err);
       });
     mint.wait().then(async () => {
+      goCreateBond();
       refreshUSDC();
       refreshNet();
       refreshTR33();
-      bePlanter.innerHTML = "Create a Bond now !";
+      bePlanter.innerHTML = "Creating a Bond now !";
       bePlanter.removeEventListener("click", mintCert);
-      bePlanter.addEventListener("click", goCreateBond);
     });
   };
-
+  const claimCarbs = async () => {
+    const co2 = await co2Data();
+    const last = await findTokens();
+    console.log(last[last.length].id);
+    const grab = await claimBond(last[last.length].id)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   const fillIn = async () => {
     let treeVal = await tree.balanceOf(client);
     const wordBox = document.getElementById("words");
@@ -1212,10 +1311,22 @@ const addUser = async (e) => {
     .catch((err) => {
       console.log(err);
     });
-  userData.wait().then((result) => {
+  userData.wait().then(async () => {
     console.log("finished");
-    // profile_btn.innerHTML = document.getElementById("su_name").value;
-
+    profile_btn.innerHTML = document.getElementById("su_name").value;
+    const client = await signer.getAddress();
+    const udata = await s0x
+      .showUser(client)
+      .then((result) => {
+        console.log(result);
+        return JSON.parse(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    profile_btn.removeEventListener("click", goProfile);
+    profile_btn.addEventListener("click", viewProfile);
+    profile_btn.innerHTML = "<img src='" + udata.avatar + "' id='uavt' />" + document.getElementById("su_name").value;
     toggle();
   });
 };
