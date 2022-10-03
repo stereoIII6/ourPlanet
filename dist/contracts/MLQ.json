@@ -88532,10 +88532,16 @@
       "links": {},
       "address": "0x879db0109D64e1e6aE9A0FD88DB2ed66D03309DD",
       "transactionHash": "0x67e08f8753abf4dd8777fac260bfd3c035b879dd3e2813cec3ed29d2d39996d9"
+    },
+    "80001": {
+      "events": {},
+      "links": {},
+      "address": "0xD81e5b1f71F56Dc32ab8cA0F4D85494Ab0A046dB",
+      "transactionHash": "0x5b6d97963d4c35ea7419a0785b1169e64199fed6e336693723ff8f5f8c4d4b5a"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-28T15:02:30.250Z",
+  "updatedAt": "2022-10-03T11:17:50.922Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

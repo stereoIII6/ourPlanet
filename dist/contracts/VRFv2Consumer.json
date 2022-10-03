@@ -79620,10 +79620,16 @@
       "links": {},
       "address": "0xb7Cccd024C650A1904339979b70772bA9C6545b8",
       "transactionHash": "0x251711c3e2bc46c2cc09e00c3524a6cc8e4b1cb0d36393db5fca363659f99052"
+    },
+    "80001": {
+      "events": {},
+      "links": {},
+      "address": "0xDC0f3Bc63027De9a8509A95275837C37dDaDF13B",
+      "transactionHash": "0x4d26df9b0da2b5452d1b2e63220d79b29ca781be86218aab46563861775a8049"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-28T15:02:30.480Z",
+  "updatedAt": "2022-10-03T11:17:51.379Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

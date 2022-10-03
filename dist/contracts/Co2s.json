@@ -93855,10 +93855,16 @@
       "links": {},
       "address": "0xD33F29c06A934FBE32FB36F5E80C6Bc7FABfc46F",
       "transactionHash": "0xa4e849d354576680554f4a9c6c05a199e16cf723b25bc28c5f01554543e3d269"
+    },
+    "80001": {
+      "events": {},
+      "links": {},
+      "address": "0xd6DDc105e729373dDa7dbbEF7d410e6E4d073fBe",
+      "transactionHash": "0xc8cf78f77089f6f983f03e660a48a8670a245b7fe9633ae21c6461be7ec1cfb6"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-28T15:02:30.430Z",
+  "updatedAt": "2022-10-03T11:17:51.258Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -557,7 +557,20 @@ const refreshNet = async () => {
   net_btn.innerHTML = Number(mainVal / 1e18).toFixed(2) + " " + networkTag;
   net_btn.addEventListener("click", netSwitch);
 };
-const refreshCo2 = async () => {};
+const refreshCo2 = async () => {
+  const co2 = await co2Data();
+  const tokenList = await findTokens()
+    .then((res) => {
+      // isolate tree count
+      // add tree count to pool balance
+      // form array of token ids
+
+      return res;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
 const getRampNet = (e) => {
   e.preventDefault();
   new RampInstantSDK({

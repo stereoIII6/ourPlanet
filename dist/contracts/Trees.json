@@ -90296,10 +90296,16 @@
       "links": {},
       "address": "0x78B01557a93A66120242F5Aa9608aD06bF9cEA72",
       "transactionHash": "0x282c55e34e159669d61239c7a452ef8831335f7f7ec1cce77b6e2cca6c15486a"
+    },
+    "80001": {
+      "events": {},
+      "links": {},
+      "address": "0x75B3E31Ef7f591c014a8F942679986E00f81E4C7",
+      "transactionHash": "0x38ce29e63de0693c98985de90d88a0f92773e81d2a8c292dd1a26d85cc78cedd"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-28T15:02:30.387Z",
+  "updatedAt": "2022-10-03T11:17:51.129Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

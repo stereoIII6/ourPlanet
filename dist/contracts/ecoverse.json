@@ -97455,10 +97455,16 @@
       "links": {},
       "address": "0x5b957F77893CeBD1F32888e56769F02792FEc2De",
       "transactionHash": "0xb689f1a4766b17f8bb8856267a4f3ec61580e2ff587f010362b34f5ead902f07"
+    },
+    "80001": {
+      "events": {},
+      "links": {},
+      "address": "0x989195469c9CFc15D68A8E920fde962695c68E43",
+      "transactionHash": "0xccec9b8cb193b73c0b0876c31224d63e1d6f77dd9daad1a2f84225286f8f2e3e"
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-09-28T15:02:30.341Z",
+  "updatedAt": "2022-10-03T11:17:51.049Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
