@@ -868,6 +868,7 @@ contract Trees is ERC20, MathFnx, exitSafes {
     uint256 mainRate;
     uint256 availSupply;
     address author;
+    address editor;
     PriceConsumerV3 public ethUsdPrice;
     IERC20 usdc;
     MLQ mlq;
@@ -965,6 +966,22 @@ contract Trees is ERC20, MathFnx, exitSafes {
         int256 mainR = ethUsdPrice.MainUsdPrice();
         mainRate = uint256(mainR);
         return (uint256(mainR));
+    }
+
+    function setEditor(address _adr) external returns (address) {
+        require(
+            msg.sender == author || msg.sender == editor,
+            "You are not the allowed to perform this action"
+        );
+        return editor = _adr;
+    }
+
+    function setMainRateMan(uint256 _rate) external returns (uint256) {
+        require(
+            msg.sender == author || msg.sender == editor,
+            "You are not the allowed to perform this action"
+        );
+        return mainRate = _rate;
     }
 
     function setMLQRates() internal returns (uint256) {
