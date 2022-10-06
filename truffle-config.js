@@ -15,7 +15,9 @@ module.exports = {
       provider: () => new HDWalletProvider(mnemonic, process.env.POLY_URL),
       network_id: 137,
       confirmations: 10,
-      timeoutBlocks: 200,
+      timeoutBlocks: 2500, // <-- Use this high gas value
+      gasPrice: 50000000000, // <-- Use this low gas price
+      BlockLimit: 0x1c1583c,
       skipDryRun: true,
     },
     mumbai: {
@@ -124,13 +126,14 @@ module.exports = {
     solc: {
       version: "^0.8.0", // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
-      //  evmVersion: "byzantium"
-      // }
+      settings: {
+        // See the solidity docs for advice about optimization and evmVersion
+        optimizer: {
+          enabled: true,
+          runs: 200,
+        },
+        //  evmVersion: "byzantium"
+      },
     },
   },
 };

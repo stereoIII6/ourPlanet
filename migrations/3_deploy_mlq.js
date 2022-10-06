@@ -7,7 +7,7 @@ const MLQ = artifacts.require("MLQ");
 module.exports = function (deployer) {
   let usdcadr;
   // 0 Fuji // 1 Avax // 2 Fantom Test // 3 Fantom Main // 4 Polygon Mumbai // 5 Polygon Main
-  const netty = 4;
+  const netty = 5;
   if (netty === 0) usdcadr = "0x5a604d07782b7303bd2327d133f13a58bd17dc43"; // Fuji AVAX
   if (netty === 1) usdcadr = "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"; // Mainnetty AVAX
 

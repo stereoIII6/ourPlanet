@@ -13,7 +13,7 @@ const VRF = artifacts.require("VRFv2Consumer");
 module.exports = function (deployer) {
   // 0 Fuji // 1 Avax // 2 Fantom Test // 3 Fantom Main // 4 Polygon Mumbai // 5 Polygon Main
 
-  const net = 4;
+  const net = 5;
   deployer.deploy(PC, net);
   if (net == 0) deployer.deploy(VRF, 423);
   if (net == 4) deployer.deploy(VRF, 2022);
