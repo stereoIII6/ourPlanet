@@ -377,7 +377,7 @@ const onClickConnect = async (e) => {
     }
     if (Number(network) === 137) {
       networkTag = "MTC";
-      // a = 0; // a = 5;
+      a = 0; // a = 5;
     }
     if (Number(network) === 200) {
       networkTag = "axETH";
@@ -421,7 +421,7 @@ const onClickConnect = async (e) => {
     }
     if (Number(network) === 43113) {
       networkTag = "AVAX*";
-      a = 0; // a = 16;
+      a = 1; // a = 16;
     }
     if (Number(network) === 43224) {
       networkTag = "AVAX";
@@ -429,7 +429,7 @@ const onClickConnect = async (e) => {
     }
     if (Number(network) === 80001) {
       networkTag = "MTC*";
-      a = 1; // a = 18;
+      a = 2; // a = 18;
     }
     console.log("net check : ", network, a);
     let mainVal = await provider.getBalance(accounts[0]);
